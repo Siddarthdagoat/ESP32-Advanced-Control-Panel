@@ -247,7 +247,7 @@ export default function ExplorePage({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredListings.map((item) => {
                 // Calculate dynamic compatibility score against user's listings
-                const userListings = listings.filter(l => l.studentEmail === currentUser?.email);
+                const userListings = listings.filter(l => l.ownerId === currentUser?.id);
                 let bestScore = 0;
                 if (currentUser) {
                   userListings.forEach(uL => {

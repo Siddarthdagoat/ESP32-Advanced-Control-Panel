@@ -26,39 +26,42 @@ export default function LoginPage({ onLogin }) {
     setTimeout(() => {
       setIsLoading(false);
       
+      // Load all registered users from database
+      const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
+      
       let userObj;
       if (isSignUp) {
+        // Verify email uniqueness
+        const exists = usersList.some(u => u.email.toLowerCase() === email.toLowerCase());
+        if (exists) {
+          setError('An account with this email already exists.');
+          return;
+        }
+
         userObj = {
+          id: 'usr_' + Date.now(),
           name,
           email,
+          password, // Store for local auth check
           avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&backgroundColor=D97757`,
           offers: offers || '',
           lookingFor: lookingFor || ''
         };
+
+        // Persist to user registry
+        usersList.push(userObj);
+        localStorage.setItem('rexchange_users', JSON.stringify(usersList));
       } else {
-        // Mock login
-        // Check if there is an existing user in localStorage from signup
-        const stored = localStorage.getItem('rexchange_user');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed.email === email) {
-            userObj = parsed;
-          }
-        }
+        // Login authentication
+        userObj = usersList.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
         
         if (!userObj) {
-          // If no stored matches, create a clean user with the entered email
-          userObj = {
-            name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-            email,
-            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email.split('@')[0]}&backgroundColor=D97757`,
-            offers: '',
-            lookingFor: ''
-          };
+          setError('Invalid email or password.');
+          return;
         }
       }
 
-      localStorage.setItem('rexchange_user', JSON.stringify(userObj));
+      localStorage.setItem('rexchange_current_session', JSON.stringify(userObj));
       onLogin(userObj);
     }, 1000);
   };

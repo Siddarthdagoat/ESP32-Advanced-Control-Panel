@@ -16,7 +16,7 @@ import {
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('rexchange_user');
+    const saved = localStorage.getItem('rexchange_current_session');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -33,6 +33,16 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  // Clean up legacy, unisolated data keys to prevent leakage
+  useEffect(() => {
+    const legacyKeys = ['rexchange_user', 'profile', 'currentUser', 'matches'];
+    legacyKeys.forEach(k => {
+      if (localStorage.getItem(k)) {
+        localStorage.removeItem(k);
+      }
+    });
+  }, []);
 
   // Get initial page from path
   const getPageFromPath = (path) => {
@@ -55,7 +65,7 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState(() => {
     const initialPage = getPageFromPath(window.location.pathname);
-    const savedUser = localStorage.getItem('rexchange_user');
+    const savedUser = localStorage.getItem('rexchange_current_session');
     const isLoggedIn = !!savedUser;
     
     // Protect routes
@@ -132,6 +142,7 @@ export default function App() {
     const freshListing = {
       ...newListingData,
       id: 'list_' + Date.now(),
+      ownerId: currentUser?.id,
       studentName: currentUser?.name || 'Student',
       studentEmail: currentUser?.email || 'student@campus.edu',
       studentAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUser?.name || 'Student'}&backgroundColor=D97757`,
@@ -168,15 +179,20 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('rexchange_user');
+    localStorage.removeItem('rexchange_current_session');
     setCurrentUser(null);
     showToast('Logged out successfully.', 'info');
-    navigate('login');
+    navigate('landing');
   };
 
   const handleUpdateUser = (updatedUser) => {
     setCurrentUser(updatedUser);
-    localStorage.setItem('rexchange_user', JSON.stringify(updatedUser));
+    localStorage.setItem('rexchange_current_session', JSON.stringify(updatedUser));
+    
+    // Also sync the update in the global user registry
+    const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
+    const updatedUsersList = usersList.map(u => u.id === updatedUser.id ? updatedUser : u);
+    localStorage.setItem('rexchange_users', JSON.stringify(updatedUsersList));
   };
 
   const renderActivePage = () => {
@@ -220,11 +236,13 @@ export default function App() {
           />
         );
       case 'exchanges':
+        const userExchanges = requests.filter(r => r.senderId === currentUser?.id || r.receiverId === currentUser?.id);
         return (
           <MyExchangesPage 
-            requests={requests} 
+            requests={userExchanges} 
             onUpdateRequest={handleUpdateRequest}
             setCurrentPage={navigate}
+            currentUser={currentUser}
           />
         );
       case 'login':

@@ -17,8 +17,8 @@ export default function ListingDetailsPage({
   const [customMessage, setCustomMessage] = useState('');
   const [proposalSentStatus, setProposalSentStatus] = useState('idle'); // idle, sending, success
 
-  // Filter listings belonging to this user
-  const userListings = allListings.filter(l => l.studentEmail === currentUser?.email);
+  // Filter listings belonging to this user using unique ID
+  const userListings = allListings.filter(l => l.ownerId === currentUser?.id);
 
   // Calculate matches for this listing
   useEffect(() => {
@@ -28,11 +28,9 @@ export default function ListingDetailsPage({
     }
   }, [listing, allListings]);
 
-  // Check if a request has already been made for this listing
+  // Check if a request has already been made by the current user for this listing
   const alreadyRequested = existingRequests.some(req => 
-    req.listingTitle === listing.title && req.fromUser === (currentUser?.name || '')
-  ) || existingRequests.some(req => 
-    req.listingTitle === listing.title && req.status !== 'Completed'
+    req.listingId === listing?.id && req.senderId === currentUser?.id
   );
 
   const simulateProfileMatch = () => {
@@ -79,6 +77,10 @@ export default function ListingDetailsPage({
       // Submit proposal request
       onRequestExchange({
         id: 'r_match_' + Date.now(),
+        senderId: currentUser?.id,
+        receiverId: listing.ownerId,
+        listingId: listing.id,
+        userListingId: selectedMatchForProposal.id,
         fromUser: listing.studentName,
         fromUserAvatar: listing.studentAvatar,
         listingTitle: listing.title,
@@ -87,7 +89,6 @@ export default function ListingDetailsPage({
         matchPercentage: selectedMatchForProposal.match.score,
         matchReason: selectedMatchForProposal.match.reason,
         status: 'Pending',
-        isOutgoing: true,
         message: customMessage.trim(),
         createdAt: new Date().toISOString()
       });

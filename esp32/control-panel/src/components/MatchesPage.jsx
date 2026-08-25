@@ -8,8 +8,8 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
   const [customMessage, setCustomMessage] = useState('');
   const [proposalSentStatus, setProposalSentStatus] = useState('idle'); // idle, sending, success
 
-  const userListings = listings.filter(l => l.studentEmail === currentUser?.email);
-  const peerListings = listings.filter(l => l.studentEmail !== currentUser?.email);
+  const userListings = listings.filter(l => l.ownerId === currentUser?.id);
+  const peerListings = listings.filter(l => l.ownerId !== currentUser?.id);
 
   // Compile all matches
   const matchesList = [];
@@ -50,6 +50,10 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
       // Add new request to exchange history
       onRequestExchange({
         id: 'r_match_' + Date.now(),
+        senderId: currentUser?.id,
+        receiverId: selectedMatch.peerListing.ownerId,
+        listingId: selectedMatch.peerListing.id,
+        userListingId: selectedMatch.userListing.id,
         fromUser: selectedMatch.peerListing.studentName,
         fromUserAvatar: selectedMatch.peerListing.studentAvatar,
         listingTitle: selectedMatch.peerListing.title,
@@ -58,7 +62,6 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
         matchPercentage: selectedMatch.score,
         matchReason: selectedMatch.reason,
         status: 'Pending',
-        isOutgoing: true,
         message: customMessage.trim(),
         createdAt: new Date().toISOString()
       });

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeftRight, Check, X, CheckCircle2, Clock, Sparkles, Compass, ListPlus } from 'lucide-react';
 
-export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentPage }) {
+export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentPage, currentUser }) {
   const [activeTab, setActiveTab] = useState('Pending');
 
   // Filter requests based on status
@@ -220,6 +220,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
           <div className="flex flex-col gap-6">
             {getRequestsForTab().length > 0 ? (
               getRequestsForTab().map((req) => {
+                const isOutgoing = req.senderId === currentUser?.id;
                 const matchColor = 
                   req.matchPercentage >= 90 ? 'text-forest-green bg-forest-green/10 border-forest-green/20' :
                   req.matchPercentage >= 80 ? 'text-warm-amber bg-warm-amber/10 border-warm-amber/20' :
@@ -243,7 +244,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                             />
                             <div className="text-left">
                               <div className="text-sm font-bold text-charcoal">{req.fromUser}</div>
-                              <div className="text-xs text-muted-gray font-semibold">{req.isOutgoing ? 'Outgoing Request' : 'Proposed Swap'}</div>
+                              <div className="text-xs text-muted-gray font-semibold">{isOutgoing ? 'Outgoing Request' : 'Proposed Swap'}</div>
                             </div>
                           </div>
                           {getStatusBadge(req.status)}
@@ -263,7 +264,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center bg-warm-surface p-4 rounded-xl border border-warm-border/60 shadow-sm text-left">
                           <div className="sm:col-span-5">
                             <div className="text-[10px] text-terracotta font-extrabold uppercase tracking-wider mb-0.5">
-                              {req.isOutgoing ? 'What You Give' : 'Their Offering'}
+                              {isOutgoing ? 'What You Give' : 'Their Offering'}
                             </div>
                             <div className="text-sm font-bold text-charcoal truncate">{req.userOffer}</div>
                           </div>
@@ -272,7 +273,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                           </div>
                           <div className="sm:col-span-5">
                             <div className="text-[10px] text-denim-blue font-extrabold uppercase tracking-wider mb-0.5">
-                              {req.isOutgoing ? 'What You Receive' : 'For Your Listing'}
+                              {isOutgoing ? 'What You Receive' : 'For Your Listing'}
                             </div>
                             <div className="text-sm font-bold text-charcoal truncate">{req.listingTitle}</div>
                           </div>
@@ -298,7 +299,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                       {/* Right Area: Action Buttons */}
                       <div className="flex flex-row md:flex-col items-center justify-end gap-3 self-stretch md:self-auto border-t md:border-t-0 border-warm-border/60 pt-4 md:pt-0">
                         {req.status === 'Pending' && (
-                          req.isOutgoing ? (
+                          isOutgoing ? (
                             <div className="text-xs text-muted-gray bg-warm-surface border border-warm-border shadow-sm px-4 py-3 rounded-xl flex items-center gap-1.5 font-semibold italic">
                               <Clock className="w-3.5 h-3.5 text-terracotta animate-pulse" />
                               Waiting for response
@@ -357,7 +358,7 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                     </div>
 
                     {/* Progress journey tracker rendered at the bottom of the card */}
-                    {renderJourneyTracker(req.status, req.isOutgoing)}
+                    {renderJourneyTracker(req.status, isOutgoing)}
                   </div>
                 );
               })

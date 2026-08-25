@@ -17,13 +17,14 @@ export default function ProfilePage({ currentUser, onUpdateUser, listings, setLi
     }
   }, [currentUser]);
 
-  // Filter listings belonging to this user
-  const userListings = listings.filter(l => l.studentEmail === currentUser?.email);
+  // Filter listings belonging to this user using unique ID
+  const userListings = listings.filter(l => l.ownerId === currentUser?.id);
 
-  // Exchange metrics
-  const pendingCount = requests.filter(r => r.status === 'Pending').length;
-  const activeCount = requests.filter(r => r.status === 'Accepted').length;
-  const completedCount = requests.filter(r => r.status === 'Completed').length;
+  // Filter requests involving the current user to isolate metrics
+  const userRequests = requests.filter(r => r.senderId === currentUser?.id || r.receiverId === currentUser?.id);
+  const pendingCount = userRequests.filter(r => r.status === 'Pending').length;
+  const activeCount = userRequests.filter(r => r.status === 'Accepted').length;
+  const completedCount = userRequests.filter(r => r.status === 'Completed').length;
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -52,10 +53,16 @@ export default function ProfilePage({ currentUser, onUpdateUser, listings, setLi
   const handleDeleteListing = (listingId, e) => {
     e.stopPropagation(); // prevent card click details redirection
     if (window.confirm('Are you sure you want to delete this listing?')) {
-      const updatedListings = listings.filter(l => l.id !== listingId);
-      setListings(updatedListings);
-      if (showToast) {
-        showToast('Listing deleted successfully!', 'success');
+      // Check if user owns it
+      const target = listings.find(l => l.id === listingId);
+      if (target && target.ownerId === currentUser?.id) {
+        const updatedListings = listings.filter(l => l.id !== listingId);
+        setListings(updatedListings);
+        if (showToast) {
+          showToast('Listing deleted successfully!', 'success');
+        }
+      } else {
+        alert("You are not authorized to delete this listing.");
       }
     }
   };
