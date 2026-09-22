@@ -6,7 +6,7 @@
  */
 export function calculateMatchScore(userListing, peerListing) {
   // If the listing belongs to the same user or student, no match
-  if (userListing.id === peerListing.id || userListing.studentName === peerListing.studentName) {
+  if (userListing.id === peerListing.id || userListing.ownerId === peerListing.ownerId) {
     return { score: 0, reason: "Same listing or user" };
   }
 
@@ -99,7 +99,7 @@ export function calculateMatchScore(userListing, peerListing) {
  */
 export function getTopMatches(currentListing, allListings) {
   return allListings
-    .filter(l => l.id !== currentListing.id && l.studentName !== currentListing.studentName)
+    .filter(l => l.id !== currentListing.id && l.ownerId !== currentListing.ownerId)
     .map(l => {
       const matchResult = calculateMatchScore(currentListing, l);
       return {

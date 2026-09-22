@@ -220,7 +220,13 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
           <div className="flex flex-col gap-6">
             {getRequestsForTab().length > 0 ? (
               getRequestsForTab().map((req) => {
-                const isOutgoing = req.senderId === currentUser?.id;
+                const isOutgoing = (req.senderId === currentUser?.id || req.requesterId === currentUser?.id);
+                const displayUser = isOutgoing 
+                  ? (req.receiverName || req.ownerName || req.fromUser || 'Campus Peer') 
+                  : (req.senderName || req.requesterName || req.fromUser || 'Campus Peer');
+                const displayAvatar = isOutgoing 
+                  ? (req.receiverAvatar || req.ownerAvatar || req.fromUserAvatar || 'https://api.dicebear.com/7.x/initials/svg?seed=Peer&backgroundColor=D97757') 
+                  : (req.senderAvatar || req.requesterAvatar || req.fromUserAvatar || 'https://api.dicebear.com/7.x/initials/svg?seed=Student&backgroundColor=D97757');
                 const matchColor = 
                   req.matchPercentage >= 90 ? 'text-forest-green bg-forest-green/10 border-forest-green/20' :
                   req.matchPercentage >= 80 ? 'text-warm-amber bg-warm-amber/10 border-warm-amber/20' :
@@ -238,12 +244,12 @@ export default function MyExchangesPage({ requests, onUpdateRequest, setCurrentP
                         <div className="flex items-center justify-between sm:justify-start gap-4">
                           <div className="flex items-center gap-3">
                             <img
-                              src={req.fromUserAvatar}
-                              alt={req.fromUser}
+                              src={displayAvatar}
+                              alt={displayUser}
                               className="w-10 h-10 rounded-full object-cover border border-warm-border"
                             />
                             <div className="text-left">
-                              <div className="text-sm font-bold text-charcoal">{req.fromUser}</div>
+                              <div className="text-sm font-bold text-charcoal">{displayUser}</div>
                               <div className="text-xs text-muted-gray font-semibold">{isOutgoing ? 'Outgoing Request' : 'Proposed Swap'}</div>
                             </div>
                           </div>

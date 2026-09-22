@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Sparkles, Plus, Trash2, CheckCircle2, AlertCircle, Clock, Save, Edit3 } from 'lucide-react';
 
-export default function ProfilePage({ currentUser, onUpdateUser, listings, setListings, requests, setCurrentPage, onSelectListing, showToast }) {
+export default function ProfilePage({ currentUser, onUpdateUser, listings, onDeleteListing, requests, setCurrentPage, onSelectListing, showToast }) {
   const [name, setName] = useState(currentUser?.name || '');
   const [offers, setOffers] = useState(currentUser?.offers || '');
   const [lookingFor, setLookingFor] = useState(currentUser?.lookingFor || '');
@@ -56,11 +56,7 @@ export default function ProfilePage({ currentUser, onUpdateUser, listings, setLi
       // Check if user owns it
       const target = listings.find(l => l.id === listingId);
       if (target && target.ownerId === currentUser?.id) {
-        const updatedListings = listings.filter(l => l.id !== listingId);
-        setListings(updatedListings);
-        if (showToast) {
-          showToast('Listing deleted successfully!', 'success');
-        }
+        onDeleteListing(listingId);
       } else {
         alert("You are not authorized to delete this listing.");
       }
@@ -204,8 +200,9 @@ export default function ProfilePage({ currentUser, onUpdateUser, listings, setLi
                 <span className="text-[10px] text-muted-gray uppercase font-extrabold tracking-wider block">Response Rate</span>
                 <span className="text-xl font-display font-extrabold text-charcoal block mt-1">
                   {(() => {
-                    const incomingCount = requests.filter(r => !r.isOutgoing).length;
-                    const answeredCount = requests.filter(r => !r.isOutgoing && r.status !== 'Pending').length;
+                    const incomingRequests = userRequests.filter(r => r.receiverId === currentUser?.id);
+                    const incomingCount = incomingRequests.length;
+                    const answeredCount = incomingRequests.filter(r => r.status !== 'Pending').length;
                     return incomingCount > 0 ? Math.round((answeredCount / incomingCount) * 100) + '%' : '—';
                   })()}
                 </span>

@@ -51,7 +51,11 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
       onRequestExchange({
         id: 'r_match_' + Date.now(),
         senderId: currentUser?.id,
+        senderName: currentUser?.name || 'Student',
+        senderAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUser?.name || 'Student'}&backgroundColor=D97757`,
         receiverId: selectedMatch.peerListing.ownerId,
+        receiverName: selectedMatch.peerListing.studentName,
+        receiverAvatar: selectedMatch.peerListing.studentAvatar,
         listingId: selectedMatch.peerListing.id,
         userListingId: selectedMatch.userListing.id,
         fromUser: selectedMatch.peerListing.studentName,
@@ -153,7 +157,7 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
                     </div>
                   </div>
                   <div className={`px-3 py-1 rounded-xl text-xs font-bold border ${scoreColor}`}>
-                    {match.score}% Compatibility
+                    {match.score}% Reciprocal Fit
                   </div>
                 </div>
 
@@ -259,7 +263,7 @@ export default function MatchesPage({ listings, currentUser, requests, onRequest
                 <div className="bg-warm-beige/35 border border-warm-border/60 p-3 rounded-xl">
                   <div className="flex justify-between items-center text-[10px] text-muted-gray mb-1">
                     <span className="font-extrabold uppercase tracking-wide">Why match works</span>
-                    <span className="font-bold text-forest-green">{selectedMatch.score}% Score</span>
+                    <span className="font-bold text-forest-green">{selectedMatch.score}% Reciprocal Fit</span>
                   </div>
                   <p className="text-[11px] text-muted-gray leading-relaxed font-normal">
                     {selectedMatch.reason}

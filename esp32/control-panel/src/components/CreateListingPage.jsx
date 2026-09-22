@@ -293,7 +293,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                 placeholder="e.g. Engineering Mathematics Textbook"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-700 ${
+                className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-200 ${
                   highlightFields 
                     ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                     : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'
@@ -310,7 +310,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal focus:outline-none text-sm transition-all duration-700 ${
+                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal focus:outline-none text-sm transition-all duration-200 ${
                     highlightFields 
                       ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                       : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'
@@ -335,7 +335,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                     setExchangeType(e.target.value);
                     if (e.target.value === 'Give Away') setLookingFor('Nothing (Free)');
                   }}
-                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal focus:outline-none text-sm transition-all duration-700 ${
+                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal focus:outline-none text-sm transition-all duration-200 ${
                     highlightFields 
                       ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                       : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'
@@ -360,7 +360,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                   placeholder="e.g. Math Textbook"
                   value={offer}
                   onChange={(e) => setOffer(e.target.value)}
-                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-700 ${
+                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-200 ${
                     highlightFields 
                       ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                       : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'
@@ -380,7 +380,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                   placeholder={exchangeType === 'Give Away' ? 'Nothing (Free)' : 'e.g. Python Notes'}
                   value={exchangeType === 'Give Away' ? 'Nothing (Free)' : lookingFor}
                   onChange={(e) => setLookingFor(e.target.value)}
-                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-700 ${
+                  className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm transition-all duration-200 ${
                     highlightFields 
                       ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                       : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'
@@ -401,7 +401,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                       key={cond}
                       type="button"
                       onClick={() => setCondition(cond)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all duration-700 ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all duration-200 ${
                         condition === cond
                           ? 'bg-terracotta text-white border-terracotta shadow-sm shadow-terracotta/20'
                           : highlightFields 
@@ -427,7 +427,7 @@ export default function CreateListingPage({ onAddListing, setCurrentPage }) {
                 placeholder="Describe your item, include edition numbers, specific condition details, or what specific topics you want to study."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm resize-y transition-all duration-700 ${
+                className={`px-4 py-2.5 bg-warm-surface border rounded-xl text-charcoal placeholder-muted-gray focus:outline-none text-sm resize-y transition-all duration-200 ${
                   highlightFields 
                     ? 'border-terracotta bg-terracotta/10 ring-1 ring-terracotta scale-[1.005]' 
                     : 'border-warm-border/85 focus:border-terracotta focus:ring-1 focus:ring-terracotta'

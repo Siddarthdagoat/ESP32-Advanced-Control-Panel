@@ -8,6 +8,7 @@ import ListingDetailsPage from './components/ListingDetailsPage';
 import LoginPage from './components/LoginPage';
 import ProfilePage from './components/ProfilePage';
 import MatchesPage from './components/MatchesPage';
+import Footer from './components/Footer';
 
 import { 
   INITIAL_LISTINGS, 
@@ -34,7 +35,7 @@ export default function App() {
     }
   }, [toast]);
 
-  // Clean up legacy, unisolated data keys to prevent leakage
+  // Clean up legacy, unisolated data keys and sanitize persisted passwords to prevent leakage
   useEffect(() => {
     const legacyKeys = ['rexchange_user', 'profile', 'currentUser', 'matches'];
     legacyKeys.forEach(k => {
@@ -42,11 +43,48 @@ export default function App() {
         localStorage.removeItem(k);
       }
     });
+
+    // Sanitize any passwords in registered users list and normalize emails
+    try {
+      const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
+      let updated = false;
+      const sanitizedUsers = usersList.map(u => {
+        let needsFix = false;
+        let cleanEmail = u.email || '';
+        if (u.email && (u.email !== u.email.trim().toLowerCase())) {
+          cleanEmail = u.email.trim().toLowerCase();
+          needsFix = true;
+        }
+        if (u.password || needsFix) {
+          updated = true;
+          const { password: _, ...rest } = u;
+          return { ...rest, email: cleanEmail };
+        }
+        return u;
+      });
+      if (updated) {
+        localStorage.setItem('rexchange_users', JSON.stringify(sanitizedUsers));
+      }
+    } catch (e) {
+      console.error("Failed to sanitize users registry", e);
+    }
+
+    // Sanitize password in current session
+    try {
+      const currentSession = JSON.parse(localStorage.getItem('rexchange_current_session') || 'null');
+      if (currentSession && currentSession.password) {
+        const { password: _, ...rest } = currentSession;
+        localStorage.setItem('rexchange_current_session', JSON.stringify(rest));
+      }
+    } catch (e) {
+      console.error("Failed to sanitize current session", e);
+    }
   }, []);
 
   // Get initial page from path
   const getPageFromPath = (path) => {
-    const p = path.replace(/^\//, ''); // strip leading slash
+    const cleanPath = path.split('?')[0].split('#')[0];
+    const p = cleanPath.replace(/^\/+|\/+$/g, ''); // strip leading/trailing slashes
     if (p === 'explore') return 'explore';
     if (p === 'matches') return 'matches';
     if (p === 'create') return 'create';
@@ -77,13 +115,29 @@ export default function App() {
   });
 
   const [listings, setListings] = useState(() => {
-    const saved = localStorage.getItem('rexchange_listings');
-    return saved ? JSON.parse(saved) : INITIAL_LISTINGS;
+    try {
+      const saved = localStorage.getItem('rexchange_listings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error("Failed to load listings", e);
+    }
+    return INITIAL_LISTINGS;
   });
 
   const [requests, setRequests] = useState(() => {
-    const saved = localStorage.getItem('rexchange_requests');
-    return saved ? JSON.parse(saved) : INITIAL_REQUESTS;
+    try {
+      const saved = localStorage.getItem('rexchange_requests');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error("Failed to load requests", e);
+    }
+    return INITIAL_REQUESTS;
   });
 
   const [selectedListingId, setSelectedListingId] = useState(null);
@@ -181,8 +235,15 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem('rexchange_current_session');
     setCurrentUser(null);
+    setSelectedListingId(null);
+    setSelectedCategory(null);
     showToast('Logged out successfully.', 'info');
     navigate('landing');
+  };
+
+  const handleDeleteListing = (listingId) => {
+    setListings(prev => prev.filter(l => l.id !== listingId));
+    showToast('Listing deleted successfully!', 'success');
   };
 
   const handleUpdateUser = (updatedUser) => {
@@ -193,6 +254,32 @@ export default function App() {
     const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
     const updatedUsersList = usersList.map(u => u.id === updatedUser.id ? updatedUser : u);
     localStorage.setItem('rexchange_users', JSON.stringify(updatedUsersList));
+
+    // Update listings owned by this user
+    setListings(prev => 
+      prev.map(l => l.ownerId === updatedUser.id ? {
+        ...l,
+        studentName: updatedUser.name,
+        studentAvatar: updatedUser.avatar,
+        studentEmail: updatedUser.email
+      } : l)
+    );
+
+    // Update requests involving this user
+    setRequests(prev =>
+      prev.map(r => {
+        let updatedReq = { ...r };
+        if (r.senderId === updatedUser.id) {
+          updatedReq.senderName = updatedUser.name;
+          updatedReq.senderAvatar = updatedUser.avatar;
+        }
+        if (r.receiverId === updatedUser.id) {
+          updatedReq.receiverName = updatedUser.name;
+          updatedReq.receiverAvatar = updatedUser.avatar;
+        }
+        return updatedReq;
+      })
+    );
   };
 
   const renderActivePage = () => {
@@ -236,7 +323,12 @@ export default function App() {
           />
         );
       case 'exchanges':
-        const userExchanges = requests.filter(r => r.senderId === currentUser?.id || r.receiverId === currentUser?.id);
+        const userExchanges = requests.filter(r => 
+          r.senderId === currentUser?.id || 
+          r.receiverId === currentUser?.id || 
+          r.requesterId === currentUser?.id || 
+          r.ownerId === currentUser?.id
+        );
         return (
           <MyExchangesPage 
             requests={userExchanges} 
@@ -257,7 +349,7 @@ export default function App() {
             currentUser={currentUser} 
             onUpdateUser={handleUpdateUser} 
             listings={listings} 
-            setListings={setListings}
+            onDeleteListing={handleDeleteListing}
             requests={requests}
             setCurrentPage={navigate}
             onSelectListing={handleSelectListing}
@@ -276,6 +368,7 @@ export default function App() {
             existingRequests={requests}
             onRequestExchangeRedirect={() => navigate('exchanges')}
             currentUser={currentUser}
+            onDeleteListing={handleDeleteListing}
           />
         );
       default:
@@ -284,6 +377,7 @@ export default function App() {
             setCurrentPage={navigate} 
             setSelectedCategory={setSelectedCategory} 
             currentUser={currentUser}
+            onLogin={handleLogin}
           />
         );
     }
@@ -304,12 +398,11 @@ export default function App() {
         {renderActivePage()}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-warm-border/60 py-6 text-center text-xs text-muted-gray bg-warm-surface/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <p>© {new Date().getFullYear()} RExchange — AI-Powered Campus Resource Loop. All rights reserved.</p>
-        </div>
-      </footer>
+      {/* Professional Footer */}
+      <Footer 
+        setCurrentPage={navigate} 
+        setSelectedCategory={setSelectedCategory} 
+      />
 
       {/* Elegant Toast Notifications */}
       {toast && (

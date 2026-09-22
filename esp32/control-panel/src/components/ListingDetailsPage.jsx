@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, Sparkles, User, Tag, ShieldAlert, Check, Send, AlertCircle, X, ArrowLeftRight, Clock, MessageSquare } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Sparkles, User, Tag, ShieldAlert, Check, Send, AlertCircle, X, ArrowLeftRight, Clock, MessageSquare, Trash2 } from 'lucide-react';
 import { getTopMatches, calculateMatchScore } from '../utils/matching';
 
 export default function ListingDetailsPage({ 
@@ -10,7 +10,8 @@ export default function ListingDetailsPage({
   onRequestExchange,
   existingRequests,
   onRequestExchangeRedirect,
-  currentUser
+  currentUser,
+  onDeleteListing
 }) {
   const [matches, setMatches] = useState([]);
   const [selectedMatchForProposal, setSelectedMatchForProposal] = useState(null);
@@ -78,7 +79,11 @@ export default function ListingDetailsPage({
       onRequestExchange({
         id: 'r_match_' + Date.now(),
         senderId: currentUser?.id,
+        senderName: currentUser?.name || 'Student',
+        senderAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUser?.name || 'Student'}&backgroundColor=D97757`,
         receiverId: listing.ownerId,
+        receiverName: listing.studentName,
+        receiverAvatar: listing.studentAvatar,
         listingId: listing.id,
         userListingId: selectedMatchForProposal.id,
         fromUser: listing.studentName,
@@ -198,7 +203,25 @@ export default function ListingDetailsPage({
 
               {/* Request Exchange Button */}
               <div className="pt-4 border-t border-warm-border/60">
-                {alreadyRequested ? (
+                {listing.ownerId === currentUser?.id ? (
+                  <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+                    <div className="flex-grow py-3 px-4 bg-warm-surface border border-warm-border rounded-xl text-xs sm:text-sm font-semibold text-muted-gray text-center select-none">
+                      This is your listing.
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to delete this listing?')) {
+                          onDeleteListing(listing.id);
+                          onBack();
+                        }
+                      }}
+                      className="w-full sm:w-auto py-3 px-6 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-rose-500/25 transition-all duration-200"
+                    >
+                      <Trash2 className="w-4 h-4 animate-pulse" />
+                      Delete Listing
+                    </button>
+                  </div>
+                ) : alreadyRequested ? (
                   <div
                     className="w-full py-4 px-6 bg-warm-beige/40 text-muted-gray rounded-2xl text-sm sm:text-base font-semibold border border-warm-border flex items-center justify-center gap-2"
                   >
@@ -269,7 +292,7 @@ export default function ListingDetailsPage({
                           </span>
                         </div>
                         <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${scoreColor}`}>
-                          {match.match.score}% Match
+                          {match.match.score}% Reciprocal Fit
                         </span>
                       </div>
 
@@ -437,7 +460,7 @@ export default function ListingDetailsPage({
                       <ArrowLeftRight className="w-5 h-5" />
                     </div>
                     <span className="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-forest-green/10 text-forest-green border border-forest-green/20 whitespace-nowrap">
-                      {selectedMatchForProposal.match.score}% Match
+                      {selectedMatchForProposal.match.score}% Reciprocal Fit
                     </span>
                   </div>
 

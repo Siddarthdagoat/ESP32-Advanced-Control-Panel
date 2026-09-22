@@ -292,8 +292,8 @@ export default function ExplorePage({
                         {/* Dynamic AI Compatibility Badge */}
                         {bestScore >= 40 && (
                           <div className="mb-4 py-1 px-2.5 bg-forest-green/10 border border-forest-green/20 rounded-xl flex items-center gap-1.5 text-[9px] text-forest-green font-extrabold self-start inline-flex shadow-sm">
-                            <Sparkles className="w-3 h-3 text-forest-green animate-pulse" />
-                            AI MATCH — {bestScore}%
+                            <Sparkles className="w-3 h-3 text-forest-green" />
+                            <span>AI Match &bull; {bestScore}% Reciprocal Fit</span>
                           </div>
                         )}
                       </div>
