@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { RefreshCw, Sparkles, LogIn, UserPlus, Mail, Lock, User as UserIcon, ArrowRight } from 'lucide-react';
+import { RefreshCw, Sparkles, LogIn, UserPlus, Mail, Lock, User as UserIcon, ArrowRight, ShieldCheck, Database } from 'lucide-react';
 import { DEMO_USERS } from '../data/dummyData';
+import { supabase, isSupabaseConfigured } from '../services/supabase';
 
-// Passwords kept in-memory for prototype session verification
+// In-memory passwords for local prototype mode fallback
 if (!window.__PROTOTYPE_MEM_AUTH_REGISTRY) {
   window.__PROTOTYPE_MEM_AUTH_REGISTRY = {};
 }
@@ -21,7 +22,10 @@ export default function LoginPage({ onLogin }) {
   const [offers, setOffers] = useState('');
   const [lookingFor, setLookingFor] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const supabaseReady = isSupabaseConfigured();
 
   // Quick 1-click demo login handler
   const handleQuickDemoLogin = (demoUser) => {
@@ -29,67 +33,165 @@ export default function LoginPage({ onLogin }) {
     onLogin(demoUser);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (!email || !password || (isSignUp && !name)) {
       setError('Please fill in all required fields.');
       return;
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = name.trim();
+
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
-      let userObj;
-      const cleanEmail = email.trim().toLowerCase();
-      const cleanName = name.trim();
+    try {
+      // 1. Production Supabase Auth Mode
+      if (supabaseReady && supabase) {
+        if (isSignUp) {
+          const { data, error: authError } = await supabase.auth.signUp({
+            email: cleanEmail,
+            password: password,
+            options: {
+              data: {
+                full_name: cleanName,
+                offers: offers || '',
+                looking_for: lookingFor || '',
+                avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=D97757`
+              }
+            }
+          });
 
-      if (isSignUp) {
-        const exists = usersList.some(u => u.email.trim().toLowerCase() === cleanEmail);
-        if (exists) {
-          setError('An account with this email already exists.');
+          if (authError) {
+            setError(authError.message);
+            setIsLoading(false);
+            return;
+          }
+
+          if (data?.user && !data?.session) {
+            // Email confirmation is required by Supabase project settings
+            setSuccessMessage('Registration successful! Please check your email inbox to confirm your account, then log in.');
+            setIsLoading(false);
+            return;
+          }
+
+          // User is registered and session is immediately active
+          const userObj = {
+            id: data.user.id,
+            email: data.user.email,
+            name: cleanName,
+            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=D97757`,
+            offers: offers || '',
+            lookingFor: lookingFor || '',
+            department: 'Computer Science',
+            year: '3rd Year'
+          };
+
+          localStorage.setItem('rexchange_current_session', JSON.stringify(userObj));
+          onLogin(userObj);
+          setIsLoading(false);
           return;
-        }
+        } else {
+          // Sign In
+          const { data, error: authError } = await supabase.auth.signInWithPassword({
+            email: cleanEmail,
+            password: password
+          });
 
-        userObj = {
-          id: 'usr_' + Date.now(),
-          name: cleanName,
-          email: cleanEmail,
-          avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${cleanName}&backgroundColor=D97757`,
-          offers: offers || '',
-          lookingFor: lookingFor || ''
-        };
+          if (authError) {
+            setError(authError.message || 'Invalid email or password.');
+            setIsLoading(false);
+            return;
+          }
 
-        setStoredPassword(cleanEmail, password);
-        usersList.push(userObj);
-        localStorage.setItem('rexchange_users', JSON.stringify(usersList));
-      } else {
-        userObj = usersList.find(u => u.email.trim().toLowerCase() === cleanEmail);
-        
-        // If not found in custom users, check DEMO_USERS
-        if (!userObj) {
-          userObj = DEMO_USERS.find(u => u.email.trim().toLowerCase() === cleanEmail);
-        }
+          // Fetch profile details from public.profiles table
+          let userProfile = null;
+          try {
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', data.user.id)
+              .single();
+            userProfile = profileData;
+          } catch (profileErr) {
+            console.warn('Profile fetch note:', profileErr);
+          }
 
-        if (!userObj) {
-          setError('Invalid email or password. You can also use the 1-click Demo accounts below.');
-          return;
-        }
+          const userObj = {
+            id: data.user.id,
+            email: data.user.email,
+            name: userProfile?.full_name || data.user.user_metadata?.full_name || cleanEmail.split('@')[0],
+            avatar: userProfile?.avatar_url || data.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanEmail)}&backgroundColor=D97757`,
+            offers: userProfile?.offers || data.user.user_metadata?.offers || '',
+            lookingFor: userProfile?.looking_for || data.user.user_metadata?.looking_for || '',
+            department: userProfile?.department || 'Computer Science',
+            year: userProfile?.year || '3rd Year'
+          };
 
-        const storedPassword = getStoredPassword(cleanEmail);
-        if (storedPassword && storedPassword !== password) {
-          setError('Invalid email or password.');
+          localStorage.setItem('rexchange_current_session', JSON.stringify(userObj));
+          onLogin(userObj);
+          setIsLoading(false);
           return;
         }
       }
 
-      localStorage.setItem('rexchange_current_session', JSON.stringify(userObj));
-      onLogin(userObj);
-    }, 600);
+      // 2. Fallback / Prototype Mode (Runs if Supabase keys not yet configured)
+      setTimeout(() => {
+        setIsLoading(false);
+        const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
+        let userObj;
+
+        if (isSignUp) {
+          const exists = usersList.some(u => u.email.trim().toLowerCase() === cleanEmail);
+          if (exists) {
+            setError('An account with this email already exists.');
+            return;
+          }
+
+          userObj = {
+            id: 'usr_' + Date.now(),
+            name: cleanName,
+            email: cleanEmail,
+            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${cleanName}&backgroundColor=D97757`,
+            offers: offers || '',
+            lookingFor: lookingFor || '',
+            department: 'Computer Science',
+            year: '3rd Year'
+          };
+
+          setStoredPassword(cleanEmail, password);
+          usersList.push(userObj);
+          localStorage.setItem('rexchange_users', JSON.stringify(usersList));
+        } else {
+          userObj = usersList.find(u => u.email.trim().toLowerCase() === cleanEmail);
+          
+          if (!userObj) {
+            userObj = DEMO_USERS.find(u => u.email.trim().toLowerCase() === cleanEmail);
+          }
+
+          if (!userObj) {
+            setError('Invalid email or password. You can also use the 1-click Demo accounts below.');
+            return;
+          }
+
+          const storedPassword = getStoredPassword(cleanEmail);
+          if (storedPassword && storedPassword !== password) {
+            setError('Invalid email or password.');
+            return;
+          }
+        }
+
+        localStorage.setItem('rexchange_current_session', JSON.stringify(userObj));
+        onLogin(userObj);
+      }, 500);
+
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.message || 'An unexpected error occurred during authentication.');
+    }
   };
 
   return (
@@ -107,6 +209,21 @@ export default function LoginPage({ onLogin }) {
           <p className="text-muted-gray text-xs sm:text-sm font-sans font-normal">
             The AI-powered campus resource loop.
           </p>
+
+          {/* Database / Auth Status Indicator */}
+          <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide border">
+            {supabaseReady ? (
+              <span className="text-emerald-700 bg-emerald-50 border-emerald-200 flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                Live Cloud Auth Active (Supabase)
+              </span>
+            ) : (
+              <span className="text-amber-800 bg-amber-50/80 border-amber-200/80 flex items-center gap-1">
+                <Database className="w-3.5 h-3.5 text-amber-600" />
+                Prototype Mode (Connect Supabase for live accounts)
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Quick Demo Login Box */}
@@ -153,7 +270,7 @@ export default function LoginPage({ onLogin }) {
         <div className="flex bg-warm-beige/50 p-1.5 rounded-2xl mb-6 border border-warm-border/60">
           <button
             type="button"
-            onClick={() => { setIsSignUp(false); setError(''); }}
+            onClick={() => { setIsSignUp(false); setError(''); setSuccessMessage(''); }}
             className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               !isSignUp ? 'bg-white text-charcoal shadow-sm' : 'text-muted-gray hover:text-charcoal'
             }`}
@@ -162,7 +279,7 @@ export default function LoginPage({ onLogin }) {
           </button>
           <button
             type="button"
-            onClick={() => { setIsSignUp(true); setError(''); }}
+            onClick={() => { setIsSignUp(true); setError(''); setSuccessMessage(''); }}
             className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               isSignUp ? 'bg-white text-charcoal shadow-sm' : 'text-muted-gray hover:text-charcoal'
             }`}
@@ -174,6 +291,12 @@ export default function LoginPage({ onLogin }) {
         {error && (
           <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs font-semibold text-left">
             {error}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 rounded-xl text-xs font-semibold text-left">
+            {successMessage}
           </div>
         )}
 

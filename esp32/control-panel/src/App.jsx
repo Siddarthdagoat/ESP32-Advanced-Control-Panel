@@ -14,6 +14,7 @@ import {
   INITIAL_LISTINGS, 
   INITIAL_REQUESTS
 } from './data/dummyData';
+import { supabase, isSupabaseConfigured } from './services/supabase';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -35,7 +36,56 @@ export default function App() {
     }
   }, [toast]);
 
-  // Clean up legacy, unisolated data keys and sanitize persisted passwords to prevent leakage
+  // Supabase Auth listener to keep session in sync across tabs and page refreshes
+  useEffect(() => {
+    if (!isSupabaseConfigured() || !supabase) return;
+
+    // Check existing active Supabase session on startup
+    const syncCurrentSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          const syncedUser = {
+            id: session.user.id,
+            email: session.user.email,
+            name: profile?.full_name || session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+            avatar: profile?.avatar_url || session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.id}&backgroundColor=D97757`,
+            offers: profile?.offers || session.user.user_metadata?.offers || '',
+            lookingFor: profile?.looking_for || session.user.user_metadata?.looking_for || '',
+            department: profile?.department || 'Computer Science',
+            year: profile?.year || '3rd Year'
+          };
+          setCurrentUser(syncedUser);
+          localStorage.setItem('rexchange_current_session', JSON.stringify(syncedUser));
+        }
+      } catch (err) {
+        console.warn('Supabase session sync notice:', err);
+      }
+    };
+
+    syncCurrentSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
+        localStorage.removeItem('rexchange_current_session');
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        syncCurrentSession();
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
+
+  // Clean up legacy, unisolated data keys and sanitize persisted passwords
   useEffect(() => {
     const legacyKeys = ['rexchange_user', 'profile', 'currentUser', 'matches'];
     legacyKeys.forEach(k => {
@@ -84,7 +134,7 @@ export default function App() {
   // Get initial page from path
   const getPageFromPath = (path) => {
     const cleanPath = path.split('?')[0].split('#')[0];
-    const p = cleanPath.replace(/^\/+|\/+$/g, ''); // strip leading/trailing slashes
+    const p = cleanPath.replace(/^\/+|\/+$/g, '');
     if (p === 'explore') return 'explore';
     if (p === 'matches') return 'matches';
     if (p === 'create') return 'create';
@@ -152,6 +202,43 @@ export default function App() {
     localStorage.setItem('rexchange_requests', JSON.stringify(requests));
   }, [requests]);
 
+  // Load shared listings from Supabase if connected
+  useEffect(() => {
+    if (!isSupabaseConfigured() || !supabase) return;
+
+    const loadCloudListings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (!error && data && data.length > 0) {
+          const mapped = data.map(item => ({
+            id: item.id,
+            ownerId: item.user_id,
+            studentName: item.user_name,
+            studentAvatar: item.user_avatar,
+            studentEmail: item.user_email || 'student@campus.edu',
+            title: item.title,
+            category: item.category,
+            type: item.type || 'item',
+            description: item.description,
+            condition: item.condition,
+            tags: item.tags || [],
+            image: item.image_url,
+            createdAt: item.created_at
+          }));
+          setListings(mapped);
+        }
+      } catch (err) {
+        console.warn('Cloud listings fetch note:', err);
+      }
+    };
+
+    loadCloudListings();
+  }, []);
+
   const navigate = (pageId) => {
     const isLoggedIn = !!currentUser;
     const protectedPages = ['explore', 'matches', 'create', 'exchanges', 'profile', 'details'];
@@ -192,16 +279,43 @@ export default function App() {
     navigate('details');
   };
 
-  const handleAddListing = (newListingData) => {
+  const handleAddListing = async (newListingData) => {
     const freshListing = {
       ...newListingData,
       id: 'list_' + Date.now(),
       ownerId: currentUser?.id,
       studentName: currentUser?.name || 'Student',
       studentEmail: currentUser?.email || 'student@campus.edu',
-      studentAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUser?.name || 'Student'}&backgroundColor=D97757`,
+      studentAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUser?.name || 'Student')}&backgroundColor=D97757`,
       createdAt: new Date().toISOString()
     };
+
+    // Save to Supabase Cloud Database if configured
+    if (isSupabaseConfigured() && supabase && currentUser?.id) {
+      try {
+        const { data, error } = await supabase.from('listings').insert([
+          {
+            user_id: currentUser.id,
+            user_name: currentUser.name,
+            user_avatar: currentUser.avatar,
+            title: newListingData.title,
+            category: newListingData.category,
+            type: newListingData.type || 'item',
+            description: newListingData.description || '',
+            condition: newListingData.condition || 'Good',
+            tags: newListingData.tags || [],
+            image_url: newListingData.image || null
+          }
+        ]).select().single();
+
+        if (data && data.id) {
+          freshListing.id = data.id;
+        }
+      } catch (err) {
+        console.warn('Listing cloud sync note:', err);
+      }
+    }
+
     setListings(prev => [freshListing, ...prev]);
     showToast('Listing published successfully!', 'success');
   };
@@ -232,7 +346,14 @@ export default function App() {
     navigate('explore');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.warn('Supabase signOut note:', err);
+      }
+    }
     localStorage.removeItem('rexchange_current_session');
     setCurrentUser(null);
     setSelectedListingId(null);
@@ -307,7 +428,7 @@ export default function App() {
       case 'matches':
         return (
           <MatchesPage 
-            listings={listings}
+            listings={listings} 
             currentUser={currentUser}
             requests={requests}
             onRequestExchange={handleRequestExchange}
