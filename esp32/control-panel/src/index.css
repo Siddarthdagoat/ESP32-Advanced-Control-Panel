@@ -1,101 +1,195 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
-  --color-warm-ivory: #F6F3EE;
-  --color-warm-beige: #EDE8DF;
-  --color-warm-surface: #FFFCF7;
-  --color-charcoal: #1F2933;
-  --color-muted-gray: #6B7280;
-  --color-terracotta: #D97757;
-  --color-warm-amber: #E9A23B;
-  --color-forest-green: #3F8F72;
-  --color-denim-blue: #4F7CAC;
-  --color-warm-border: #DED8CF;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  /* Strict Ultra-Premium Monochrome Design Tokens */
+  --color-mono-bg: #000000;
+  --color-mono-sub-bg: #080808;
+  --color-mono-surface: #111111;
+  --color-mono-elevated: #1A1A1A;
+  --color-mono-border: #333333;
+  --color-mono-border-subtle: #222222;
+  --color-mono-border-strong: #666666;
+  --color-mono-text-sec: #888888;
+  --color-mono-text-sup: #BDBDBD;
+  --color-mono-text-pri: #E8E8E8;
+  --color-mono-highlight: #FFFFFF;
+
+  /* Legacy variable mappings routed to monochrome */
+  --color-intel-bg: #000000;
+  --color-intel-surface: #111111;
+  --color-intel-surface-elevated: #1A1A1A;
+  --color-intel-border: #333333;
+  --color-intel-border-bright: #666666;
+  
+  --color-intel-conflict: #FFFFFF;
+  --color-intel-tension: #E8E8E8;
+  --color-intel-instability: #BDBDBD;
+  --color-intel-diplomatic: #E8E8E8;
+  --color-intel-military: #FFFFFF;
+  --color-intel-strategic: #E8E8E8;
+  --color-intel-stable: #888888;
 }
 
-/* Warm minimalist design utility components */
+/* Base Body Environment - Pure Black Space */
+html, body {
+  background-color: #000000;
+  color: #E8E8E8;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: var(--font-sans);
+}
 
+/* Monochrome High-End Paneling */
 .glass-panel {
-  background: rgba(255, 252, 247, 0.85);
+  background: rgba(17, 17, 17, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid #333333;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-elevated {
+  background: rgba(26, 26, 26, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid #444444;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-panel-interactive {
+  background: rgba(17, 17, 17, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #DED8CF;
+  border: 1px solid #333333;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card {
-  background: #FFFCF7;
-  border: 1px solid #DED8CF;
-  box-shadow: 0 8px 30px rgba(50, 40, 30, 0.04);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+.glass-panel-interactive:hover {
+  background: rgba(26, 26, 26, 0.95);
+  border-color: #666666;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
 }
 
-.glass-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(217, 119, 87, 0.4);
-  box-shadow: 0 16px 40px rgba(50, 40, 30, 0.08);
-}
-
-.terracotta-gradient-text {
-  background: linear-gradient(135deg, #D97757 0%, #E9A23B 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.shadow-premium {
-  box-shadow: 0 8px 30px rgba(50, 40, 30, 0.06);
-}
-
-.shadow-premium-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.shadow-premium-hover:hover {
-  box-shadow: 0 16px 40px rgba(50, 40, 30, 0.1);
-  transform: translateY(-2px);
-}
-
-/* Custom scrollbars for warm minimalist design */
+/* Monochrome Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F6F3EE;
+  background: #080808;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DED8CF;
+  background: #333333;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C7BDB1;
+  background: #666666;
 }
 
-/* Custom fadeIn animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Radar Sweep Animation (White & Silver) */
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.animate-radar-sweep {
+  animation: radarSweep 4s linear infinite;
 }
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+/* Shockwave Expansion */
+@keyframes shockwavePulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 15s linear infinite;
+.animate-shockwave {
+  animation: shockwavePulse 2.2s cubic-bezier(0.1, 0.7, 0.3, 1) infinite;
 }
 
-/* Spacing and base layout helpers */
-body {
-  background: linear-gradient(135deg, #F6F3EE 0%, #EDE8DF 50%, #F8F5F0 100%);
-  color: #1F2933;
+/* Subtle Breathing Glow */
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.06);
+  }
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 2.4s ease-in-out infinite;
+}
+
+/* Fade In */
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-panel-in {
+  animation: panelFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Slide in from right (Desktop dossier) */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Slide up from bottom (Mobile bottom sheet) */
+@keyframes slideUpBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up-mobile {
+  animation: slideUpBottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

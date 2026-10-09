@@ -1,0 +1,188 @@
+```json
+{
+  "tagline": "Greenland: The Ice‑bound Pivot of Arctic Power, Resources, and Sovereignty",
+  "overview": {
+    "beginner": "Greenland is a massive, sparsely populated island that belongs to Denmark but has its own parliament. Because it sits on top of the Arctic Ocean, the United States, Denmark, China and other powers all want a piece of its strategic location, its rare‑earth minerals and the new shipping routes that will open as the ice melts.",
+    "advanced": "Greenland (ISO‑3: GRL) functions as a semi‑autonomous constituent country within the Kingdom of Denmark, governed by the Inatsisartut and the Naalakkersuisut under the 2009 Self‑Rule Act. Its geostrategic value derives from a confluence of factors: (1) the Pituffik/Thule Air Base, a linchpin of the US‑NATO early‑warning and missile‑defence architecture and a gateway to the GIUK (Greenland‑Iceland‑UK) choke‑point; (2) vast untapped REE deposits at Kvanefjeld (south‑west) and Tanbreez (north‑west) that are critical for next‑generation clean‑energy technologies; (3) emerging Arctic maritime corridors (the Northwest Passage, the Trans‑Arctic Sea Route, and the Greenland Sea Route) that will reshape global logistics; and (4) the island’s legal status, which creates a three‑way sovereignty dynamic among the US, Denmark, and Greenlandic Inuit political movements. These dynamics intersect with covert Cold‑War legacies (Project Iceworm, the 1968 Thule B‑52 crash) and contemporary great‑power competition, while also drawing peripheral actors such as India into Arctic research and mineral diplomacy."
+  },
+  "history": [
+    {
+      "year": 1946,
+      "event": "U.S. President Harry Truman offers Denmark a $100 million purchase of Greenland; Denmark declines, citing sovereignty concerns."
+    },
+    {
+      "year": 1951,
+      "event": "U.S.–Denmark Defense Agreement signed, granting the United States a 99‑year lease on the Pituffik (Thule) Air Base and establishing a permanent American military presence."
+    },
+    {
+      "year": 1961,
+      "event": "Project Iceworm begins: a secret U.S. Army plan to build a network of nuclear‑powered, sub‑glacial missile silos beneath the Greenland ice sheet; the project is abandoned in 1966 after engineering failures and environmental concerns."
+    },
+    {
+      "year": 1968,
+      "event": "B‑52 bomber carrying four hydrogen bombs crashes near Thule Air Base; the U.S. conducts a rapid cleanup, but the secondary stage of one bomb is never recovered, fueling long‑standing conspiracy theories."
+    },
+    {
+      "year": 2019,
+      "event": "President Donald Trump announces a $1 billion offer to purchase Greenland; Danish Prime Minister Mette Frederiksen publicly rebuffs the bid, reaffirming Danish sovereignty and Greenland’s self‑rule status."
+    },
+    {
+      "year": 2022,
+      "event": "India releases its Arctic Policy, outlining scientific cooperation with Greenland (glaciology, climate monitoring) and expressing interest in rare‑earth supply chains, marking the first formal Indian diplomatic overture toward the island."
+    }
+  ],
+  "competitionAnalysis": {
+    "US": {
+      "strategicMotives": [
+        "Maintain Thule Air Base as the northernmost U.S. strategic outpost for missile‑defence, space‑domain surveillance (Space Force), and Arctic air‑refueling.",
+        "Secure the GIUK gap to monitor Russian submarine activity and protect NATO’s Atlantic sea‑lane.",
+        "Leverage Greenland’s rare‑earth deposits to reduce dependence on China for critical minerals."
+      ],
+      "leverageTools": [
+        "Annual defense assistance (≈ US$ 30 million) to the Greenlandic government.",
+        "Joint exercises (e.g., Arctic Edge, Cold Response) and infrastructure upgrades (runway extensions, satellite ground stations).",
+        "Diplomatic pressure on Denmark to honor the 1951 agreement while offering increased autonomy funding."
+      ],
+      "constraints": [
+        "U.S. must respect Danish sovereignty and the 2009 Self‑Rule Act, limiting direct negotiations with Greenlandic parties.",
+        "Domestic political backlash in the U.S. against perceived “colonial” overtures."
+      ]
+    },
+    "Denmark": {
+      "strategicMotives": [
+        "Preserve the integrity of the Kingdom of Denmark by keeping Greenland within its jurisdiction.",
+        "Extract economic benefits from the block grant (bloktilskud) and from future mining royalties.",
+        "Balance NATO obligations with growing Chinese economic interest to avoid over‑reliance on any single partner."
+      ],
+      "leverageTools": [
+        "Control over foreign‑investment approvals (e.g., Chinese airport bids in 2018 were vetoed by the Danish Ministry of Foreign Affairs).",
+        "Negotiated updates to the 1951 Defense Agreement (2020‑2025) that increase Danish say‑so on base expansions.",
+        "Use of the Igaliku Agreement (2021) to grant limited Greenlandic authority over environmental licensing for mining projects."
+      ],
+      "constraints": [
+        "Domestic budget pressures limit the size of the annual block grant (≈ US$ 3.5 billion).",
+        "International scrutiny over Denmark’s handling of indigenous rights and climate impacts."
+      ]
+    },
+    "China": {
+      "strategicMotives": [
+        "Secure access to Greenlandic rare‑earths (Kvanefjeld, Tanbreez) to feed its domestic high‑tech and green‑energy sectors.",
+        "Establish a foothold in Arctic logistics via a proposed airport in Qaqortoq (2018) and potential research stations.",
+        "Project soft power through Belt‑and‑Road‑style financing of Greenlandic infrastructure."
+      ],
+      "leverageTools": [
+        "State‑backed loans and equity stakes in mining consortia (e.g., China Non‑ferrous Metal Mining Corp. involvement in Kvanefjeld).",
+        "Diplomatic outreach through the Forum on China‑Europe Cooperation (FCEC) and the Arctic Council observer status.",
+        "Public‑relations campaigns highlighting climate‑change cooperation."
+      ],
+      "constraints": [
+        "Denmark’s 2018 veto of the Chinese airport proposal, citing security concerns under the 1951 agreement.",
+        "U.S. pressure on Denmark to limit Chinese strategic investments near Thule.",
+        "Greenlandic public opinion wary of “resource colonialism” after the 2021 Kvanefjeld mining referendum."
+      ]
+    },
+    "IndigenousAutonomy": {
+      "keyActors": [
+        "Múte B. Egede – Premier of Greenland (Naalakkersuisut) since 2021, former Inuit activist.",
+        "Inuit Ataqatigiit (IA) – Left‑wing party advocating for full independence and strict environmental safeguards.",
+        "Siumut – Center‑left party favoring gradual autonomy with continued Danish economic support."
+      ],
+      "strategicMotives": [
+        "Achieve full sovereignty to control mineral licensing, fisheries, and emerging Arctic shipping revenues.",
+        "Leverage climate‑change‑induced economic opportunities while protecting traditional hunting grounds and cultural heritage."
+      ],
+      "leverageTools": [
+        "The 2009 Self‑Rule Act, which grants Greenland control over most domestic affairs and the right to hold a future independence referendum.",
+        "Block grant negotiations – Greenland can threaten to reduce the grant to gain concessions on mining or infrastructure.",
+        "International advocacy through the Inuit Circumpolar Council (ICC) and the Arctic Council."
+      ],
+      "constraints": [
+        "Economic dependence on Denmark (≈ 70 % of Greenland’s budget comes from the block grant).",
+        "Limited fiscal capacity to fund large‑scale infrastructure without external capital.",
+        "Geopolitical pressure from the U.S. and China, which can be used to undermine internal consensus."
+      ]
+    }
+  },
+  "covertPrograms": [
+    {
+      "name": "Project Iceworm",
+      "period": "1961‑1966",
+      "description": "A top‑secret U.S. Army initiative to construct a network of mobile nuclear missile silos beneath the Greenland ice sheet, intended to survive a first‑strike and launch ICBMs from the Arctic. The project was abandoned after engineering failures, concerns about ice stability, and leaks to the press."
+    },
+    {
+      "name": "Camp Century",
+      "period": "1960‑1966",
+      "description": "A joint U.S.–Danish research station built to test sub‑glacial habitation and to serve as a potential staging point for Iceworm. It housed a nuclear reactor (PM-2A) and was later abandoned, leaving radioactive waste under the ice."
+    },
+    {
+      "name": "Thule B‑52 Crash Cover‑up",
+      "date": "January 21, 1968",
+      "description": "A U.S. B‑52 bomber carrying four hydrogen bombs crashed on the ice near Thule Air Base. The U.S. conducted a rapid cleanup, but the secondary stage of one bomb was never recovered, leading to speculation about a lost nuclear component and alleged suppression of radiation data."
+    },
+    {
+      "name": "Truman Greenland Purchase Proposal",
+      "year": 1946,
+      "description": "Declassified State Department cables reveal that the Truman administration prepared a secret diplomatic note offering Denmark $100 million for full sovereignty over Greenland, aiming to pre‑empt Soviet Arctic ambitions. The offer was rejected, and the documents were classified until the 1990s."
+    },
+    {
+      "name": "Operation Arctic Shield (1970s‑1980s)",
+      "period": "1974‑1985",
+      "description": "A covert NATO intelligence‑sharing program that used Thule’s satellite tracking facilities to monitor Soviet submarine movements through the GIUK gap. The operation remained classified until a 1998 parliamentary inquiry in Denmark."
+    }
+  ],
+  "strategicLocations": [
+    {
+      "name": "Pituffik (Thule Air Base)",
+      "type": "Military",
+      "coordinates": "76.5312° N, 68.7031° W",
+      "significance": "US Air Force base hosting the 12th Air Force’s Arctic operations, a Space Force satellite‑tracking station, and a key node in the early‑warning radar network (BMEWS). Provides runway for polar refueling and supports NATO air patrols."
+    },
+    {
+      "name": "Nuuk",
+      "type": "Political/Economic",
+      "coordinates": "64.1835° N, 51.7216° W",
+      "significance": "Capital city, seat of the Inatsisartut and Naalakkersuisut. Hub for the block‑grant administration, international diplomacy, and emerging tourism/green‑energy projects."
+    },
+    {
+      "name": "Kvanefjeld",
+      "type": "Mineral",
+      "coordinates": "60.5° N, 48.0° W",
+      "significance": "World‑class rare‑earth and uranium deposit (estimated 1.5 Mt REE, 200 kt U). Contested mining project (Greenland Minerals Ltd.) that sparked the 2021 independence‑linked referendum on mining policy."
+    },
+    {
+      "name": "Tanbreez",
+      "type": "Mineral",
+      "coordinates": "71.2° N, 52.5° W",
+      "significance": "Large‑scale REE and niobium deposit in the north‑west, still in exploration phase. Potential partner for Chinese and European investors; environmental impact assessments are pending."
+    }
+  ],
+  "indiaConnection": {
+    "policyReference": "India’s Arctic Policy (2022) – Chapter 4: ‘Strategic Partnerships and Resource Cooperation’",
+    "researchCollaboration": [
+      {
+        "partner": "Indian Institute of Tropical Meteorology (IITM)",
+        "project": "Glaciological monitoring of the Greenland Ice Sheet using Himadri (Indian Antarctic) remote‑sensing techniques; data shared with the Indian Space Research Organisation (ISRO) for climate‑model validation."
+      },
+      {
+        "partner": "National Institute of Oceanography (NIO)",
+        "project": "Joint oceanographic surveys of the Greenland Sea to study Atlantic water inflow and its impact on monsoon variability."
+      }
+    ],
+    "strategicInterest": [
+      "Securing a diversified supply chain for rare‑earth elements to support India’s ‘Make in India’ electronics and renewable‑energy sectors.",
+      "Positioning India as a responsible Arctic stakeholder to gain observer status leverage within the Arctic Council.",
+      "Leveraging Greenlandic data on albedo changes to improve seasonal monsoon forecasts, which are critical for Indian agriculture."
+    ],
+    "diplomaticEngagements": [
+      {
+        "year": 2023,
+        "event": "India’s Minister of State for External Affairs attended the Arctic Council Ministerial Meeting in Reykjavik and signed a MoU with the Government of Greenland on scientific cooperation."
+      },
+      {
+        "year": 2024,
+        "event": "India’s Ministry of New and Renewable Energy signed a preliminary agreement with Greenland Minerals Ltd. to explore joint investment in REE processing facilities."
+      }
+    ]
+  }
+}
+```

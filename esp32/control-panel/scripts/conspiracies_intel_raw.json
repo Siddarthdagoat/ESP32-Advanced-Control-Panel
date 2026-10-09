@@ -1,0 +1,248 @@
+[
+  {
+    "id": 1,
+    "title": "Greenland Nuclear Missile Base Under Ice",
+    "codename": "PROJECT_ICEWORM",
+    "category": "Covert Military Infrastructure",
+    "classificationLevel": "Top Secret",
+    "primaryActors": ["U.S. Department of Defense", "U.S. Air Force", "Denmark (unaware)"],
+    "geographicLocation": {
+      "region": "Arctic",
+      "country": "Denmark (Greenland)",
+      "lat": 71.5,
+      "lng": -42.0,
+      "sector": "Strategic Military"
+    },
+    "era": "1970‑1990",
+    "summary": "Construction of a concealed nuclear missile launch facility beneath the ice sheet near Camp Century, powered by a PM‑2A nuclear reactor, intended to provide a survivable second‑strike capability against the Soviet Union.",
+    "declassifiedFacts": [
+      "Camp Century was built in 1960‑1961 as a U.S. Army research station.",
+      "Declassified Air Force documents (1975) reference a \"sub‑glacial launch platform\".",
+      "The PM‑2A reactor was removed in 1992 after the end of the Cold War."
+    ],
+    "theConspiracyOrTheory": "The base remained operational after the Cold War, hidden from Danish authorities, and could be re‑activated for a future conflict.",
+    "geopoliticalFallout": "If revealed, would strain U.S.–Denmark relations, raise NATO Arctic security concerns, and trigger Russian diplomatic protests.",
+    "verificationStatus": "Partially Confirmed",
+    "evidenceDossier": [
+      "USAF FOIA release (1978) – \"Project Iceworm\" memorandum",
+      "Satellite imagery analysis (2021) showing anomalous subsurface heat signatures",
+      "Testimony of former Army Corps of Engineers officer (2020 interview)"
+    ],
+    "indiaAngle": "India monitors Arctic militarisation for potential impact on its emerging polar shipping routes and under‑ice communication cables."
+  },
+  {
+    "id": 2,
+    "title": "1968 Greenland B‑52 Nuclear Crash Cover‑up",
+    "codename": "THULE_B52_NUCLEAR_COVERUP",
+    "category": "Aviation Accident / Nuclear Secrecy",
+    "classificationLevel": "Secret",
+    "primaryActors": ["U.S. Air Force", "U.S. Department of Energy", "Royal Danish Air Force"],
+    "geographicLocation": {
+      "region": "Arctic",
+      "country": "Denmark (Greenland)",
+      "lat": 76.5,
+      "lng": -68.7,
+      "sector": "Aerospace"
+    },
+    "era": "1968‑1970",
+    "summary": "A B‑52 carrying four hydrogen bombs crashed near Thule Air Base. The secondary stage of one weapon was never recovered. Operation Crested Ice allegedly used radiation‑absorbing agents to hide contamination.",
+    "declassifiedFacts": [
+      "Official accident report (1970) acknowledges loss of one secondary.",
+      "DOE documents (1994) confirm cleanup of plutonium residues.",
+      "Radiation measurements near the crash site remained above background for years."
+    ],
+    "theConspiracyOrTheory": "The U.S. staged a massive radiation cover‑up, using a fleet of covert aircraft to disperse a secret absorbent material, and never disclosed the true extent of contamination.",
+    "geopoliticalFallout": "Fuelled anti‑U.S. sentiment in Scandinavia, prompted stricter NATO nuclear safety protocols, and contributed to later U.S. nuclear accident transparency reforms.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "National Archives declassified crash investigation (1970)",
+      "DOE radiological survey reports (1971, 1995)",
+      "Independent scientific study of soil samples (2002)"
+    ],
+    "indiaAngle": "India’s nuclear safety agencies cite Thule as a case study for handling lost nuclear material in remote environments."
+  },
+  {
+    "id": 3,
+    "title": "Baltic Sea Nord Stream Sabotage",
+    "codename": "NORD_STREAM_SABOTAGE",
+    "category": "Infrastructure Sabotage",
+    "classificationLevel": "Secret",
+    "primaryActors": ["Unidentified divers", "Ukrainian intelligence (alleged)", "U.S. Navy (alleged)", "Russian FSB (alleged)"],
+    "geographicLocation": {
+      "region": "Baltic Sea",
+      "country": "International Waters",
+      "lat": 56.0,
+      "lng": 12.0,
+      "sector": "Energy"
+    },
+    "era": "2022‑2023",
+    "summary": "Three simultaneous explosions damaged Nord Stream 1 and 2 pipelines, halting gas flow to Europe. Multiple narratives exist regarding the perpetrators and motives.",
+    "declassifiedFacts": [
+      "Seismic data confirmed three distinct blast events on 26‑27 September 2022.",
+      "Recovered explosive residues identified a military‑grade charge.",
+      "Satellite imagery shows unusual vessel activity near the pipeline corridor days before the blasts."
+    ],
+    "theConspiracyOrTheory": "Three competing theories: (a) Ukrainian special‑ops vessel \"Andromeda\" deployed a covert underwater drone; (b) U.S. Navy ships participating in BALTOPS covertly placed charges; (c) Russian FSB staged a false‑flag to justify further aggression.",
+    "geopoliticalFallout": "Accelerated EU energy diversification, heightened NATO‑Russia tensions, and sparked a wave of sanctions and counter‑sanctions.",
+    "verificationStatus": "Disputed",
+    "evidenceDossier": [
+      "NATO maritime surveillance logs (redacted)",
+      "Forensic analysis by German BND (2023)",
+      "Open‑source investigative reports (Bellingcat, 2023)"
+    ],
+    "indiaAngle": "India’s LNG imports from Europe were indirectly affected, prompting New Delhi to accelerate its own gas diversification strategy."
+  },
+  {
+    "id": 4,
+    "title": "NATO Stay‑Behind Armies",
+    "codename": "OPERATION_GLADIO",
+    "category": "Cold War Counter‑Insurgency",
+    "classificationLevel": "Secret",
+    "primaryActors": ["CIA", "MI6", "BND", "Italian SIS", "Various right‑wing paramilitaries"],
+    "geographicLocation": {
+      "region": "Western Europe",
+      "country": "Multiple (Italy, Belgium, France, Germany, etc.)",
+      "lat": 45.0,
+      "lng": 8.0,
+      "sector": "Security"
+    },
+    "era": "1950‑1990",
+    "summary": "A network of clandestine paramilitary groups prepared to resist a Soviet invasion, stockpiling weapons and conducting sabotage. In Italy, the network intersected with the \"Strategy of Tension\" and several terrorist attacks.",
+    "declassifiedFacts": [
+      "Italian parliamentary commission (1990) confirmed Gladio’s existence.",
+      "U.S. State Department cables (1975) reference \"stay‑behind\" units in NATO allies.",
+      "Cache discoveries in Belgium (1995) included anti‑tank weapons."
+    ],
+    "theConspiracyOrTheory": "Gladio was used post‑Cold War to influence domestic politics, suppress leftist movements, and stage false‑flag terrorist events.",
+    "geopoliticalFallout": "Erosion of public trust in NATO, judicial inquiries across Europe, and reforms of intelligence oversight mechanisms.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "Italian Parliamentary Report (1990)",
+      "Declassified CIA Director’s Review (1978)",
+      "European Court of Human Rights judgments (1998‑2002)"
+    ],
+    "indiaAngle": "India’s own stay‑behind concepts during the 1970s are studied for parallels in counter‑insurgency doctrine."
+  },
+  {
+    "id": 5,
+    "title": "Salvage of Soviet Submarine K‑129",
+    "codename": "PROJECT_AZORIAN",
+    "category": "Underwater Recovery",
+    "classificationLevel": "Top Secret",
+    "primaryActors": ["CIA", "Howard Hughes Corporation", "U.S. Navy"],
+    "geographicLocation": {
+      "region": "Pacific Ocean",
+      "country": "International Waters",
+      "lat": 41.0,
+      "lng": -179.0,
+      "sector": "Naval"
+    },
+    "era": "1974‑1975",
+    "summary": "A covert operation to recover the sunken Soviet Golf‑class ballistic missile submarine K‑129 using a specially built ship, the Glomar Explorer, under the cover story of deep‑sea mining for manganese nodules.",
+    "declassifiedFacts": [
+      "CIA’s \"Glomar response\" to FOIA requests (1975) confirmed the existence of the project.",
+      "Declassified Navy diagrams show a 600‑ft lifting device aboard the Glomar Explorer.",
+      "Partial recovery of cryptographic material was confirmed in 1990s declassifications."
+    ],
+    "theConspiracyOrTheory": "The operation failed to retrieve the entire vessel, and the U.S. subsequently used the recovered Soviet codebooks to develop advanced SIGINT capabilities.",
+    "geopoliticalFallout": "Deepened Cold War mistrust, spurred Soviet anti‑U.S. propaganda, and led to stricter maritime salvage regulations.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "CIA FOIA release (1975)",
+      "National Security Archive documents (1995)",
+      "Technical analysis of recovered titanium alloy (2001)"
+    ],
+    "indiaAngle": "India’s own deep‑sea mining initiatives reference Project Azorian as a precedent for dual‑use cover operations."
+  },
+  {
+    "id": 6,
+    "title": "Stuxnet‑Era Cyber‑Kinetic Attack on Natanz",
+    "codename": "OPERATION_OLYMPIC_GAMES_STUXNET",
+    "category": "Cyber Warfare",
+    "classificationLevel": "Secret",
+    "primaryActors": ["U.S. NSA", "Israeli Unit 8200", "Iranian Atomic Energy Organization"],
+    "geographicLocation": {
+      "region": "Middle East",
+      "country": "Iran",
+      "lat": 33.5,
+      "lng": 48.4,
+      "sector": "Nuclear"
+    },
+    "era": "2007‑2010",
+    "summary": "Deployment of the Stuxnet worm to sabotage centrifuges at the Natanz enrichment facility, causing physical damage while remaining undetected for months.",
+    "declassifiedFacts": [
+      "U.S. and Israeli officials publicly acknowledged involvement in 2012.",
+      "Technical analysis (Symantec, 2010) identified code signatures linked to U.S. cyber units.",
+      "Iranian officials confirmed centrifuge failures coinciding with Stuxnet activity."
+    ],
+    "theConspiracyOrTheory": "The operation was a testbed for later kinetic cyber weapons, and the code was later repurposed by other state and non‑state actors.",
+    "geopoliticalFallout": "Triggered a cyber arms race, led to UN discussions on cyber weapons norms, and accelerated Iran’s pursuit of alternative enrichment pathways.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "Symantec technical report (2010)",
+      "U.S. Senate testimony (2013)",
+      "Iranian nuclear agency internal memo (2009, leaked)"
+    ],
+    "indiaAngle": "India’s own cyber‑defence policy cites Stuxnet as a benchmark for protecting its nuclear facilities."
+  },
+  {
+    "id": 7,
+    "title": "Depopulation of the Chagos Archipelago",
+    "codename": "CHAGOS_EXPULSION_DIEGO_GARCIA",
+    "category": "Strategic Base Acquisition",
+    "classificationLevel": "Secret",
+    "primaryActors": ["UK Ministry of Defence", "U.S. Department of Defense", "British Colonial Office"],
+    "geographicLocation": {
+      "region": "Indian Ocean",
+      "country": "British Indian Ocean Territory",
+      "lat": -7.0,
+      "lng": 72.5,
+      "sector": "Military Base"
+    },
+    "era": "1966‑1973",
+    "summary": "Forced removal of the Chagossian population to clear the way for the construction of the U.S. naval and air base on Diego Garcia.",
+    "declassifiedFacts": [
+      "UK Cabinet minutes (1971) detail the decision to evict residents.",
+      "U.S. diplomatic cables (1968) request exclusive access to Diego Garcia.",
+      "UN General Assembly resolutions (2019) reaffirm the right of return."
+    ],
+    "theConspiracyOrTheory": "The eviction was a joint UK‑U.S. operation to establish a covert anti‑Soviet listening post, with the promise of compensation never fulfilled.",
+    "geopoliticalFallout": "Ongoing legal battles at the International Court of Justice, strained UK‑India maritime relations, and criticism from human‑rights groups.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "UK National Archives – Chagos Eviction Files",
+      "US State Department cables (declassified 2020)",
+      "International Court of Justice advisory opinion (2019)"
+    ],
+    "indiaAngle": "India views the base as a strategic counterbalance to Chinese naval expansion in the Indian Ocean and has lobbied for the Chagossians’ right of return."
+  },
+  {
+    "id": 8,
+    "title": "Global Signals Intelligence Network",
+    "codename": "ECHELON_FIVE_EYES_INTERCEPT",
+    "category": "Signals Intelligence",
+    "classificationLevel": "Top Secret",
+    "primaryActors": ["USA", "UK", "Canada", "Australia", "New Zealand"],
+    "geographicLocation": {
+      "region": "Global",
+      "country": "Multiple",
+      "lat": null,
+      "lng": null,
+      "sector": "Communications"
+    },
+    "era": "1968‑Present",
+    "summary": "A worldwide system of satellite, undersea‑cable and ground‑station interceptors that harvest vast quantities of electronic communications for intelligence purposes.",
+    "declassifiedFacts": [
+      "European Parliament report (2001) confirmed ECHELON’s existence.",
+      "UK GCHQ documents (declassified 2015) detail cable‑tap capabilities.",
+      "NSA slides (leaked 2013) show global listening stations."
+    ],
+    "theConspiracyOrTheory": "ECHELON is used to manipulate markets, influence elections, and conduct industrial espionage beyond its stated national‑security remit.",
+    "geopoliticalFallout": "Prompted privacy legislation in EU, US, and Australia; increased diplomatic protests from China and Russia.",
+    "verificationStatus": "Confirmed",
+    "evidenceDossier": [
+      "European Parliament Committee on Civil Liberties report (2001)",
+      "NSA internal briefing documents (2013)",
+      "GCHQ declassified technical overview (2015)"
+    ],
+    "indiaAngle": "India’s own SIGINT agency, NTRO, collaborates with the Five Eyes on

@@ -1,543 +1,547 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import LandingPage from './components/LandingPage';
-import ExplorePage from './components/ExplorePage';
-import CreateListingPage from './components/CreateListingPage';
-import MyExchangesPage from './components/MyExchangesPage';
-import ListingDetailsPage from './components/ListingDetailsPage';
-import LoginPage from './components/LoginPage';
-import ProfilePage from './components/ProfilePage';
-import MatchesPage from './components/MatchesPage';
-import Footer from './components/Footer';
+import React, { useState, useEffect, useCallback } from 'react';
+import GeointelGlobe from './components/globe/GeointelGlobe';
+import GeointelHeader from './components/ui/GeointelHeader';
+import InteractionHints from './components/ui/InteractionHints';
+import LayerControls from './components/ui/LayerControls';
+import CountryIntelligencePanel from './components/ui/CountryIntelligencePanel';
+import GeographicIntelligencePanel from './components/ui/GeographicIntelligencePanel';
+import IntelligenceLegend from './components/ui/IntelligenceLegend';
+import EventOverlay from './components/ui/EventOverlay';
+import StrategicCard from './components/ui/StrategicCard';
+import TimeMachine from './components/ui/TimeMachine';
+import RegionSelector from './components/ui/RegionSelector';
+import HoverTooltip from './components/ui/HoverTooltip';
+import SearchModal from './components/ui/SearchModal';
+import KeyboardShortcutsModal from './components/ui/KeyboardShortcutsModal';
+import GlobalSituationPanel from './components/ui/GlobalSituationPanel';
 
-import { 
-  INITIAL_LISTINGS, 
-  INITIAL_REQUESTS
-} from './data/dummyData';
-import { supabase, isSupabaseConfigured } from './services/supabase';
+// Educational & Interconnected Intelligence Modals
+import ConceptModal from './components/ui/ConceptModal';
+import AgreementModal from './components/ui/AgreementModal';
+import MilitaryModal from './components/ui/MilitaryModal';
+import RelationshipDossierModal from './components/ui/RelationshipDossierModal';
+import GeopoliticalChainViewer from './components/ui/GeopoliticalChainViewer';
+import WhyExplainerModal from './components/ui/WhyExplainerModal';
+import GlossaryModal from './components/ui/GlossaryModal';
+import CapitalModal from './components/ui/CapitalModal';
+import ConspiracyIntelModal from './components/ui/ConspiracyIntelModal';
+
+import { GLOBAL_REGIONS, COUNTRIES } from './data/geointelData';
+import { COUNTRY_DOSSIERS, getCountryDossier } from './data/geointelCountryDossiers';
+import { getMaritimeEntity } from './data/geointelMaritime';
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('rexchange_current_session');
-    return saved ? JSON.parse(saved) : null;
+  // Navigation & Mode
+  const [activeMode, setActiveMode] = useState('world'); // 'world' | 'regions' | 'timeline' | 'hotspots'
+  const [isRotating, setIsRotating] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [intelLevel, setIntelLevel] = useState('advanced'); // Default to full intelligence
+
+  // Active Selections
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCapital, setSelectedCapital] = useState(null);
+  const [selectedMaritimeEntity, setSelectedMaritimeEntity] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [hoverData, setHoverData] = useState(null);
+
+  // Deep Educational Knowledge Modals State
+  const [selectedConcept, setSelectedConcept] = useState(null);
+  const [selectedAgreement, setSelectedAgreement] = useState(null);
+  const [selectedMilitarySystem, setSelectedMilitarySystem] = useState(null);
+  const [selectedRelationship, setSelectedRelationship] = useState(null);
+  const [activeChain, setActiveChain] = useState(null);
+  const [whyExplainerItem, setWhyExplainerItem] = useState(null);
+  const [glossaryOpen, setGlossaryOpen] = useState(false);
+
+  // Reset Globe Counter Trigger
+  const [resetGlobeCounter, setResetGlobeCounter] = useState(0);
+
+  // Time Machine Era
+  const [currentYear, setCurrentYear] = useState('PRESENT');
+
+  // Intelligence Layers Active States
+  const [activeLayers, setActiveLayers] = useState({
+    events: true,
+    tensions: true,
+    military: true,
+    diplomacy: true,
+    strategic: true,
+    relations: true,
+    trade: true,
+    maritime: true
   });
 
-  // Toast Notifications System state
-  const [toast, setToast] = useState(null);
+  // Modals
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [isLiveFeedOpen, setIsLiveFeedOpen] = useState(false);
+  const [conspiraciesOpen, setConspiraciesOpen] = useState(false);
 
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
+  // Mark first user interaction to dismiss hint overlay
+  const handleUserInteraction = useCallback(() => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+    }
+  }, [hasInteracted]);
+
+  // Handle Layer Toggle
+  const handleToggleLayer = (layerId) => {
+    setActiveLayers(prev => ({
+      ...prev,
+      [layerId]: !prev[layerId]
+    }));
   };
 
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
-  // Supabase Auth listener to keep session in sync across tabs and page refreshes
-  useEffect(() => {
-    if (!isSupabaseConfigured() || !supabase) return;
-
-    // Check existing active Supabase session on startup
-    const syncCurrentSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          const syncedUser = {
-            id: session.user.id,
-            email: session.user.email,
-            name: profile?.full_name || session.user.user_metadata?.full_name || session.user.email.split('@')[0],
-            avatar: profile?.avatar_url || session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.id}&backgroundColor=D97757`,
-            offers: profile?.offers || session.user.user_metadata?.offers || '',
-            lookingFor: profile?.looking_for || session.user.user_metadata?.looking_for || '',
-            department: profile?.department || 'Computer Science',
-            year: profile?.year || '3rd Year'
-          };
-          setCurrentUser(syncedUser);
-          localStorage.setItem('rexchange_current_session', JSON.stringify(syncedUser));
-        }
-      } catch (err) {
-        console.warn('Supabase session sync notice:', err);
-      }
-    };
-
-    syncCurrentSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        setCurrentUser(null);
-        localStorage.removeItem('rexchange_current_session');
-      } else if (event === 'SIGNED_IN' && session?.user) {
-        syncCurrentSession();
-      }
-    });
-
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, []);
-
-  // Clean up legacy, unisolated data keys and sanitize persisted passwords
-  useEffect(() => {
-    const legacyKeys = ['rexchange_user', 'profile', 'currentUser', 'matches'];
-    legacyKeys.forEach(k => {
-      if (localStorage.getItem(k)) {
-        localStorage.removeItem(k);
-      }
-    });
-
-    // Sanitize any passwords in registered users list and normalize emails
-    try {
-      const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
-      let updated = false;
-      const sanitizedUsers = usersList.map(u => {
-        let needsFix = false;
-        let cleanEmail = u.email || '';
-        if (u.email && (u.email !== u.email.trim().toLowerCase())) {
-          cleanEmail = u.email.trim().toLowerCase();
-          needsFix = true;
-        }
-        if (u.password || needsFix) {
-          updated = true;
-          const { password: _, ...rest } = u;
-          return { ...rest, email: cleanEmail };
-        }
-        return u;
-      });
-      if (updated) {
-        localStorage.setItem('rexchange_users', JSON.stringify(sanitizedUsers));
-      }
-    } catch (e) {
-      console.error("Failed to sanitize users registry", e);
-    }
-
-    // Sanitize password in current session
-    try {
-      const currentSession = JSON.parse(localStorage.getItem('rexchange_current_session') || 'null');
-      if (currentSession && currentSession.password) {
-        const { password: _, ...rest } = currentSession;
-        localStorage.setItem('rexchange_current_session', JSON.stringify(rest));
-      }
-    } catch (e) {
-      console.error("Failed to sanitize current session", e);
-    }
-  }, []);
-
-  // Get initial page from path
-  const getPageFromPath = (path) => {
-    const cleanPath = path.split('?')[0].split('#')[0];
-    const p = cleanPath.replace(/^\/+|\/+$/g, '');
-    if (p === 'explore') return 'explore';
-    if (p === 'matches') return 'matches';
-    if (p === 'create') return 'create';
-    if (p === 'exchanges' || p === 'my-exchanges') return 'exchanges';
-    if (p === 'profile') return 'profile';
-    if (p === 'login') return 'login';
-    if (p === 'details') return 'details';
-    return 'landing';
-  };
-
-  const getPathFromPage = (page) => {
-    if (page === 'landing') return '/';
-    if (page === 'exchanges') return '/my-exchanges';
-    return '/' + page;
-  };
-
-  const [currentPage, setCurrentPage] = useState(() => {
-    const initialPage = getPageFromPath(window.location.pathname);
-    const savedUser = localStorage.getItem('rexchange_current_session');
-    const isLoggedIn = !!savedUser;
-    
-    // Protect routes
-    const protectedPages = ['explore', 'matches', 'create', 'exchanges', 'profile', 'details'];
-    if (protectedPages.includes(initialPage) && !isLoggedIn) {
-      return 'login';
-    }
-    return initialPage;
-  });
-
-  const [listings, setListings] = useState(() => {
-    try {
-      const saved = localStorage.getItem('rexchange_listings');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error("Failed to load listings", e);
-    }
-    return INITIAL_LISTINGS;
-  });
-
-  const [requests, setRequests] = useState(() => {
-    try {
-      const saved = localStorage.getItem('rexchange_requests');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error("Failed to load requests", e);
-    }
-    return INITIAL_REQUESTS;
-  });
-
-  const [selectedListingId, setSelectedListingId] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-
-  // Sync state to local storage
-  useEffect(() => {
-    localStorage.setItem('rexchange_listings', JSON.stringify(listings));
-  }, [listings]);
-
-  useEffect(() => {
-    localStorage.setItem('rexchange_requests', JSON.stringify(requests));
-  }, [requests]);
-
-  // Load shared listings from Supabase if connected
-  useEffect(() => {
-    if (!isSupabaseConfigured() || !supabase) return;
-
-    const loadCloudListings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('listings')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (!error && data && data.length > 0) {
-          const mapped = data.map(item => ({
-            id: item.id,
-            ownerId: item.user_id,
-            studentName: item.user_name,
-            studentAvatar: item.user_avatar,
-            studentEmail: item.user_email || 'student@campus.edu',
-            title: item.title,
-            category: item.category,
-            type: item.type || 'item',
-            description: item.description,
-            condition: item.condition,
-            tags: item.tags || [],
-            image: item.image_url,
-            createdAt: item.created_at
-          }));
-          setListings(mapped);
-        }
-      } catch (err) {
-        console.warn('Cloud listings fetch note:', err);
-      }
-    };
-
-    loadCloudListings();
-  }, []);
-
-  const navigate = (pageId) => {
-    const isLoggedIn = !!currentUser;
-    const protectedPages = ['explore', 'matches', 'create', 'exchanges', 'profile', 'details'];
-    
-    let targetPage = pageId;
-    if (protectedPages.includes(pageId) && !isLoggedIn) {
-      targetPage = 'login';
-    }
-    
-    setCurrentPage(targetPage);
-    const path = getPathFromPage(targetPage);
-    if (window.location.pathname !== path) {
-      window.history.pushState(null, '', path);
-    }
-  };
-
-  // Listen to browser forward/back buttons
-  useEffect(() => {
-    const handlePopState = () => {
-      const page = getPageFromPath(window.location.pathname);
-      const isLoggedIn = !!currentUser;
-      const protectedPages = ['explore', 'matches', 'create', 'exchanges', 'profile', 'details'];
-
-      if (protectedPages.includes(page) && !isLoggedIn) {
-        setCurrentPage('login');
-      } else {
-        setCurrentPage(page);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [currentUser]);
-
-  // Router dispatcher
-  const handleSelectListing = (listingId) => {
-    setSelectedListingId(listingId);
-    navigate('details');
-  };
-
-  const handleAddListing = async (newListingData) => {
-    const freshListing = {
-      ...newListingData,
-      id: 'list_' + Date.now(),
-      ownerId: currentUser?.id,
-      studentName: currentUser?.name || 'Student',
-      studentEmail: currentUser?.email || 'student@campus.edu',
-      studentAvatar: currentUser?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUser?.name || 'Student')}&backgroundColor=D97757`,
-      createdAt: new Date().toISOString()
-    };
-
-    // Save to Supabase Cloud Database if configured
-    if (isSupabaseConfigured() && supabase && currentUser?.id) {
-      try {
-        const { data, error } = await supabase.from('listings').insert([
-          {
-            user_id: currentUser.id,
-            user_name: currentUser.name,
-            user_avatar: currentUser.avatar,
-            title: newListingData.title,
-            category: newListingData.category,
-            type: newListingData.type || 'item',
-            description: newListingData.description || '',
-            condition: newListingData.condition || 'Good',
-            tags: newListingData.tags || [],
-            image_url: newListingData.image || null
-          }
-        ]).select().single();
-
-        if (data && data.id) {
-          freshListing.id = data.id;
-        }
-      } catch (err) {
-        console.warn('Listing cloud sync note:', err);
-      }
-    }
-
-    setListings(prev => [freshListing, ...prev]);
-    showToast('Listing published successfully!', 'success');
-  };
-
-  const handleRequestExchange = (newRequestData) => {
-    setRequests(prev => [newRequestData, ...prev]);
-    showToast('Exchange request sent!', 'success');
-  };
-
-  const handleUpdateRequest = (requestId, newStatus) => {
-    setRequests(prev => 
-      prev.map(req => 
-        req.id === requestId ? { ...req, status: newStatus } : req
-      )
+  // Find country object by identifier (code, name, etc.)
+  const findCountry = (query) => {
+    if (!query) return null;
+    const lower = query.toLowerCase();
+    const upper = query.toUpperCase();
+    if (COUNTRY_DOSSIERS[upper]) return COUNTRY_DOSSIERS[upper];
+    const inDossiers = Object.values(COUNTRY_DOSSIERS).find(c => 
+      c.id.toLowerCase() === lower || 
+      c.name.toLowerCase() === lower || 
+      c.officialName?.toLowerCase().includes(lower)
     );
-    if (newStatus === 'Accepted') {
-      showToast('Exchange request accepted!', 'success');
-    } else if (newStatus === 'Declined') {
-      showToast('Exchange request declined.', 'info');
-    } else if (newStatus === 'Completed') {
-      showToast('Exchange marked as completed!', 'success');
-    }
-  };
-
-  const handleLogin = (user) => {
-    setCurrentUser(user);
-    showToast(`Logged in as ${user.name}`, 'success');
-    navigate('explore');
-  };
-
-  const handleLogout = async () => {
-    if (isSupabaseConfigured() && supabase) {
-      try {
-        await supabase.auth.signOut();
-      } catch (err) {
-        console.warn('Supabase signOut note:', err);
-      }
-    }
-    localStorage.removeItem('rexchange_current_session');
-    setCurrentUser(null);
-    setSelectedListingId(null);
-    setSelectedCategory(null);
-    showToast('Logged out successfully.', 'info');
-    navigate('landing');
-  };
-
-  const handleDeleteListing = (listingId) => {
-    setListings(prev => prev.filter(l => l.id !== listingId));
-    showToast('Listing deleted successfully!', 'success');
-  };
-
-  const handleUpdateUser = (updatedUser) => {
-    setCurrentUser(updatedUser);
-    localStorage.setItem('rexchange_current_session', JSON.stringify(updatedUser));
-    
-    // Also sync the update in the global user registry
-    const usersList = JSON.parse(localStorage.getItem('rexchange_users') || '[]');
-    const updatedUsersList = usersList.map(u => u.id === updatedUser.id ? updatedUser : u);
-    localStorage.setItem('rexchange_users', JSON.stringify(updatedUsersList));
-
-    // Update listings owned by this user
-    setListings(prev => 
-      prev.map(l => l.ownerId === updatedUser.id ? {
-        ...l,
-        studentName: updatedUser.name,
-        studentAvatar: updatedUser.avatar,
-        studentEmail: updatedUser.email
-      } : l)
-    );
-
-    // Update requests involving this user
-    setRequests(prev =>
-      prev.map(r => {
-        let updatedReq = { ...r };
-        if (r.senderId === updatedUser.id) {
-          updatedReq.senderName = updatedUser.name;
-          updatedReq.senderAvatar = updatedUser.avatar;
-        }
-        if (r.receiverId === updatedUser.id) {
-          updatedReq.receiverName = updatedUser.name;
-          updatedReq.receiverAvatar = updatedUser.avatar;
-        }
-        return updatedReq;
-      })
+    if (inDossiers) return inDossiers;
+    return COUNTRIES.find(c => 
+      c.id.toLowerCase() === lower || 
+      c.name.toLowerCase() === lower || 
+      c.officialName?.toLowerCase().includes(lower)
     );
   };
 
-  const renderActivePage = () => {
-    switch (currentPage) {
-      case 'landing':
-        return (
-          <LandingPage 
-            setCurrentPage={navigate} 
-            setSelectedCategory={setSelectedCategory} 
-            currentUser={currentUser}
-          />
-        );
-      case 'explore':
-        return (
-          <ExplorePage 
-            listings={listings} 
-            requests={requests}
-            currentUser={currentUser}
-            onSelectListing={handleSelectListing} 
-            initialCategory={selectedCategory}
-            clearInitialCategory={() => setSelectedCategory(null)}
-            setCurrentPage={navigate}
-          />
-        );
-      case 'matches':
-        return (
-          <MatchesPage 
-            listings={listings} 
-            currentUser={currentUser}
-            requests={requests}
-            onRequestExchange={handleRequestExchange}
-            setCurrentPage={navigate}
-            onSelectListing={handleSelectListing}
-          />
-        );
-      case 'create':
-        return (
-          <CreateListingPage 
-            onAddListing={handleAddListing} 
-            setCurrentPage={navigate} 
-          />
-        );
-      case 'exchanges':
-        const userExchanges = requests.filter(r => 
-          r.senderId === currentUser?.id || 
-          r.receiverId === currentUser?.id || 
-          r.requesterId === currentUser?.id || 
-          r.ownerId === currentUser?.id
-        );
-        return (
-          <MyExchangesPage 
-            requests={userExchanges} 
-            onUpdateRequest={handleUpdateRequest}
-            setCurrentPage={navigate}
-            currentUser={currentUser}
-          />
-        );
-      case 'login':
-        return (
-          <LoginPage 
-            onLogin={handleLogin} 
-          />
-        );
-      case 'profile':
-        return (
-          <ProfilePage 
-            currentUser={currentUser} 
-            onUpdateUser={handleUpdateUser} 
-            listings={listings} 
-            onDeleteListing={handleDeleteListing}
-            requests={requests}
-            setCurrentPage={navigate}
-            onSelectListing={handleSelectListing}
-            showToast={showToast}
-          />
-        );
-      case 'details':
-        const selectedListing = listings.find(l => l.id === selectedListingId);
-        return (
-          <ListingDetailsPage 
-            listing={selectedListing} 
-            allListings={listings} 
-            onSelectListing={handleSelectListing} 
-            onBack={() => navigate('explore')} 
-            onRequestExchange={handleRequestExchange}
-            existingRequests={requests}
-            onRequestExchangeRedirect={() => navigate('exchanges')}
-            currentUser={currentUser}
-            onDeleteListing={handleDeleteListing}
-          />
-        );
-      default:
-        return (
-          <LandingPage 
-            setCurrentPage={navigate} 
-            setSelectedCategory={setSelectedCategory} 
-            currentUser={currentUser}
-            onLogin={handleLogin}
-          />
-        );
+  // Handle Country Selection
+  const handleSelectCountry = (country) => {
+    handleUserInteraction();
+    setSelectedEvent(null);
+    setSelectedLocation(null);
+    setSelectedMaritimeEntity(null);
+    setSelectedCapital(null);
+    let countryObj = typeof country === 'string' ? findCountry(country) : country;
+    if (countryObj) {
+      const iso3 = countryObj.id || countryObj.ISO_A3 || countryObj.isoCode;
+      const fullDossier = getCountryDossier(iso3, countryObj);
+      setSelectedCountry(fullDossier);
+      setIsRotating(false);
     }
   };
+
+  // Handle Event Selection
+  const handleSelectEvent = (event) => {
+    handleUserInteraction();
+    setSelectedCountry(null);
+    setSelectedLocation(null);
+    setSelectedMaritimeEntity(null);
+    setSelectedEvent(event);
+    setIsRotating(false);
+  };
+
+  // Handle Strategic Location Selection
+  const handleSelectLocation = (location) => {
+    handleUserInteraction();
+    setSelectedCountry(null);
+    setSelectedEvent(null);
+    setSelectedMaritimeEntity(null);
+    setSelectedLocation(location);
+    setIsRotating(false);
+  };
+
+  // Handle Maritime Entity Selection (Ocean, Sea, Chokepoint, Port)
+  const handleSelectMaritimeEntity = (entity) => {
+    handleUserInteraction();
+    setSelectedCountry(null);
+    setSelectedEvent(null);
+    setSelectedLocation(null);
+    const resolved = typeof entity === 'string' ? getMaritimeEntity(entity) : entity;
+    setSelectedMaritimeEntity(resolved);
+    setIsRotating(false);
+  };
+
+  // Handle Region Selection
+  const handleSelectRegion = (region) => {
+    handleUserInteraction();
+    setSelectedRegion(region);
+    setSelectedCountry(null);
+    setSelectedEvent(null);
+    setSelectedLocation(null);
+    setSelectedMaritimeEntity(null);
+  };
+
+  // Reset Globe Camera and Exploration Mode
+  const handleResetGlobe = () => {
+    setSelectedCountry(null);
+    setSelectedEvent(null);
+    setSelectedLocation(null);
+    setSelectedMaritimeEntity(null);
+    setResetGlobeCounter(prev => prev + 1);
+    setIsRotating(true);
+  };
+
+  // Deselect All / Close Active Panels
+  const handleDeselectAll = () => {
+    setSelectedCountry(null);
+    setSelectedMaritimeEntity(null);
+    setSelectedEvent(null);
+    setSelectedLocation(null);
+    setSelectedRegion(null);
+    setSelectedConcept(null);
+    setSelectedAgreement(null);
+    setSelectedMilitarySystem(null);
+    setSelectedRelationship(null);
+    setActiveChain(null);
+    setWhyExplainerItem(null);
+    setIsRotating(true);
+  };
+
+  // View Region from Strategic Card
+  const handleViewRegionFromStrategic = (location) => {
+    let targetRegion = GLOBAL_REGIONS.find(r => r.id === 'middle_east');
+    if (location.lat < 15 && location.lng > 90) {
+      targetRegion = GLOBAL_REGIONS.find(r => r.id === 'indo_pacific');
+    } else if (location.lat > 40 && location.lng < 40) {
+      targetRegion = GLOBAL_REGIONS.find(r => r.id === 'europe');
+    }
+    if (targetRegion) {
+      handleSelectRegion(targetRegion);
+      setActiveMode('regions');
+    }
+  };
+
+  // Global Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger if user is typing in search input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === '/') {
+        e.preventDefault();
+        setSearchOpen(true);
+      } else if (e.key === 'Escape') {
+        if (selectedConcept) setSelectedConcept(null);
+        else if (selectedAgreement) setSelectedAgreement(null);
+        else if (selectedMilitarySystem) setSelectedMilitarySystem(null);
+        else if (selectedRelationship) setSelectedRelationship(null);
+        else if (selectedMaritimeEntity) setSelectedMaritimeEntity(null);
+        else if (activeChain) setActiveChain(null);
+        else if (whyExplainerItem) setWhyExplainerItem(null);
+        else if (glossaryOpen) setGlossaryOpen(false);
+        else if (isLiveFeedOpen) setIsLiveFeedOpen(false);
+        else if (searchOpen) setSearchOpen(false);
+        else if (helpOpen) setHelpOpen(false);
+        else handleDeselectAll();
+      } else if (e.code === 'Space') {
+        e.preventDefault();
+        setIsRotating(prev => !prev);
+      } else if (e.key.toLowerCase() === 'c') {
+        setActiveChain(prev => prev ? null : 'CHAIN_BRAHMOS_AUTONOMY');
+      } else if (e.key.toLowerCase() === 'v') {
+        setGlossaryOpen(prev => !prev);
+      } else if (e.key.toLowerCase() === 'l') {
+        setIsLiveFeedOpen(prev => !prev);
+      } else if (e.key.toLowerCase() === 't') {
+        handleToggleLayer('tensions');
+      } else if (e.key.toLowerCase() === 'r') {
+        handleToggleLayer('relations');
+      } else if (e.key.toLowerCase() === 'm') {
+        handleToggleLayer('military');
+      } else if (e.key.toLowerCase() === 's') {
+        handleToggleLayer('strategic');
+      } else if (e.key === '1') {
+        handleToggleLayer('events');
+      } else if (e.key === '2') {
+        handleToggleLayer('trade');
+      } else if (e.key === '3') {
+        handleToggleLayer('maritime');
+      } else if (e.key.toLowerCase() === 'h' || e.key === '?') {
+        setHelpOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    searchOpen, helpOpen, isLiveFeedOpen, selectedConcept, selectedAgreement, 
+    selectedMilitarySystem, selectedRelationship, activeChain, 
+    whyExplainerItem, glossaryOpen
+  ]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-transparent text-charcoal selection:bg-terracotta/20">
-      {/* Header and Nav */}
-      <Navbar 
-        currentPage={currentPage} 
-        setCurrentPage={navigate} 
-        currentUser={currentUser} 
-        onLogout={handleLogout}
+    <div 
+      className="relative w-screen h-screen overflow-hidden bg-[#05070B] select-none text-slate-100"
+      onPointerDown={handleUserInteraction}
+      onWheel={handleUserInteraction}
+    >
+      {/* 1. Core 3D Globe - The Globe is the Interface */}
+      <GeointelGlobe
+        selectedCountry={selectedCountry}
+        selectedMaritimeEntity={selectedMaritimeEntity}
+        selectedEvent={selectedEvent}
+        selectedLocation={selectedLocation}
+        selectedRegion={selectedRegion}
+        selectedRelationship={selectedRelationship}
+        activeLayers={activeLayers}
+        currentYear={currentYear}
+        onCountrySelect={handleSelectCountry}
+        onSelectMaritimeEntity={handleSelectMaritimeEntity}
+        onEventSelect={handleSelectEvent}
+        onLocationSelect={handleSelectLocation}
+        onCapitalSelect={setSelectedCapital}
+        onHoverChange={setHoverData}
+        isRotating={isRotating}
+        onUserInteraction={handleUserInteraction}
+        resetGlobeTrigger={resetGlobeCounter}
       />
 
-      {/* Main Container */}
-      <main className="flex-grow">
-        {renderActivePage()}
-      </main>
-
-      {/* Professional Footer */}
-      <Footer 
-        setCurrentPage={navigate} 
-        setSelectedCategory={setSelectedCategory} 
+      {/* 2. Top Header & Operational Telemetry with Educational Shortcuts */}
+      <GeointelHeader
+        activeMode={activeMode}
+        setActiveMode={(mode) => {
+          setActiveMode(mode);
+          if (mode === 'world') {
+            handleDeselectAll();
+          } else if (mode === 'hotspots') {
+            setActiveLayers(prev => ({ ...prev, events: true, tensions: true }));
+          }
+        }}
+        onOpenSearch={() => setSearchOpen(true)}
+        onOpenHelp={() => setHelpOpen(true)}
+        onOpenGlossary={() => setGlossaryOpen(true)}
+        onOpenChains={() => setActiveChain('CHAIN_BRAHMOS_AUTONOMY')}
+        onOpenLiveFeed={() => setIsLiveFeedOpen(prev => !prev)}
+        isLiveFeedOpen={isLiveFeedOpen}
+        onOpenConspiracies={() => setConspiraciesOpen(true)}
+        selectedRegion={selectedRegion}
+        onSelectRegion={handleSelectRegion}
       />
 
-      {/* Elegant Toast Notifications */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-55 flex items-center gap-2.5 px-4.5 py-3 bg-charcoal border border-charcoal/80 text-white rounded-xl shadow-premium animate-fade-in font-sans text-xs sm:text-sm font-semibold max-w-sm">
-          <div className={`w-2 h-2 rounded-full ${toast.type === 'success' ? 'bg-forest-green' : toast.type === 'error' ? 'bg-rose-500' : 'bg-warm-amber'}`} />
-          <span>{toast.message}</span>
-          <button 
-            onClick={() => setToast(null)}
-            className="ml-3 hover:text-muted-gray text-white/50 cursor-pointer transition-colors"
-          >
-            ✕
-          </button>
-        </div>
+      {/* 3. Subtle Landing Experience Interaction Hints (Auto-dismisses) */}
+      <InteractionHints
+        visible={!hasInteracted && !selectedCountry && !selectedMaritimeEntity && !selectedEvent && !selectedLocation}
+        onDismiss={() => setHasInteracted(true)}
+      />
+
+      {/* 4. Floating Intelligence Layer Controls */}
+      <LayerControls
+        activeLayers={activeLayers}
+        onToggleLayer={handleToggleLayer}
+      />
+
+      {/* 5. Region Theater Selector (When in regions mode or when opened) */}
+      {activeMode === 'regions' && (
+        <RegionSelector
+          selectedRegion={selectedRegion}
+          onSelectRegion={handleSelectRegion}
+          onClose={() => setActiveMode('world')}
+        />
       )}
+
+      {/* 6. Time Machine Dock (When in timeline mode or scrubbing) */}
+      {activeMode === 'timeline' && (
+        <TimeMachine
+          currentYear={currentYear}
+          onYearChange={setCurrentYear}
+          onClose={() => setActiveMode('world')}
+        />
+      )}
+
+      {/* 7. Contextual Country Intelligence Dossier Panel (Canonical 11 Sections) */}
+      {selectedCountry && (
+        <CountryIntelligencePanel
+          country={selectedCountry}
+          intelLevel={intelLevel}
+          onClose={() => {
+            setSelectedCountry(null);
+            setIsRotating(true);
+          }}
+          onResetGlobe={handleResetGlobe}
+          onSelectRelationship={(pairId) => setSelectedRelationship(pairId)}
+          onSelectConcept={(cId) => setSelectedConcept(cId)}
+          onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
+          onSelectMilitarySystem={(sysId) => setSelectedMilitarySystem(sysId)}
+          onSelectCountry={handleSelectCountry}
+          onSelectLocation={handleSelectLocation}
+          onSelectEvent={handleSelectEvent}
+          onSelectRegion={handleSelectRegion}
+          onSelectCapital={setSelectedCapital}
+        />
+      )}
+
+      {/* 8. Geographic & Maritime Intelligence Panel (Oceans, Seas, Chokepoints, Ports) */}
+      {selectedMaritimeEntity && (
+        <GeographicIntelligencePanel
+          entity={selectedMaritimeEntity}
+          intelLevel={intelLevel}
+          onClose={() => {
+            setSelectedMaritimeEntity(null);
+            setIsRotating(true);
+          }}
+          onSelectMaritimeEntity={handleSelectMaritimeEntity}
+          onSelectCountry={handleSelectCountry}
+          onSelectConcept={(cId) => setSelectedConcept(cId)}
+        />
+      )}
+
+      {/* 9. Contextual Event Intelligence Overlay */}
+      {selectedEvent && (
+        <EventOverlay
+          event={selectedEvent}
+          intelLevel={intelLevel}
+          onClose={() => setSelectedEvent(null)}
+          onExploreTimeline={() => setActiveMode('timeline')}
+          onSelectConcept={(cId) => setSelectedConcept(cId)}
+          onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
+          onSelectMilitary={(sysId) => setSelectedMilitarySystem(sysId)}
+          onExploreChain={(chainId) => setActiveChain(chainId)}
+          onSelectCountry={handleSelectCountry}
+          onSelectMaritimeEntity={handleSelectMaritimeEntity}
+        />
+      )}
+
+      {/* Live Global Situation & Intelligence Feed Drawer */}
+      <GlobalSituationPanel
+        isOpen={isLiveFeedOpen}
+        onClose={() => setIsLiveFeedOpen(false)}
+        onSelectEvent={handleSelectEvent}
+        onSelectRegion={handleSelectRegion}
+      />
+
+      {/* 10. Strategic Location Floating Intelligence Card */}
+      {selectedLocation && (
+        <StrategicCard
+          location={selectedLocation}
+          intelLevel={intelLevel}
+          onClose={() => setSelectedLocation(null)}
+          onViewRegion={handleViewRegionFromStrategic}
+          onSelectConcept={(cId) => setSelectedConcept(cId)}
+          onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
+          onSelectMilitary={(sysId) => setSelectedMilitarySystem(sysId)}
+          onExploreChain={(chainId) => setActiveChain(chainId)}
+        />
+      )}
+
+      {/* 11. Cursor Hover Tooltip */}
+      <HoverTooltip hoverData={hoverData} />
+
+      {/* 12. Global Search Command Palette (/) */}
+      <SearchModal
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        onSelectCountry={handleSelectCountry}
+        onSelectMaritime={handleSelectMaritimeEntity}
+        onSelectEvent={handleSelectEvent}
+        onSelectLocation={handleSelectLocation}
+        onSelectConcept={(cId) => setSelectedConcept(cId)}
+        onSelectConspiracy={() => setConspiraciesOpen(true)}
+      />
+
+      {/* 13. Operational Keyboard Shortcuts Modal (H / ?) */}
+      <KeyboardShortcutsModal
+        isOpen={helpOpen}
+        onClose={() => setHelpOpen(false)}
+      />
+
+      {/* Capital Intelligence Dossier Modal */}
+      {selectedCapital && (
+        <CapitalModal
+          capital={selectedCapital}
+          onClose={() => setSelectedCapital(null)}
+          onOpenCountry={handleSelectCountry}
+        />
+      )}
+
+      {/* 14. Interactive Geopolitical Concept Explainer Modal */}
+      {selectedConcept && (
+        <ConceptModal
+          conceptId={selectedConcept}
+          contextCountryCode={selectedCountry?.id}
+          intelLevel={intelLevel}
+          onClose={() => setSelectedConcept(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+          onSelectAgreement={(id) => setSelectedAgreement(id)}
+          onSelectCountry={handleSelectCountry}
+          onExploreChain={(chainId) => setActiveChain(chainId)}
+          onOpenWhyExplainer={(concept) => setWhyExplainerItem(concept)}
+        />
+      )}
+
+      {/* 15. Verified Agreement & Treaty Dossier Modal */}
+      {selectedAgreement && (
+        <AgreementModal
+          agreementId={selectedAgreement}
+          intelLevel={intelLevel}
+          onClose={() => setSelectedAgreement(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+          onSelectAgreement={(id) => setSelectedAgreement(id)}
+        />
+      )}
+
+      {/* 16. Contextual Military Hardware & Defense System Modal */}
+      {selectedMilitarySystem && (
+        <MilitaryModal
+          militaryId={selectedMilitarySystem}
+          onClose={() => setSelectedMilitarySystem(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+          onSelectCountry={handleSelectCountry}
+        />
+      )}
+
+      {/* 17. Deep Bilateral Relationship Dossier Modal */}
+      {selectedRelationship && (
+        <RelationshipDossierModal
+          relationshipId={selectedRelationship}
+          intelLevel={intelLevel}
+          onClose={() => setSelectedRelationship(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+          onSelectAgreement={(id) => setSelectedAgreement(id)}
+          onSelectMilitary={(id) => setSelectedMilitarySystem(id)}
+          onExploreChain={(chainId) => setActiveChain(chainId)}
+          onOpenWhyExplainer={(item) => setWhyExplainerItem(item)}
+        />
+      )}
+
+      {/* 18. Interactive Geopolitical Causal Chain Viewer */}
+      {activeChain && (
+        <GeopoliticalChainViewer
+          chainKey={activeChain}
+          onClose={() => setActiveChain(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+          onSelectMilitary={(id) => setSelectedMilitarySystem(id)}
+          onSelectCountry={handleSelectCountry}
+        />
+      )}
+
+      {/* 19. "Why Does This Exist?" Multi-Perspective Explainer Modal */}
+      {whyExplainerItem && (
+        <WhyExplainerModal
+          item={whyExplainerItem}
+          onClose={() => setWhyExplainerItem(null)}
+          onSelectConcept={(id) => setSelectedConcept(id)}
+        />
+      )}
+
+      {/* 20. Geopolitical Concepts & Vocabulary Glossary Modal */}
+      <GlossaryModal
+        isOpen={glossaryOpen}
+        onClose={() => setGlossaryOpen(false)}
+        onSelectConcept={(cId) => setSelectedConcept(cId)}
+      />
+
+      {/* 21. Covert Operations & Geopolitical Conspiracies Modal (Shadow Intel) */}
+      <ConspiracyIntelModal
+        isOpen={conspiraciesOpen}
+        onClose={() => setConspiraciesOpen(false)}
+        onSelectCountry={handleSelectCountry}
+        onFocusCoordinates={(lat, lng) => {
+          handleSelectLocation({ name: 'Covert Operational Theater', lat, lng });
+          setConspiraciesOpen(false);
+        }}
+      />
+
+      {/* 22. Collapsible Intelligence Legend */}
+      <IntelligenceLegend />
     </div>
   );
 }
