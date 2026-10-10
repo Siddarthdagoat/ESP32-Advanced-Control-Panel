@@ -5,6 +5,8 @@ import { OCEANS, SEAS, CHOKEPOINTS, PORTS } from '../../data/geointelMaritime';
 import { searchGeopoliticalTerms } from '../../data/geopoliticalTerms';
 import { GEOPOLITICAL_CONSPIRACIES } from '../../data/geointelConspiracies';
 import { WORLD_HISTORY_EVENTS } from '../../data/history/worldHistoryEvents';
+import { WARGAME_SCENARIOS } from '../../data/geointelScenarios';
+import { STRATEGIC_FLASHPOINTS } from '../../data/geointelFlashpoints';
 
 export default function SearchModal({
   isOpen,
@@ -15,7 +17,9 @@ export default function SearchModal({
   onSelectMaritime,
   onSelectConcept,
   onSelectConspiracy,
-  onSelectHistory
+  onSelectHistory,
+  onSelectWargame,
+  onSelectFlashpoint
 }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -92,8 +96,38 @@ export default function SearchModal({
     symbol: '📜'
   }));
 
-  // Prioritize concepts, history, and shadow intel
-  const allResults = [...matchedTerms, ...matchedHistory, ...matchedConspiracies, ...matchedCountries, ...matchedMaritime, ...matchedEvents, ...matchedLocations];
+  const matchedWargames = WARGAME_SCENARIOS.filter(w =>
+    !q || w.title?.toLowerCase().includes(q) || w.theater?.toLowerCase().includes(q) || w.summary?.toLowerCase().includes(q) || w.code?.toLowerCase().includes(q)
+  ).slice(0, 2).map(w => ({
+    type: 'wargame',
+    data: w,
+    title: `${w.code}: ${w.title}`,
+    sub: `${w.threatLevel} • ${w.theater}`,
+    symbol: '🛡️'
+  }));
+
+  const matchedFlashpoints = STRATEGIC_FLASHPOINTS.filter(f =>
+    !q || f.name?.toLowerCase().includes(f) || f.region?.toLowerCase().includes(q) || f.overview?.toLowerCase().includes(q)
+  ).slice(0, 2).map(f => ({
+    type: 'flashpoint',
+    data: f,
+    title: f.name,
+    sub: `${f.defconLevel.split(' ')[0]} • ${f.region}`,
+    symbol: '🎯'
+  }));
+
+  // Prioritize concepts, history, shadow intel, wargames, flashpoints
+  const allResults = [
+    ...matchedTerms, 
+    ...matchedWargames, 
+    ...matchedFlashpoints, 
+    ...matchedHistory, 
+    ...matchedConspiracies, 
+    ...matchedCountries, 
+    ...matchedMaritime, 
+    ...matchedEvents, 
+    ...matchedLocations
+  ];
 
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
@@ -111,6 +145,8 @@ export default function SearchModal({
 
   const handleSelect = (item) => {
     if (item.type === 'concept' && onSelectConcept) onSelectConcept(item.data.id);
+    else if (item.type === 'wargame' && onSelectWargame) onSelectWargame(item.data);
+    else if (item.type === 'flashpoint' && onSelectFlashpoint) onSelectFlashpoint(item.data);
     else if (item.type === 'history' && onSelectHistory) onSelectHistory(item.data);
     else if (item.type === 'conspiracy' && onSelectConspiracy) onSelectConspiracy(item.data);
     else if (item.type === 'country') onSelectCountry(item.data);

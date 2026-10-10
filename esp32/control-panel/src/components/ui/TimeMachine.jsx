@@ -82,9 +82,9 @@ export default function TimeMachine({
         {/* Interactive Scrub Slider */}
         <div className="relative px-2 py-1">
           <div className="flex justify-between text-[9px] font-mono text-[#888888] mb-1.5 tracking-wider">
-            <span>PAST (1962)</span>
+            <span>PAST ({HISTORICAL_ERAS[0]?.year || '1914'})</span>
             <span className="text-white font-bold">SCRUB CHRONOLOGY</span>
-            <span>PRESENT</span>
+            <span>PRESENT (2026)</span>
           </div>
 
           <input

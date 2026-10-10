@@ -61,7 +61,9 @@ export default function CountryIntelligencePanel({
   onSelectLocation,
   onSelectEvent,
   onSelectRegion,
-  onSelectCapital
+  onSelectCapital,
+  isDocked = false,
+  onOpenSitrep
 }) {
   const [activeTab, setActiveTab] = useState('overview'); 
   // 'overview' | 'history' | 'politics' | 'geography' | 'borders' | 'economy' | 'military' | 'relations' | 'tensions' | 'locations' | 'events' | 'india'
@@ -141,20 +143,31 @@ export default function CountryIntelligencePanel({
       );
 
   return (
-    <div className="fixed inset-y-0 right-0 sm:right-6 sm:top-20 sm:bottom-20 z-25 pointer-events-auto w-full sm:max-w-[520px] flex flex-col justify-end sm:justify-start">
+    <div className={isDocked ? "h-full w-full flex flex-col" : "fixed inset-y-0 right-0 sm:right-6 sm:top-20 sm:bottom-20 z-25 pointer-events-auto w-full sm:max-w-[520px] flex flex-col justify-end sm:justify-start"}>
       {/* Mobile Backdrop */}
-      <div 
-        onClick={onClose} 
-        className="sm:hidden fixed inset-0 bg-black/60 backdrop-blur-xs -z-10" 
-      />
+      {!isDocked && (
+        <div 
+          onClick={onClose} 
+          className="sm:hidden fixed inset-0 bg-black/60 backdrop-blur-xs -z-10" 
+        />
+      )}
 
       {/* Main Glass Dossier */}
-      <div className="rounded-t-3xl sm:rounded-2xl border border-[#1A1A1A] shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[calc(100vh-150px)] flex flex-col animate-slide-up-mobile sm:animate-slide-in-right bg-[#080808]/98 backdrop-blur-2xl">
+      <div className={isDocked ? "h-full flex flex-col bg-[#080808]" : "rounded-t-3xl sm:rounded-2xl border border-[#1A1A1A] shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[calc(100vh-150px)] flex flex-col animate-slide-up-mobile sm:animate-slide-in-right bg-[#080808]/98 backdrop-blur-2xl"}>
         
         {/* Header Bar */}
         <div className="p-4 pb-3 border-b border-[#1A1A1A] relative bg-[#0D0D0D]">
-          {/* Action Buttons: Reset Globe & Close */}
+          {/* Action Buttons: SITREP, Reset Globe & Close */}
           <div className="absolute top-3.5 right-4 flex items-center gap-1.5">
+            {onOpenSitrep && (
+              <button
+                onClick={() => onOpenSitrep(dossier)}
+                className="px-2 py-1 rounded-md text-[10px] font-mono text-white bg-[#1A1A1A] hover:bg-white hover:text-black border border-white/20 flex items-center gap-1 transition-all cursor-pointer font-bold"
+                title="Export PDB / SitRep Memorandum"
+              >
+                <span>SITREP</span>
+              </button>
+            )}
             {onResetGlobe && (
               <button
                 onClick={onResetGlobe}
@@ -162,7 +175,7 @@ export default function CountryIntelligencePanel({
                 title="Reset Globe View"
               >
                 <RotateCcw className="w-3 h-3 text-[#888888]" />
-                <span>RESET GLOBE</span>
+                <span className="hidden sm:inline">RESET</span>
               </button>
             )}
             <button

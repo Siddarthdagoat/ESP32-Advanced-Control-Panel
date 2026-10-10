@@ -12,9 +12,11 @@ const SHORTCUTS = [
   { key: 'R', desc: 'Toggle RELATIONS layer' },
   { key: 'M', desc: 'Toggle MILITARY layer' },
   { key: 'S', desc: 'Toggle STRATEGIC layer' },
+  { key: 'W', desc: 'Toggle Docked Split Workstation Mode' },
   { key: '1', desc: 'Toggle EVENTS layer' },
   { key: '2', desc: 'Toggle TRADE routes' },
   { key: '3', desc: 'Toggle MARITIME corridors' },
+  { key: '4', desc: 'Toggle OSINT SENSORS (AIS, ADS-B, FIRMS)' },
   { key: 'H / ?', desc: 'Open / Close this shortcuts guide' }
 ];
 

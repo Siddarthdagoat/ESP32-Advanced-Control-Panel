@@ -27,9 +27,19 @@ import CapitalModal from './components/ui/CapitalModal';
 import ConspiracyIntelModal from './components/ui/ConspiracyIntelModal';
 import HistoricalTimelineModal from './components/ui/HistoricalTimelineModal';
 
+// Advanced Analytical Capabilities (Workstation, PDB Briefing, Wargaming, OSINT Sensors, Flashpoints, Watchlist)
+import WorkstationDock from './components/ui/WorkstationDock';
+import BriefingExportModal from './components/ui/BriefingExportModal';
+import WargameScenarioModal from './components/ui/WargameScenarioModal';
+import FlashpointFocusModal from './components/ui/FlashpointFocusModal';
+import SensorTrackerPanel from './components/ui/SensorTrackerPanel';
+import CrisisWatchlist from './components/ui/CrisisWatchlist';
+
 import { GLOBAL_REGIONS, COUNTRIES } from './data/geointelData';
 import { COUNTRY_DOSSIERS, getCountryDossier } from './data/geointelCountryDossiers';
 import { getMaritimeEntity } from './data/geointelMaritime';
+import { WARGAME_SCENARIOS } from './data/geointelScenarios';
+import { STRATEGIC_FLASHPOINTS } from './data/geointelFlashpoints';
 
 export default function App() {
   // Navigation & Mode
@@ -64,6 +74,7 @@ export default function App() {
 
   // Intelligence Layers Active States
   const [activeLayers, setActiveLayers] = useState({
+    sensors: true,
     events: true,
     tensions: true,
     military: true,
@@ -73,6 +84,26 @@ export default function App() {
     trade: true,
     maritime: true
   });
+
+  // Docked Split Workstation Mode & Dock Tab
+  const [workstationMode, setWorkstationMode] = useState(false);
+  const [workstationTab, setWorkstationTab] = useState('dossier');
+
+  // Globe Visual Display Mode
+  const [mapMode, setMapMode] = useState('monochrome'); // 'monochrome' | 'bathymetry' | 'thermal' | 'satellite'
+
+  // Advanced Analytical Telemetry States
+  const [activeScenario, setActiveScenario] = useState(null);
+  const [tacticalFlashpoint, setTacticalFlashpoint] = useState(null);
+  const [selectedSensorData, setSelectedSensorData] = useState(null);
+
+  // Analytical Standalone Modals (Active in HUD Mode)
+  const [sitrepModalOpen, setSitrepModalOpen] = useState(false);
+  const [sitrepContext, setSitrepContext] = useState(null);
+  const [wargameModalOpen, setWargameModalOpen] = useState(false);
+  const [flashpointsModalOpen, setFlashpointsModalOpen] = useState(false);
+  const [sensorsModalOpen, setSensorsModalOpen] = useState(false);
+  const [watchlistModalOpen, setWatchlistModalOpen] = useState(false);
 
   // Modals
   const [searchOpen, setSearchOpen] = useState(false);
@@ -128,6 +159,7 @@ export default function App() {
       const fullDossier = getCountryDossier(iso3, countryObj);
       setSelectedCountry(fullDossier);
       setIsRotating(false);
+      setWorkstationTab('dossier');
     }
   };
 
@@ -160,6 +192,48 @@ export default function App() {
     const resolved = typeof entity === 'string' ? getMaritimeEntity(entity) : entity;
     setSelectedMaritimeEntity(resolved);
     setIsRotating(false);
+    setWorkstationTab('dossier');
+  };
+
+  // Handle Open Executive SitRep Briefing
+  const handleOpenSitrep = (context = null) => {
+    setSitrepContext(context || selectedCountry || activeScenario || null);
+    setSitrepModalOpen(true);
+  };
+
+  // Handle Deploy Wargame to Globe
+  const handleDeployWargameToGlobe = (scenario, phaseIdx) => {
+    setActiveScenario(scenario);
+    if (scenario.focusCoords) {
+      handleSelectLocation({
+        name: `Wargame Focal Point: ${scenario.title}`,
+        lat: scenario.focusCoords.lat,
+        lng: scenario.focusCoords.lng
+      });
+    }
+    setWargameModalOpen(false);
+  };
+
+  // Handle Fly to Tactical Flashpoint
+  const handleFlyToFlashpoint = (fp) => {
+    setTacticalFlashpoint(fp);
+    handleSelectLocation({
+      name: fp.name,
+      lat: fp.lat,
+      lng: fp.lng,
+      defcon: fp.defconLevel
+    });
+    setFlashpointsModalOpen(false);
+  };
+
+  // Handle Fly to Sensor
+  const handleFlyToSensor = (sensor) => {
+    handleSelectLocation({
+      name: sensor.name,
+      lat: sensor.lat,
+      lng: sensor.lng
+    });
+    setSensorsModalOpen(false);
   };
 
   // Handle Region Selection
@@ -222,7 +296,12 @@ export default function App() {
         e.preventDefault();
         setSearchOpen(true);
       } else if (e.key === 'Escape') {
-        if (selectedConcept) setSelectedConcept(null);
+        if (sitrepModalOpen) setSitrepModalOpen(false);
+        else if (wargameModalOpen) setWargameModalOpen(false);
+        else if (flashpointsModalOpen) setFlashpointsModalOpen(false);
+        else if (sensorsModalOpen) setSensorsModalOpen(false);
+        else if (watchlistModalOpen) setWatchlistModalOpen(false);
+        else if (selectedConcept) setSelectedConcept(null);
         else if (selectedAgreement) setSelectedAgreement(null);
         else if (selectedMilitarySystem) setSelectedMilitarySystem(null);
         else if (selectedRelationship) setSelectedRelationship(null);
@@ -237,6 +316,8 @@ export default function App() {
       } else if (e.code === 'Space') {
         e.preventDefault();
         setIsRotating(prev => !prev);
+      } else if (e.key.toLowerCase() === 'w') {
+        setWorkstationMode(prev => !prev);
       } else if (e.key.toLowerCase() === 'c') {
         setActiveChain(prev => prev ? null : 'CHAIN_BRAHMOS_AUTONOMY');
       } else if (e.key.toLowerCase() === 'v') {
@@ -257,6 +338,8 @@ export default function App() {
         handleToggleLayer('trade');
       } else if (e.key === '3') {
         handleToggleLayer('maritime');
+      } else if (e.key === '4') {
+        handleToggleLayer('sensors');
       } else if (e.key.toLowerCase() === 'h' || e.key === '?') {
         setHelpOpen(prev => !prev);
       }
@@ -267,7 +350,8 @@ export default function App() {
   }, [
     searchOpen, helpOpen, isLiveFeedOpen, selectedConcept, selectedAgreement, 
     selectedMilitarySystem, selectedRelationship, activeChain, 
-    whyExplainerItem, glossaryOpen
+    whyExplainerItem, glossaryOpen, sitrepModalOpen, wargameModalOpen, 
+    flashpointsModalOpen, sensorsModalOpen, watchlistModalOpen
   ]);
 
   return (
@@ -284,6 +368,9 @@ export default function App() {
         selectedLocation={selectedLocation}
         selectedRegion={selectedRegion}
         selectedRelationship={selectedRelationship}
+        tacticalFlashpoint={tacticalFlashpoint}
+        activeScenario={activeScenario}
+        mapMode={mapMode}
         activeLayers={activeLayers}
         currentYear={currentYear}
         onCountrySelect={handleSelectCountry}
@@ -291,6 +378,14 @@ export default function App() {
         onEventSelect={handleSelectEvent}
         onLocationSelect={handleSelectLocation}
         onCapitalSelect={setSelectedCapital}
+        onSensorSelect={(sensor) => {
+          setSelectedSensorData(sensor);
+          handleSelectLocation({
+            name: sensor.name || sensor.callsign || sensor.theater,
+            lat: sensor.lat,
+            lng: sensor.lng
+          });
+        }}
         onHoverChange={setHoverData}
         isRotating={isRotating}
         onUserInteraction={handleUserInteraction}
@@ -307,6 +402,25 @@ export default function App() {
           } else if (mode === 'hotspots') {
             setActiveLayers(prev => ({ ...prev, events: true, tensions: true }));
           }
+        }}
+        workstationMode={workstationMode}
+        onToggleWorkstationMode={() => setWorkstationMode(prev => !prev)}
+        onOpenWargame={() => {
+          setWorkstationTab('wargame');
+          if (!workstationMode) setWargameModalOpen(true);
+        }}
+        onOpenFlashpoints={() => {
+          setWorkstationTab('flashpoints');
+          if (!workstationMode) setFlashpointsModalOpen(true);
+        }}
+        onOpenSensors={() => {
+          setWorkstationTab('sensors');
+          if (!workstationMode) setSensorsModalOpen(true);
+        }}
+        onOpenSitrep={() => handleOpenSitrep()}
+        onOpenWatchlist={() => {
+          setWorkstationTab('watchlist');
+          if (!workstationMode) setWatchlistModalOpen(true);
         }}
         onOpenSearch={() => setSearchOpen(true)}
         onOpenHelp={() => setHelpOpen(true)}
@@ -330,6 +444,34 @@ export default function App() {
       <LayerControls
         activeLayers={activeLayers}
         onToggleLayer={handleToggleLayer}
+        mapMode={mapMode}
+        onMapModeChange={setMapMode}
+      />
+
+      {/* 4.5. Docked Split Workstation Mode (Split-Screen Multi-Pane Terminal) */}
+      <WorkstationDock
+        isOpen={workstationMode}
+        onClose={() => setWorkstationMode(false)}
+        activeTab={workstationTab}
+        onTabChange={setWorkstationTab}
+        selectedCountry={selectedCountry}
+        selectedMaritimeEntity={selectedMaritimeEntity}
+        intelLevel={intelLevel}
+        onCountrySelect={handleSelectCountry}
+        onMaritimeSelect={handleSelectMaritimeEntity}
+        onLocationSelect={handleSelectLocation}
+        onResetGlobe={handleResetGlobe}
+        onDeployWargame={handleDeployWargameToGlobe}
+        onFlyToFlashpoint={handleFlyToFlashpoint}
+        onFlyToSensor={handleFlyToSensor}
+        onOpenSitrep={handleOpenSitrep}
+        onSelectRelationship={(pairId) => setSelectedRelationship(pairId)}
+        onSelectConcept={(cId) => setSelectedConcept(cId)}
+        onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
+        onSelectMilitarySystem={(sysId) => setSelectedMilitarySystem(sysId)}
+        onSelectEvent={handleSelectEvent}
+        onSelectRegion={handleSelectRegion}
+        onSelectCapital={setSelectedCapital}
       />
 
       {/* 5. Region Theater Selector (When in regions mode or when opened) */}
@@ -350,8 +492,8 @@ export default function App() {
         />
       )}
 
-      {/* 7. Contextual Country Intelligence Dossier Panel (Canonical 11 Sections) */}
-      {selectedCountry && (
+      {/* 7. Contextual Country Intelligence Dossier Panel (Canonical 11 Sections, when in HUD Mode) */}
+      {!workstationMode && selectedCountry && (
         <CountryIntelligencePanel
           country={selectedCountry}
           intelLevel={intelLevel}
@@ -360,6 +502,7 @@ export default function App() {
             setIsRotating(true);
           }}
           onResetGlobe={handleResetGlobe}
+          onOpenSitrep={handleOpenSitrep}
           onSelectRelationship={(pairId) => setSelectedRelationship(pairId)}
           onSelectConcept={(cId) => setSelectedConcept(cId)}
           onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
@@ -372,8 +515,8 @@ export default function App() {
         />
       )}
 
-      {/* 8. Geographic & Maritime Intelligence Panel (Oceans, Seas, Chokepoints, Ports) */}
-      {selectedMaritimeEntity && (
+      {/* 8. Geographic & Maritime Intelligence Panel (Oceans, Seas, Chokepoints, Ports, when in HUD Mode) */}
+      {!workstationMode && selectedMaritimeEntity && (
         <GeographicIntelligencePanel
           entity={selectedMaritimeEntity}
           intelLevel={intelLevel}
@@ -439,6 +582,12 @@ export default function App() {
         onSelectConcept={(cId) => setSelectedConcept(cId)}
         onSelectConspiracy={() => setConspiraciesOpen(true)}
         onSelectHistory={() => setHistoryTimelineOpen(true)}
+        onSelectWargame={(scenario) => {
+          setActiveScenario(scenario);
+          if (workstationMode) setWorkstationTab('wargame');
+          else setWargameModalOpen(true);
+        }}
+        onSelectFlashpoint={(fp) => handleFlyToFlashpoint(fp)}
       />
 
       {/* 13. Operational Keyboard Shortcuts Modal (H / ?) */}
@@ -560,7 +709,53 @@ export default function App() {
         onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
       />
 
-      {/* 23. Collapsible Intelligence Legend */}
+      {/* 23. Executive PDB / SitRep Export Briefing Modal */}
+      <BriefingExportModal
+        isOpen={sitrepModalOpen}
+        onClose={() => setSitrepModalOpen(false)}
+        country={sitrepContext || selectedCountry}
+        scenario={activeScenario}
+      />
+
+      {/* 24. Standalone Wargaming Modal (When in HUD Mode) */}
+      {!workstationMode && wargameModalOpen && (
+        <WargameScenarioModal
+          isOpen={wargameModalOpen}
+          onClose={() => setWargameModalOpen(false)}
+          onDeployToGlobe={handleDeployWargameToGlobe}
+          onOpenSitrep={handleOpenSitrep}
+        />
+      )}
+
+      {/* 25. Standalone Tactical Flashpoint Focus Modal (When in HUD Mode) */}
+      {!workstationMode && flashpointsModalOpen && (
+        <FlashpointFocusModal
+          isOpen={flashpointsModalOpen}
+          onClose={() => setFlashpointsModalOpen(false)}
+          onFlyToFlashpoint={handleFlyToFlashpoint}
+        />
+      )}
+
+      {/* 26. Standalone OSINT Sensor Tracker Panel (When in HUD Mode) */}
+      {!workstationMode && sensorsModalOpen && (
+        <SensorTrackerPanel
+          isOpen={sensorsModalOpen}
+          onClose={() => setSensorsModalOpen(false)}
+          onFlyToSensor={handleFlyToSensor}
+        />
+      )}
+
+      {/* 27. Standalone Crisis Watchlist Modal (When in HUD Mode) */}
+      {!workstationMode && watchlistModalOpen && (
+        <CrisisWatchlist
+          isOpen={watchlistModalOpen}
+          onClose={() => setWatchlistModalOpen(false)}
+          onFlyToTarget={(coords, name) => handleSelectLocation({ name, lat: coords.lat, lng: coords.lng })}
+          onSelectCountry={handleSelectCountry}
+        />
+      )}
+
+      {/* 28. Collapsible Intelligence Legend */}
       <IntelligenceLegend />
     </div>
   );

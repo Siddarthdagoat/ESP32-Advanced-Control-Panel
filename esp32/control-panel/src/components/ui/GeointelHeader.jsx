@@ -1,10 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Clock, HelpCircle, Globe2, BookOpen, GitFork, Radio, History } from 'lucide-react';
+import { 
+  Search, 
+  Clock, 
+  HelpCircle, 
+  Globe2, 
+  BookOpen, 
+  GitFork, 
+  Radio, 
+  History, 
+  ShieldAlert, 
+  Layout, 
+  FileText, 
+  Crosshair, 
+  Star 
+} from 'lucide-react';
 import { useIntelligenceFeed } from '../../services/intelligenceFeed';
 
 export default function GeointelHeader({
   activeMode,
   setActiveMode,
+  workstationMode = false,
+  onToggleWorkstationMode,
+  onOpenWargame,
+  onOpenFlashpoints,
+  onOpenSensors,
+  onOpenSitrep,
+  onOpenWatchlist,
   onOpenSearch,
   onOpenHelp,
   onOpenGlossary,
@@ -53,7 +74,7 @@ export default function GeointelHeader({
         </div>
       </div>
 
-      {/* Top Center: View Selectors + Educational Modules */}
+      {/* Top Center: View Selectors + Educational & Analytical Modules */}
       <div className="pointer-events-auto hidden md:flex items-center bg-[#080808]/90 px-1.5 py-1 rounded-full border border-white/15 shadow-2xl backdrop-blur-md">
         <button
           onClick={() => setActiveMode('world')}
@@ -98,22 +119,34 @@ export default function GeointelHeader({
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 
-        {/* Causal Chains Quick Access */}
+        {/* Wargaming & Scenario Simulator Trigger */}
         <button
-          onClick={onOpenChains}
-          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#E8E8E8] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          onClick={onOpenWargame}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-white hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open 'What-If?' Wargaming & Crisis Simulator (Taiwan, Hormuz, Cables, Red Sea)"
         >
-          <GitFork className="w-3 h-3 text-white" />
-          <span>CHAINS</span>
+          <ShieldAlert className="w-3 h-3 text-white" />
+          <span>WARGAME</span>
         </button>
 
-        {/* Vocabulary & Concepts Quick Access */}
+        {/* Tactical Strategic Flashpoints */}
         <button
-          onClick={onOpenGlossary}
-          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#BDBDBD] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          onClick={onOpenFlashpoints}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#CCCCCC] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open High-Res Strategic Flashpoints Recon"
         >
-          <BookOpen className="w-3 h-3 text-white" />
-          <span>CONCEPTS</span>
+          <Crosshair className="w-3 h-3 text-white" />
+          <span>FLASHPOINTS</span>
+        </button>
+
+        {/* Live OSINT Sensors Quick Access */}
+        <button
+          onClick={onOpenSensors}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#BDBDBD] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open Live Kinetic OSINT Sensors (AIS, ADS-B, FIRMS)"
+        >
+          <Radio className="w-3 h-3 text-white" />
+          <span>SENSORS</span>
         </button>
 
         {/* World History & Soviet Republics Timeline Access */}
@@ -124,16 +157,6 @@ export default function GeointelHeader({
         >
           <History className="w-3 h-3 text-white" />
           <span>HISTORY</span>
-        </button>
-
-        {/* Covert Operations & Conspiracies Access */}
-        <button
-          onClick={onOpenConspiracies}
-          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-white hover:text-white hover:bg-white/10 transition-all cursor-pointer"
-          title="Open Covert Operations & Geopolitical Conspiracies Dossiers (Project Iceworm, Nord Stream, Gladio)"
-        >
-          <span className="text-white text-xs">◈</span>
-          <span>SHADOW INTEL</span>
         </button>
 
         <div className="w-px h-4 bg-white/10 mx-1" />
@@ -156,38 +179,41 @@ export default function GeointelHeader({
 
       </div>
 
-      {/* Top Right: Search Trigger, Time & Help */}
+      {/* Top Right: Workstation Mode Toggle, SitRep Export, Search Trigger, Time & Help */}
       <div className="pointer-events-auto flex items-center gap-2 sm:gap-2.5">
-        {/* Mobile History Trigger */}
+        
+        {/* Docked Split Workstation Mode Toggle */}
         <button
-          onClick={onOpenHistoryTimeline}
-          className="md:hidden px-2 py-1.5 rounded-lg bg-[#080808]/90 border border-white/20 flex items-center gap-1 text-xs font-mono font-bold text-white transition-all cursor-pointer"
-          title="World History Timeline"
-        >
-          <History className="w-3 h-3" />
-          <span>HIST</span>
-        </button>
-
-        {/* Mobile Shadow Intel Trigger */}
-        <button
-          onClick={onOpenConspiracies}
-          className="md:hidden px-2 py-1.5 rounded-lg bg-[#080808]/90 border border-white/20 flex items-center gap-1 text-xs font-mono font-bold text-white transition-all cursor-pointer"
-          title="Shadow Intel (Covert Ops & Conspiracies)"
-        >
-          <span>◈</span>
-          <span>SHADOW</span>
-        </button>
-
-        {/* Mobile Live Intel Trigger */}
-        <button
-          onClick={onOpenLiveFeed}
-          className={`md:hidden px-2.5 py-1.5 rounded-lg bg-[#080808]/90 border border-white/20 flex items-center gap-1.5 text-xs font-mono font-bold transition-all cursor-pointer ${
-            isLiveFeedOpen ? 'bg-white text-black' : 'text-white hover:text-white'
+          onClick={onToggleWorkstationMode}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg border flex items-center gap-1.5 text-xs font-mono font-bold transition-all cursor-pointer ${
+            workstationMode
+              ? 'bg-white text-black border-white shadow-lg'
+              : 'bg-[#080808]/90 hover:bg-[#111111] text-white border-white/20 hover:border-white/50'
           }`}
-          title="Live Intelligence Feed"
+          title="Toggle Docked Multi-Pane Workstation Mode (Split-Screen Terminal)"
         >
-          <span className="w-2 h-2 rounded-full bg-white animate-ping shrink-0" />
-          <span>INTEL</span>
+          <Layout className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">WORKSTATION</span>
+          <span className="sm:hidden">DOCK</span>
+        </button>
+
+        {/* Presidential Daily Brief (PDB) SitRep Export */}
+        <button
+          onClick={onOpenSitrep}
+          className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#080808]/90 hover:bg-[#111111] border border-white/20 hover:border-white/50 text-xs font-mono font-bold text-white transition-all cursor-pointer"
+          title="Generate & Export Presidential Daily Brief (PDB) / Strategic SitRep"
+        >
+          <FileText className="w-3.5 h-3.5 text-white" />
+          <span>SITREP</span>
+        </button>
+
+        {/* Watchlist Quick Button */}
+        <button
+          onClick={onOpenWatchlist}
+          className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#080808]/90 hover:bg-[#111111] border border-white/20 hover:border-white/50 text-xs font-mono font-bold text-white transition-all cursor-pointer"
+          title="Crisis Watchlist"
+        >
+          <Star className="w-3.5 h-3.5 text-white" />
         </button>
 
         {/* Search Trigger */}

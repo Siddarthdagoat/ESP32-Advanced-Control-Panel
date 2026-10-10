@@ -1138,6 +1138,16 @@ export const STRATEGIC_RELATIONS = [
 
 export const HISTORICAL_ERAS = [
   {
+    year: '1914',
+    label: '1914: High Imperialism & WWI Outbreak',
+    brief: 'Six great empires govern two-thirds of the planet; assassination of Archduke Franz Ferdinand triggers systemic alliance chain reaction.'
+  },
+  {
+    year: '1939',
+    label: '1939: Axis Expansion & Molotov-Ribbentrop',
+    brief: 'Nazi-Soviet pact carves Eastern Europe; Imperial Japan expands in Asia; collapse of the League of Nations collective security order.'
+  },
+  {
     year: '1962',
     label: '1962: Sino-Indian War & Cuban Crisis',
     brief: 'High Cold War nuclear brinkmanship between Washington and Moscow, coinciding with the Himalayan high-altitude war between India and China.'

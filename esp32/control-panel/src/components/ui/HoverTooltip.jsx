@@ -182,6 +182,30 @@ export default function HoverTooltip({ hoverData }) {
             </div>
           </div>
         )}
+
+        {type === 'sensor' && (
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5 pb-1 border-b border-white/10">
+              <span className="text-white font-bold text-xs">◎</span>
+              <div>
+                <h4 className="text-xs font-mono font-bold text-white tracking-wider uppercase">
+                  {data.name || data.callsign || data.theater}
+                </h4>
+                <p className="text-[9px] font-mono text-[#CCCCCC] uppercase truncate max-w-[190px]">
+                  {data.type || data.aircraftType || data.anomalyType || 'OSINT SENSOR'}
+                </p>
+              </div>
+            </div>
+            {(data.flag || data.altitudeFt) && (
+              <p className="text-[9px] font-mono text-slate-300">
+                {data.flag ? `Flag: ${data.flag} · ${data.speedKts} kts` : `Altitude: ${data.altitudeFt?.toLocaleString()} FT`}
+              </p>
+            )}
+            <div className="pt-0.5 flex items-center justify-between text-[9px] font-mono text-slate-400 border-t border-white/5">
+              <span className="text-white">Click to inspect telemetry</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

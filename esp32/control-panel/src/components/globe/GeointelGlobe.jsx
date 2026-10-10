@@ -17,6 +17,10 @@ import {
   getOceanAndSeaLabels 
 } from '../../data/geointelMaritime';
 import { intelligenceFeed } from '../../services/intelligenceFeed.js';
+import { AIS_VESSELS, ADSB_MILITARY_FLIGHTS, FIRMS_THERMAL_HOTSPOTS } from '../../data/geointelSensors';
+import { getHistoricalEraData } from '../../data/history/historicalBoundaries';
+import { SUBSEA_CABLES, DEEP_OCEAN_TRENCHES } from '../../data/geointelBathymetryCables';
+import { STRATEGIC_FLASHPOINTS } from '../../data/geointelFlashpoints';
 
 const GLOBE_RADIUS = 100;
 
@@ -141,6 +145,86 @@ function createClusterBillboardSprite(regionName, count, hasCritical = false) {
   return sprite;
 }
 
+// Helper to create crisp billboard sprite for historical empires (1914, 1939, 1962, 1991)
+function createEmpireBillboardSprite(empireName, year) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 130;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 512, 130);
+
+  ctx.fillStyle = 'rgba(8, 8, 8, 0.94)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(14, 10, 484, 110, 14);
+  else ctx.rect(14, 10, 484, 110);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 18px "Courier New", monospace';
+  ctx.fillStyle = '#CCCCCC';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.letterSpacing = '3px';
+  ctx.fillText(`◈ HISTORICAL EMPIRE (${year})`, 256, 38);
+
+  ctx.font = 'bold 28px "Courier New", monospace';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText(String(empireName || '').toUpperCase(), 256, 82);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  const spriteMat = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0.98,
+    depthWrite: false
+  });
+  const sprite = new THREE.Sprite(spriteMat);
+  sprite.scale.set(18, 4.6, 1);
+  return sprite;
+}
+
+// Helper to create crisp billboard sprite for OSINT sensor markers
+function createSensorSprite(label, subtext, type = 'ais') {
+  const canvas = document.createElement('canvas');
+  canvas.width = 384;
+  canvas.height = 100;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 384, 100);
+
+  ctx.fillStyle = 'rgba(5, 5, 5, 0.92)';
+  ctx.strokeStyle = type === 'firms' ? '#ffffff' : 'rgba(220, 220, 220, 0.85)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(10, 8, 364, 84, 10);
+  else ctx.rect(10, 8, 364, 84);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 16px "Courier New", monospace';
+  ctx.fillStyle = type === 'firms' ? '#ffffff' : '#e0e0e0';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.letterSpacing = '2px';
+  ctx.fillText(String(label || '').toUpperCase(), 192, 35);
+
+  ctx.font = 'bold 13px "Courier New", monospace';
+  ctx.fillStyle = '#999999';
+  ctx.fillText(String(subtext || '').toUpperCase(), 192, 65);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  const spriteMat = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0.95,
+    depthWrite: false
+  });
+  const sprite = new THREE.Sprite(spriteMat);
+  sprite.scale.set(12, 3.2, 1);
+  return sprite;
+}
+
 // Coordinate converter: (lat, lng) to Three.js 3D Vector3
 const latLngToVector3 = (lat, lng, radius = GLOBE_RADIUS) => {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -204,13 +288,17 @@ export default function GeointelGlobe({
   selectedRegion,
   selectedMaritimeEntity,
   selectedRelationship,
+  tacticalFlashpoint,
+  activeScenario,
   activeLayers = {},
+  mapMode = 'monochrome', // 'monochrome' | 'bathymetry' | 'thermal' | 'satellite'
   currentYear = 'PRESENT',
   onCountrySelect,
   onEventSelect,
   onLocationSelect,
   onSelectMaritimeEntity,
   onCapitalSelect,
+  onSensorSelect,
   onHoverChange,
   isRotating = true,
   onUserInteraction,
@@ -233,7 +321,12 @@ export default function GeointelGlobe({
   const routesGroupRef = useRef(null);
   const countryBordersGroupRef = useRef(null);
   const oceanLabelsGroupRef = useRef(null);
-  const interactiveMarkersRef = useRef([]); // Events, strategic locations, chokepoints, ports, capital
+  const subseaCablesGroupRef = useRef(null);
+  const historicalBordersGroupRef = useRef(null);
+  const sensorsGroupRef = useRef(null);
+  const wargameGroupRef = useRef(null);
+  const tacticalFlashpointGroupRef = useRef(null);
+  const interactiveMarkersRef = useRef([]); // Events, strategic locations, chokepoints, ports, capital, sensors
   const animFrameRef = useRef(null);
   const photonPacketsRef = useRef([]);
 
@@ -495,6 +588,26 @@ export default function GeointelGlobe({
     const capitalMarkerGroup = new THREE.Group();
     globeGroup.add(capitalMarkerGroup);
     capitalMarkerGroupRef.current = capitalMarkerGroup;
+
+    const subseaCablesGroup = new THREE.Group();
+    globeGroup.add(subseaCablesGroup);
+    subseaCablesGroupRef.current = subseaCablesGroup;
+
+    const historicalBordersGroup = new THREE.Group();
+    globeGroup.add(historicalBordersGroup);
+    historicalBordersGroupRef.current = historicalBordersGroup;
+
+    const sensorsGroup = new THREE.Group();
+    globeGroup.add(sensorsGroup);
+    sensorsGroupRef.current = sensorsGroup;
+
+    const wargameGroup = new THREE.Group();
+    globeGroup.add(wargameGroup);
+    wargameGroupRef.current = wargameGroup;
+
+    const tacticalFlashpointGroup = new THREE.Group();
+    globeGroup.add(tacticalFlashpointGroup);
+    tacticalFlashpointGroupRef.current = tacticalFlashpointGroup;
 
     // Populate subtle floating ocean & marginal sea geographic labels
     const oceanLabels = getOceanAndSeaLabels();
@@ -1634,8 +1747,416 @@ export default function GeointelGlobe({
       }
     }
   }, [selectedMaritimeEntity, animateCameraTo]);
+  // Update Globe Visual Display Mode (Bathymetry & Subsea Cables / Conflict Thermals / Topo)
+  useEffect(() => {
+    if (!subseaCablesGroupRef.current) return;
+    const group = subseaCablesGroupRef.current;
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (child.material.map) child.material.map.dispose();
+        child.material.dispose();
+      }
+    }
 
-  // Trigger refocus for selected region
+    if (mapMode === 'bathymetry') {
+      // 1. Render Subsea Fiber-Optic Cables as luminous pathways on ocean floor
+      SUBSEA_CABLES.forEach(cable => {
+        const points = cable.routeCoords.map(([lat, lng]) => latLngToVector3(lat, lng, GLOBE_RADIUS * 1.0025));
+        const spline = new THREE.CatmullRomCurve3(points);
+        const samplePoints = spline.getPoints(90);
+        const geom = new THREE.BufferGeometry().setFromPoints(samplePoints);
+        const mat = new THREE.LineDashedMaterial({
+          color: 0xffffff,
+          dashSize: 2.5,
+          gapSize: 1.5,
+          transparent: true,
+          opacity: 0.90,
+          linewidth: 2.0
+        });
+        const line = new THREE.Line(geom, mat);
+        line.computeLineDistances();
+        group.add(line);
+
+        // Cable landing point nodes
+        cable.routeCoords.forEach(([lat, lng]) => {
+          const lp = latLngToVector3(lat, lng, GLOBE_RADIUS * 1.004);
+          const nodeGeom = new THREE.SphereGeometry(0.7, 8, 8);
+          const nodeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+          const nodeMesh = new THREE.Mesh(nodeGeom, nodeMat);
+          nodeMesh.position.copy(lp);
+          group.add(nodeMesh);
+        });
+      });
+
+      // 2. Render Deep Ocean Trenches
+      DEEP_OCEAN_TRENCHES.forEach(trench => {
+        const tPos = latLngToVector3(trench.lat, trench.lng, GLOBE_RADIUS * 1.003);
+        const ringGeom = new THREE.RingGeometry(1.6, 3.4, 16);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0x888888,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.70
+        });
+        const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+        ringMesh.position.copy(tPos);
+        ringMesh.lookAt(tPos.clone().multiplyScalar(1.1));
+        group.add(ringMesh);
+      });
+    } else if (mapMode === 'thermal') {
+      // Render NASA FIRMS Satellite Thermal Anomaly Heatmap
+      FIRMS_THERMAL_HOTSPOTS.forEach(spot => {
+        const sPos = latLngToVector3(spot.lat, spot.lng, GLOBE_RADIUS * 1.008);
+        const normal = sPos.clone().normalize();
+        
+        const coreGeom = new THREE.SphereGeometry(1.2, 12, 12);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+        coreMesh.position.copy(sPos);
+        group.add(coreMesh);
+
+        const haloGeom = new THREE.RingGeometry(1.6, 4.2, 24);
+        const haloMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.75
+        });
+        const haloMesh = new THREE.Mesh(haloGeom, haloMat);
+        haloMesh.position.copy(sPos.clone().add(normal.clone().multiplyScalar(0.1)));
+        haloMesh.lookAt(sPos.clone().add(normal));
+        haloMesh.userData = { type: 'pulse_ring', speed: 1.2, phase: Math.random() * Math.PI };
+        group.add(haloMesh);
+      });
+    } else if (mapMode === 'satellite') {
+      // Topographical terrain contours
+      for (let lat = -60; lat <= 60; lat += 20) {
+        const ringPts = [];
+        for (let lng = -180; lng <= 180; lng += 10) {
+          ringPts.push(latLngToVector3(lat, lng, GLOBE_RADIUS * 1.002));
+        }
+        const geom = new THREE.BufferGeometry().setFromPoints(ringPts);
+        const mat = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.35 });
+        group.add(new THREE.Line(geom, mat));
+      }
+    }
+  }, [mapMode]);
+
+  // Update 4D Historical Era Boundaries & Empires
+  useEffect(() => {
+    if (!historicalBordersGroupRef.current) return;
+    const group = historicalBordersGroupRef.current;
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (child.material.map) child.material.map.dispose();
+        child.material.dispose();
+      }
+    }
+
+    const eraData = getHistoricalEraData(currentYear);
+    const isPresent = String(currentYear).toUpperCase() === 'PRESENT' || currentYear === '2026';
+
+    // Toggle modern borders prominence
+    if (bordersMeshRef.current) {
+      bordersMeshRef.current.visible = true;
+      if (bordersMeshRef.current.material) {
+        bordersMeshRef.current.material.opacity = isPresent ? 0.65 : 0.20;
+      }
+    }
+
+    if (!isPresent && eraData) {
+      // 1. Render Era Historical Boundary Segments
+      const eraLinePositions = [];
+      (eraData.boundarySegments || []).forEach(segment => {
+        for (let i = 0; i < segment.length - 1; i++) {
+          const pt1 = segment[i];
+          const pt2 = segment[i + 1];
+          const p1 = latLngToVector3(pt1[0], pt1[1], GLOBE_RADIUS * 1.006);
+          const p2 = latLngToVector3(pt2[0], pt2[1], GLOBE_RADIUS * 1.006);
+          eraLinePositions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+        }
+      });
+
+      if (eraLinePositions.length > 0) {
+        const eraGeom = new THREE.BufferGeometry();
+        eraGeom.setAttribute('position', new THREE.Float32BufferAttribute(eraLinePositions, 3));
+        const eraMat = new THREE.LineBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.95,
+          linewidth: 2.5
+        });
+        const eraMesh = new THREE.LineSegments(eraGeom, eraMat);
+        group.add(eraMesh);
+      }
+
+      // 2. Render Historical Empire Billboards
+      (eraData.empires || []).forEach(emp => {
+        const sprite = createEmpireBillboardSprite(emp.name, eraData.year);
+        const ePos = latLngToVector3(emp.lat, emp.lng, GLOBE_RADIUS * 1.015);
+        sprite.position.copy(ePos);
+        group.add(sprite);
+
+        // Subsurface anchor beacon
+        const beaconGeom = new THREE.SphereGeometry(1.2, 12, 12);
+        const beaconMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const beaconMesh = new THREE.Mesh(beaconGeom, beaconMat);
+        beaconMesh.position.copy(ePos);
+        group.add(beaconMesh);
+      });
+    } else if (isPresent && eraData) {
+      // Render Present Disputed Ceasefires / Lines of Control
+      const locPositions = [];
+      (eraData.boundarySegments || []).forEach(segment => {
+        for (let i = 0; i < segment.length - 1; i++) {
+          const pt1 = segment[i];
+          const pt2 = segment[i + 1];
+          const p1 = latLngToVector3(pt1[0], pt1[1], GLOBE_RADIUS * 1.005);
+          const p2 = latLngToVector3(pt2[0], pt2[1], GLOBE_RADIUS * 1.005);
+          locPositions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+        }
+      });
+      if (locPositions.length > 0) {
+        const locGeom = new THREE.BufferGeometry();
+        locGeom.setAttribute('position', new THREE.Float32BufferAttribute(locPositions, 3));
+        const locMat = new THREE.LineDashedMaterial({
+          color: 0xffffff,
+          dashSize: 1.5,
+          gapSize: 1.0,
+          transparent: true,
+          opacity: 0.90
+        });
+        const locMesh = new THREE.LineSegments(locGeom, locMat);
+        locMesh.computeLineDistances();
+        group.add(locMesh);
+      }
+    }
+  }, [currentYear]);
+
+  // Update Live Kinetic OSINT Sensors (AIS, ADS-B, FIRMS)
+  useEffect(() => {
+    if (!sensorsGroupRef.current) return;
+    const group = sensorsGroupRef.current;
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (child.material.map) child.material.map.dispose();
+        child.material.dispose();
+      }
+    }
+
+    interactiveMarkersRef.current = interactiveMarkersRef.current.filter(m => !m.userData?.type?.startsWith('sensor_'));
+
+    if (activeLayers.sensors === false) return;
+
+    // A. Render AIS Commercial & Naval Vessels
+    AIS_VESSELS.forEach(vessel => {
+      const vPos = latLngToVector3(vessel.lat, vessel.lng, GLOBE_RADIUS * 1.006);
+      const normal = vPos.clone().normalize();
+
+      const hitGeom = new THREE.SphereGeometry(3.0, 10, 10);
+      const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+      const hitMesh = new THREE.Mesh(hitGeom, hitMat);
+      hitMesh.position.copy(vPos);
+      hitMesh.userData = { type: 'sensor_ais', data: vessel };
+      group.add(hitMesh);
+      interactiveMarkersRef.current.push(hitMesh);
+
+      // Ship marker icon (Triangle pointing towards heading)
+      const shipGeom = new THREE.ConeGeometry(0.8, 1.8, 3);
+      const shipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const shipMesh = new THREE.Mesh(shipGeom, shipMat);
+      shipMesh.position.copy(vPos);
+      shipMesh.lookAt(vPos.clone().add(normal));
+      shipMesh.rotation.z = (vessel.heading * Math.PI) / 180;
+      group.add(shipMesh);
+
+      const sprite = createSensorSprite(vessel.name, `${vessel.speedKts} kts · ${vessel.flag}`, 'ais');
+      sprite.position.copy(vPos.clone().add(normal.clone().multiplyScalar(2.2)));
+      group.add(sprite);
+    });
+
+    // B. Render ADS-B Military Reconnaissance Flights
+    ADSB_MILITARY_FLIGHTS.forEach(flight => {
+      const fPos = latLngToVector3(flight.lat, flight.lng, GLOBE_RADIUS * 1.018);
+      const normal = fPos.clone().normalize();
+
+      const hitGeom = new THREE.SphereGeometry(3.5, 10, 10);
+      const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+      const hitMesh = new THREE.Mesh(hitGeom, hitMat);
+      hitMesh.position.copy(fPos);
+      hitMesh.userData = { type: 'sensor_adsb', data: flight };
+      group.add(hitMesh);
+      interactiveMarkersRef.current.push(hitMesh);
+
+      const planeGeom = new THREE.OctahedronGeometry(1.0, 0);
+      const planeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const planeMesh = new THREE.Mesh(planeGeom, planeMat);
+      planeMesh.position.copy(fPos);
+      group.add(planeMesh);
+
+      const sprite = createSensorSprite(`✈ ${flight.callsign}`, `${flight.altitudeFt.toLocaleString()} FT`, 'adsb');
+      sprite.position.copy(fPos.clone().add(normal.clone().multiplyScalar(2.6)));
+      group.add(sprite);
+
+      if (flight.flightPath && flight.flightPath.length > 1) {
+        const trailPoints = flight.flightPath.map(([lat, lng]) => latLngToVector3(lat, lng, GLOBE_RADIUS * 1.016));
+        const spline = new THREE.CatmullRomCurve3(trailPoints);
+        const trailGeom = new THREE.BufferGeometry().setFromPoints(spline.getPoints(40));
+        const trailMat = new THREE.LineDashedMaterial({
+          color: 0x999999,
+          dashSize: 1.5,
+          gapSize: 1.0,
+          transparent: true,
+          opacity: 0.65
+        });
+        const trailLine = new THREE.Line(trailGeom, trailMat);
+        trailLine.computeLineDistances();
+        group.add(trailLine);
+      }
+    });
+
+    // C. Render NASA FIRMS Thermal Hotspots
+    FIRMS_THERMAL_HOTSPOTS.forEach(hotspot => {
+      const hPos = latLngToVector3(hotspot.lat, hotspot.lng, GLOBE_RADIUS * 1.008);
+      const normal = hPos.clone().normalize();
+
+      const hitGeom = new THREE.SphereGeometry(3.2, 10, 10);
+      const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+      const hitMesh = new THREE.Mesh(hitGeom, hitMat);
+      hitMesh.position.copy(hPos);
+      hitMesh.userData = { type: 'sensor_firms', data: hotspot };
+      group.add(hitMesh);
+      interactiveMarkersRef.current.push(hitMesh);
+
+      const ringGeom = new THREE.RingGeometry(0.8, 2.2, 16);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.85
+      });
+      const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+      ringMesh.position.copy(hPos.clone().add(normal.clone().multiplyScalar(0.1)));
+      ringMesh.lookAt(hPos.clone().add(normal));
+      ringMesh.userData = { type: 'pulse_ring', speed: 1.4, phase: Math.random() * Math.PI };
+      group.add(ringMesh);
+    });
+  }, [activeLayers.sensors]);
+
+  // Update Tactical Strategic Flashpoints
+  useEffect(() => {
+    if (!tacticalFlashpointGroupRef.current) return;
+    const group = tacticalFlashpointGroupRef.current;
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (child.material.map) child.material.map.dispose();
+        child.material.dispose();
+      }
+    }
+
+    if (!tacticalFlashpoint) return;
+
+    const fpPos = latLngToVector3(tacticalFlashpoint.lat, tacticalFlashpoint.lng, GLOBE_RADIUS * 1.01);
+    const normal = fpPos.clone().normalize();
+
+    animateCameraTo(tacticalFlashpoint.lat, tacticalFlashpoint.lng, tacticalFlashpoint.cameraDist || 155, 900);
+
+    // Concentric Tactical Defense Rings (50km, 100km, 250km)
+    [2.5, 5.0, 9.0].forEach((radius, idx) => {
+      const ringGeom = new THREE.RingGeometry(radius - 0.2, radius, 36);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.85 - idx * 0.25
+      });
+      const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+      ringMesh.position.copy(fpPos.clone().add(normal.clone().multiplyScalar(0.1 + idx * 0.05)));
+      ringMesh.lookAt(fpPos.clone().add(normal));
+      group.add(ringMesh);
+    });
+
+    const crosshairGeom = new THREE.BufferGeometry();
+    const crossPts = [];
+    [-6, 6].forEach(offset => {
+      crossPts.push(-offset, 0, 0, offset, 0, 0);
+      crossPts.push(0, -offset, 0, 0, offset, 0);
+    });
+    crosshairGeom.setAttribute('position', new THREE.Float32BufferAttribute(crossPts, 3));
+    const crosshairMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.75 });
+    const crosshairMesh = new THREE.LineSegments(crosshairGeom, crosshairMat);
+    crosshairMesh.position.copy(fpPos);
+    crosshairMesh.lookAt(fpPos.clone().add(normal));
+    group.add(crosshairMesh);
+
+    const sprite = createClusterBillboardSprite(tacticalFlashpoint.name, tacticalFlashpoint.defconLevel.split(' ')[0], true);
+    sprite.position.copy(fpPos.clone().add(normal.clone().multiplyScalar(3.8)));
+    group.add(sprite);
+  }, [tacticalFlashpoint, animateCameraTo]);
+
+  // Update Wargaming Diverted SLOC Arcs
+  useEffect(() => {
+    if (!wargameGroupRef.current) return;
+    const group = wargameGroupRef.current;
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (child.material.map) child.material.map.dispose();
+        child.material.dispose();
+      }
+    }
+
+    if (!activeScenario) return;
+
+    if (activeScenario.focusCoords) {
+      animateCameraTo(activeScenario.focusCoords.lat, activeScenario.focusCoords.lng, activeScenario.focusCoords.zoomDist || 175, 850);
+    }
+
+    (activeScenario.reroutedRoutes || []).forEach(route => {
+      const p1 = latLngToVector3(route.fromCoords[0], route.fromCoords[1], GLOBE_RADIUS * 1.004);
+      const p2 = latLngToVector3(route.toCoords[0], route.toCoords[1], GLOBE_RADIUS * 1.004);
+
+      const mid = p1.clone().add(p2).multiplyScalar(0.5);
+      const midNormal = mid.clone().normalize();
+      const dist = p1.distanceTo(p2);
+      const control = midNormal.multiplyScalar(GLOBE_RADIUS + Math.max(dist * 0.28, 14));
+
+      const curve = new THREE.QuadraticBezierCurve3(p1, control, p2);
+      const curveGeom = new THREE.BufferGeometry().setFromPoints(curve.getPoints(60));
+      const curveMat = new THREE.LineDashedMaterial({
+        color: 0xffffff,
+        dashSize: 2.2,
+        gapSize: 1.5,
+        transparent: true,
+        opacity: 0.95,
+        linewidth: 2.0
+      });
+      const arc = new THREE.Line(curveGeom, curveMat);
+      arc.computeLineDistances();
+      group.add(arc);
+
+      const apex = curve.getPoint(0.5);
+      const detourSprite = createSensorSprite(`DIVERSION: +${route.addedDays} DAYS`, route.bypassedChokepoint, 'firms');
+      detourSprite.position.copy(apex.clone().add(apex.clone().normalize().multiplyScalar(2.0)));
+      group.add(detourSprite);
+    });
+  }, [activeScenario, animateCameraTo]);
+
+  // Selected region zoom trigger
   useEffect(() => {
     if (selectedRegion && selectedRegion.center) {
       const zoomDist = 280 / (selectedRegion.zoom || 1.5);
@@ -1705,6 +2226,13 @@ export default function GeointelGlobe({
               onHoverChange({
                 type: 'cluster',
                 data: item.cluster,
+                x: e.clientX,
+                y: e.clientY
+              });
+            } else if (item.type?.startsWith('sensor_')) {
+              onHoverChange({
+                type: 'sensor',
+                data: item.data,
                 x: e.clientX,
                 y: e.clientY
               });
@@ -1844,6 +2372,9 @@ export default function GeointelGlobe({
           } else if (item.type === 'location' && onLocationSelect) {
             onLocationSelect(item.location);
             return;
+          } else if (item.type?.startsWith('sensor_') && onSensorSelect) {
+            onSensorSelect(item.data);
+            return;
           }
         }
       }
@@ -1894,7 +2425,7 @@ export default function GeointelGlobe({
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('click', handleClick);
     };
-  }, [findCountryAt, onCountrySelect, onEventSelect, onLocationSelect, onSelectMaritimeEntity, onCapitalSelect, onHoverChange, onUserInteraction]);
+  }, [findCountryAt, onCountrySelect, onEventSelect, onLocationSelect, onSelectMaritimeEntity, onCapitalSelect, onSensorSelect, onHoverChange, onUserInteraction]);
 
   return (
     <div 
