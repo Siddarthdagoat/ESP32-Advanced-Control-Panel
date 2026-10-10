@@ -66,6 +66,8 @@ export default function CountryIntelligencePanel({
   const [activeTab, setActiveTab] = useState('overview'); 
   // 'overview' | 'history' | 'politics' | 'geography' | 'borders' | 'economy' | 'military' | 'relations' | 'tensions' | 'locations' | 'events' | 'india'
   const [historyExpandedIndex, setHistoryExpandedIndex] = useState(null);
+  const [historySearchQuery, setHistorySearchQuery] = useState('');
+  const [historyCategoryFilter, setHistoryCategoryFilter] = useState('ALL');
   const [relationSearchQuery, setRelationSearchQuery] = useState('');
   const [loadingState, setLoadingState] = useState('loading'); // 'loading' | 'ready'
 
@@ -506,131 +508,302 @@ export default function CountryIntelligencePanel({
             )}
 
             {/* ======================================================== */}
-            {/* 2. HISTORY (Interactive Chronological Timeline) */}
+            {/* 2. HISTORY (Interactive Chronological Intelligence Timeline) */}
             {/* ======================================================== */}
-            {activeTab === 'history' && (
-              <div className="space-y-3 animate-fade-in">
-                <div className="flex items-center justify-between pb-1 border-b border-white/10">
-                  <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">
-                    HISTORICAL DEVELOPMENT ({dossier.history?.length || 0} MILESTONES)
-                  </span>
-                  <span className="text-[9px] font-mono text-slate-400">
-                    CLICK TO EXPAND
-                  </span>
-                </div>
+            {activeTab === 'history' && (() => {
+              const rawHistory = Array.isArray(dossier.history) ? dossier.history : [];
+              const filteredHistory = rawHistory.filter(item => {
+                if (historyCategoryFilter !== 'ALL') {
+                  const cat = historyCategoryFilter.toLowerCase();
+                  const hay = `${item.phase || ''} ${item.title || ''} ${item.whatHappened || ''} ${item.claimType || ''}`.toLowerCase();
+                  if (!hay.includes(cat)) return false;
+                }
+                if (!historySearchQuery.trim()) return true;
+                const q = historySearchQuery.toLowerCase();
+                return (
+                  item.title?.toLowerCase().includes(q) ||
+                  item.year?.toLowerCase().includes(q) ||
+                  item.whatHappened?.toLowerCase().includes(q) ||
+                  item.where?.toLowerCase().includes(q) ||
+                  item.actors?.some(a => a.toLowerCase().includes(q)) ||
+                  item.sources?.toLowerCase().includes(q)
+                );
+              });
 
-                {(!Array.isArray(dossier.history) || dossier.history.length === 0 || dossier.history?.isAvailable === false) ? (
-                  <DataNotAvailable 
-                    section="HISTORICAL DEVELOPMENT" 
-                    explanation={dossier.history?.explanation || "Chronological milestone archives and verified historical records for this sovereign nation are not cataloged in current verified open-source intelligence databases."} 
-                  />
-                ) : (
-                  <div className="relative border-l border-cyan-500/30 ml-2 space-y-3 pl-4">
-                    {dossier.history.map((item, idx) => {
-                      const isExpanded = historyExpandedIndex === idx;
+              return (
+                <div className="space-y-3 animate-fade-in text-[#E0E0E0]">
+                  
+                  {/* Top Bar: Count & Search */}
+                  <div className="space-y-2 pb-2 border-b border-[#1A1A1A]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <span>◈</span>
+                        <span>CHRONOLOGICAL HISTORICAL ARCHIVE ({rawHistory.length} MILESTONES)</span>
+                      </span>
+                      <span className="text-[8.5px] font-mono text-[#888888]">
+                        STRICT HISTORICAL FACT
+                      </span>
+                    </div>
 
-                      return (
-                        <div 
-                          key={idx}
-                          onClick={() => setHistoryExpandedIndex(isExpanded ? null : idx)}
-                          className="group relative cursor-pointer"
+                    {/* In-Timeline Search Input */}
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#666666]" />
+                      <input
+                        type="text"
+                        value={historySearchQuery}
+                        onChange={(e) => setHistorySearchQuery(e.target.value)}
+                        placeholder="Filter milestones, treaties, wars, leaders..."
+                        className="w-full bg-[#111111] border border-[#1C1C1C] rounded-lg pl-7 pr-3 py-1 text-xs text-white placeholder-[#555555] font-mono focus:outline-none focus:border-white transition-colors"
+                      />
+                    </div>
+
+                    {/* Category Filter Pills */}
+                    <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none text-[8.5px] font-mono">
+                      {[
+                        { id: 'ALL', label: 'ALL' },
+                        { id: 'war', label: 'WARS & CONFLICT' },
+                        { id: 'state', label: 'STATEHOOD / EMPIRES' },
+                        { id: 'treaty', label: 'TREATIES' },
+                        { id: 'independence', label: 'INDEPENDENCE' },
+                        { id: 'soviet', label: 'SOVIET / COLD WAR' }
+                      ].map(pill => (
+                        <button
+                          key={pill.id}
+                          onClick={() => setHistoryCategoryFilter(pill.id)}
+                          className={`px-2 py-0.5 rounded border transition-colors shrink-0 cursor-pointer ${
+                            historyCategoryFilter === pill.id
+                              ? 'bg-white text-black font-bold border-white'
+                              : 'bg-[#141414] text-[#888888] border-[#222222] hover:text-white'
+                          }`}
                         >
-                          {/* Dot on timeline */}
-                          <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-slate-900 border-2 border-cyan-400 group-hover:scale-125 transition-transform" />
+                          {pill.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-                          <div className="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 hover:border-cyan-500/40 transition-all">
-                            <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-[11px] font-mono font-bold text-cyan-300">
-                                    {item.year}
-                                  </span>
-                                  {item.phase && (
-                                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/5 text-slate-400">
-                                      {item.phase}
+                  {/* Former Soviet Union Republic Special Historical Matrix */}
+                  {dossier.sovietTransition && (
+                    <div className="p-3.5 rounded-xl bg-[#111111] border border-white/20 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                          <span>■</span>
+                          <span>USSR STATUS & 1991 SOVEREIGN TRANSITION</span>
+                        </span>
+                        <span className="text-[8.5px] font-mono px-1.5 py-0.2 rounded bg-white text-black font-bold">
+                          POST-SOVIET REPUBLIC
+                        </span>
+                      </div>
+
+                      <div className="text-xs space-y-1.5 text-[#CCCCCC]">
+                        <div>
+                          <span className="text-[9.5px] font-mono text-[#888888] block">CONSTITUENT ENTITY IN USSR:</span>
+                          <p className="font-semibold text-white">{dossier.sovietTransition.ussrName}</p>
+                          <p className="text-[11px] text-[#AAAAAA] mt-0.5 leading-snug">{dossier.sovietTransition.statusInUSSR}</p>
+                        </div>
+
+                        <div className="pt-1 border-t border-[#1C1C1C] flex items-center justify-between text-[10px] font-mono">
+                          <span className="text-[#888888]">Independence Declaration:</span>
+                          <span className="text-white font-bold">{dossier.sovietTransition.independenceDeclarationDate}</span>
+                        </div>
+
+                        <div className="pt-1 border-t border-[#1C1C1C] space-y-0.5">
+                          <span className="text-[9.5px] font-mono text-[#888888] block">CIS & COLLECTIVE SECURITY STATUS:</span>
+                          <p className="text-[11px] text-[#CCCCCC]">{dossier.sovietTransition.cisStatus}</p>
+                        </div>
+
+                        {dossier.sovietTransition.balticDistinctTrajectory && (
+                          <div className="pt-1 border-t border-[#1C1C1C] space-y-0.5">
+                            <span className="text-[9.5px] font-mono text-white font-bold block">BALTIC WESTERN INTEGRATION (NATO & EU 2004):</span>
+                            <p className="text-[11px] text-[#AAAAAA]">{dossier.sovietTransition.balticDistinctTrajectory}</p>
+                          </div>
+                        )}
+
+                        {dossier.sovietTransition.majorTerritorialBorderConflicts?.length > 0 && (
+                          <div className="pt-1 border-t border-[#1C1C1C] space-y-0.5">
+                            <span className="text-[9.5px] font-mono text-[#888888] block">DOCUMENTED POST-INDEPENDENCE BORDER CONFLICTS:</span>
+                            <ul className="text-[10.5px] text-[#B0B0B0] list-disc list-inside space-y-0.5">
+                              {dossier.sovietTransition.majorTerritorialBorderConflicts.slice(0, 3).map((cnf, i) => (
+                                <li key={i}>{cnf}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Empty state check */}
+                  {filteredHistory.length === 0 ? (
+                    <div className="p-4 rounded-xl bg-[#111111] border border-[#1C1C1C] text-center space-y-1">
+                      <p className="text-xs text-white font-semibold">No historical milestones matched current filters.</p>
+                      <button
+                        onClick={() => { setHistorySearchQuery(''); setHistoryCategoryFilter('ALL'); }}
+                        className="text-[10px] font-mono text-[#888888] hover:text-white underline cursor-pointer"
+                      >
+                        Reset history filters
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="relative border-l border-[#222222] ml-2 space-y-3 pl-4">
+                      {filteredHistory.map((item, idx) => {
+                        const isExpanded = historyExpandedIndex === idx;
+
+                        return (
+                          <div 
+                            key={idx}
+                            className="group relative"
+                          >
+                            {/* Dot on timeline */}
+                            <div className="absolute -left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-[#0A0A0A] border-2 border-white group-hover:scale-125 transition-transform" />
+
+                            <div 
+                              onClick={() => setHistoryExpandedIndex(isExpanded ? null : idx)}
+                              className="p-3 rounded-xl bg-[#111111] hover:bg-[#161616] border border-[#1C1C1C] hover:border-[#333333] transition-all cursor-pointer"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[10.5px] font-mono font-bold text-white px-1.5 py-0.2 rounded bg-[#1C1C1C] border border-[#262626]">
+                                      {item.year}
+                                    </span>
+                                    {item.phase && (
+                                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/5 text-[#888888]">
+                                        {item.phase}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h4 className="text-xs font-semibold text-white group-hover:text-white transition-colors mt-1 leading-snug">
+                                    {item.title}
+                                  </h4>
+                                </div>
+
+                                <div className="flex items-center gap-1 shrink-0">
+                                  {item.claimType && (
+                                    <span className="text-[8px] font-mono px-1.5 py-0.5 rounded uppercase font-bold bg-white/10 text-white border border-white/20">
+                                      {item.claimType}
                                     </span>
                                   )}
+                                  {isExpanded ? (
+                                    <ChevronUp className="w-3.5 h-3.5 text-[#888888]" />
+                                  ) : (
+                                    <ChevronDown className="w-3.5 h-3.5 text-[#888888]" />
+                                  )}
                                 </div>
-                                <h4 className="text-xs font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors mt-0.5">
-                                  {item.title}
-                                </h4>
                               </div>
 
-                              <div className="flex items-center gap-1 shrink-0">
-                                {item.claimType && (
-                                  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded uppercase font-bold ${
-                                    item.claimType === 'HISTORICAL FACT' 
-                                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                                      : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                                  }`}>
-                                    {item.claimType}
-                                  </span>
-                                )}
-                                {isExpanded ? (
-                                  <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
-                                ) : (
-                                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                                )}
-                              </div>
+                              {/* Collapsible Expanded Details */}
+                              {isExpanded && (
+                                <div 
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="mt-3 pt-2.5 border-t border-[#1C1C1C] space-y-2.5 text-[11px] leading-relaxed animate-fade-in"
+                                >
+                                  {/* What Happened */}
+                                  <div>
+                                    <strong className="text-white uppercase font-mono text-[9px] block">WHAT HAPPENED?</strong>
+                                    <div className="text-[#D0D0D0] mt-0.5">
+                                      <InteractiveText text={item.whatHappened} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
+                                    </div>
+                                  </div>
+
+                                  {/* Root Causes & Immediate Trigger (if present) */}
+                                  {(item.rootCauses || item.immediateTrigger) && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-[#1A1A1A]">
+                                      {item.rootCauses && (
+                                        <div className="p-2 rounded bg-[#141414] border border-[#222222]">
+                                          <span className="text-[8.5px] font-mono text-[#888888] uppercase block">ROOT CAUSES</span>
+                                          <p className="text-[10.5px] text-[#B0B0B0] mt-0.5">{item.rootCauses}</p>
+                                        </div>
+                                      )}
+                                      {item.immediateTrigger && (
+                                        <div className="p-2 rounded bg-[#141414] border border-[#222222]">
+                                          <span className="text-[8.5px] font-mono text-[#888888] uppercase block">IMMEDIATE TRIGGER</span>
+                                          <p className="text-[10.5px] text-[#B0B0B0] mt-0.5">{item.immediateTrigger}</p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* Turning Points */}
+                                  {item.turningPoints && (
+                                    <div>
+                                      <strong className="text-white uppercase font-mono text-[9px] block">CRITICAL TURNING POINTS</strong>
+                                      <p className="text-[#C0C0C0] mt-0.5">{item.turningPoints}</p>
+                                    </div>
+                                  )}
+
+                                  {/* Geographic Location & Locate Action */}
+                                  {item.where && (
+                                    <div className="flex items-center justify-between p-2 rounded bg-[#141414] border border-[#222222]">
+                                      <div>
+                                        <strong className="text-[#888888] uppercase font-mono text-[8.5px] block">GEOGRAPHIC LOCATION</strong>
+                                        <p className="text-[#CCCCCC] text-[10.5px]">{item.where}</p>
+                                      </div>
+                                      {onSelectLocation && (
+                                        <button
+                                          onClick={() => onSelectLocation({ name: item.title, lat: dossier.lat, lng: dossier.lng })}
+                                          className="px-2 py-0.5 rounded bg-[#1C1C1C] hover:bg-white hover:text-black border border-[#2A2A2A] text-white font-mono text-[9px] flex items-center gap-1 transition-all cursor-pointer"
+                                        >
+                                          <Compass className="w-3 h-3" />
+                                          <span>LOCATE</span>
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* Key Actors */}
+                                  {item.actors && item.actors.length > 0 && (
+                                    <div>
+                                      <strong className="text-[#888888] uppercase font-mono text-[9px] block">KEY ACTORS & LEADERS</strong>
+                                      <p className="text-[#B0B0B0]">{item.actors.join(', ')}</p>
+                                    </div>
+                                  )}
+
+                                  {/* Why Did It Matter */}
+                                  {item.whyItMattered && (
+                                    <div>
+                                      <strong className="text-white uppercase font-mono text-[9px] block">STRATEGIC SIGNIFICANCE</strong>
+                                      <div className="text-[#D0D0D0]">
+                                        <InteractiveText text={item.whyItMattered} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Consequences & Aftermath */}
+                                  {(item.consequences || item.politicalConsequences) && (
+                                    <div>
+                                      <strong className="text-white uppercase font-mono text-[9px] block">CONSEQUENCES & AFTERMATH</strong>
+                                      <div className="text-[#D0D0D0]">
+                                        <InteractiveText text={item.politicalConsequences || item.consequences} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Connection to Present */}
+                                  {item.connectionToPresent && (
+                                    <div className="p-2 rounded bg-white/5 border border-white/10">
+                                      <strong className="text-white uppercase font-mono text-[8.5px] block">CONNECTION TO PRESENT GEOPOLITICS</strong>
+                                      <p className="text-[#E0E0E0] text-[10.5px] mt-0.5">{item.connectionToPresent}</p>
+                                    </div>
+                                  )}
+
+                                  {/* Sources */}
+                                  {item.sources && (
+                                    <div className="pt-1 text-[8.5px] font-mono text-[#666666] border-t border-[#1C1C1C]">
+                                      SOURCES: {item.sources}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </div>
-
-                            {/* Collapsible Expanded Details */}
-                            {isExpanded && (
-                              <div className="mt-3 pt-2.5 border-t border-white/10 space-y-2 text-[11px] leading-relaxed animate-fade-in">
-                                <div>
-                                  <strong className="text-cyan-400 uppercase font-mono text-[9px] block">WHAT HAPPENED?</strong>
-                                  <div className="text-slate-200 mt-0.5">
-                                    <InteractiveText text={item.whatHappened} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
-                                  </div>
-                                </div>
-
-                                {item.where && (
-                                  <div>
-                                    <strong className="text-slate-400 uppercase font-mono text-[9px] block">GEOGRAPHIC LOCATION</strong>
-                                    <p className="text-slate-300">{item.where}</p>
-                                  </div>
-                                )}
-
-                                {item.actors && item.actors.length > 0 && (
-                                  <div>
-                                    <strong className="text-slate-400 uppercase font-mono text-[9px] block">KEY ACTORS & LEADERS</strong>
-                                    <p className="text-slate-300">{item.actors.join(', ')}</p>
-                                  </div>
-                                )}
-
-                                {item.whyItMattered && (
-                                  <div>
-                                    <strong className="text-amber-400 uppercase font-mono text-[9px] block">WHY DID IT MATTER?</strong>
-                                    <div className="text-slate-200">
-                                      <InteractiveText text={item.whyItMattered} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
-                                    </div>
-                                  </div>
-                                )}
-
-                                {(item.consequences || item.politicalConsequences) && (
-                                  <div>
-                                    <strong className="text-rose-400 uppercase font-mono text-[9px] block">CONSEQUENCES & AFTERMATH</strong>
-                                    <div className="text-slate-200">
-                                      <InteractiveText text={item.politicalConsequences || item.consequences} contextEntity={dossier.id} onSelectConcept={onSelectConcept} />
-                                    </div>
-                                  </div>
-                                )}
-
-                                {item.sources && (
-                                  <div className="pt-1 text-[9px] font-mono text-slate-500 border-t border-white/5">
-                                    SOURCES: {item.sources}
-                                  </div>
-                                )}
-                              </div>
-                            )}
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* ======================================================== */}
             {/* 3. POLITICAL STRUCTURE & POLITICS */}

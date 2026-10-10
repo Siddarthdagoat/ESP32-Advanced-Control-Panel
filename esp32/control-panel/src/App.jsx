@@ -25,6 +25,7 @@ import WhyExplainerModal from './components/ui/WhyExplainerModal';
 import GlossaryModal from './components/ui/GlossaryModal';
 import CapitalModal from './components/ui/CapitalModal';
 import ConspiracyIntelModal from './components/ui/ConspiracyIntelModal';
+import HistoricalTimelineModal from './components/ui/HistoricalTimelineModal';
 
 import { GLOBAL_REGIONS, COUNTRIES } from './data/geointelData';
 import { COUNTRY_DOSSIERS, getCountryDossier } from './data/geointelCountryDossiers';
@@ -78,6 +79,7 @@ export default function App() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [isLiveFeedOpen, setIsLiveFeedOpen] = useState(false);
   const [conspiraciesOpen, setConspiraciesOpen] = useState(false);
+  const [historyTimelineOpen, setHistoryTimelineOpen] = useState(false);
 
   // Mark first user interaction to dismiss hint overlay
   const handleUserInteraction = useCallback(() => {
@@ -313,6 +315,7 @@ export default function App() {
         onOpenLiveFeed={() => setIsLiveFeedOpen(prev => !prev)}
         isLiveFeedOpen={isLiveFeedOpen}
         onOpenConspiracies={() => setConspiraciesOpen(true)}
+        onOpenHistoryTimeline={() => setHistoryTimelineOpen(true)}
         selectedRegion={selectedRegion}
         onSelectRegion={handleSelectRegion}
       />
@@ -435,6 +438,7 @@ export default function App() {
         onSelectLocation={handleSelectLocation}
         onSelectConcept={(cId) => setSelectedConcept(cId)}
         onSelectConspiracy={() => setConspiraciesOpen(true)}
+        onSelectHistory={() => setHistoryTimelineOpen(true)}
       />
 
       {/* 13. Operational Keyboard Shortcuts Modal (H / ?) */}
@@ -540,7 +544,23 @@ export default function App() {
         }}
       />
 
-      {/* 22. Collapsible Intelligence Legend */}
+      {/* 22. Comprehensive World History Timeline & Soviet Republics Modal */}
+      <HistoricalTimelineModal
+        isOpen={historyTimelineOpen}
+        onClose={() => setHistoryTimelineOpen(false)}
+        onSelectCountry={(cCode) => {
+          handleSelectCountry(cCode);
+          setHistoryTimelineOpen(false);
+        }}
+        onLocateCoords={(lat, lng, locName) => {
+          handleSelectLocation({ name: locName || 'Historical Epicenter', lat, lng });
+          setHistoryTimelineOpen(false);
+        }}
+        onSelectConcept={(cId) => setSelectedConcept(cId)}
+        onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
+      />
+
+      {/* 23. Collapsible Intelligence Legend */}
       <IntelligenceLegend />
     </div>
   );

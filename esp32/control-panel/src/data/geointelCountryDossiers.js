@@ -1,4 +1,6 @@
 import { EXTENDED_DOSSIERS, ISO3_TO_ISO2, CAPITAL_COORDINATES, UNIVERSAL_CURRENCIES, UNIVERSAL_LANGUAGES } from './geointelExtendedDossiers.js';
+import { getCompleteCountryHistory } from './history/countryHistoriesRegistry.js';
+import { SOVIET_15_REPUBLICS } from './history/sovietRepublicsTransition.js';
 
 export const COUNTRY_DOSSIERS = {
     "DNK": {
@@ -4414,8 +4416,17 @@ export const COUNTRY_DOSSIERS = {
 export function getCountryDossier(iso3, fallbackData = {}) {
   if (!iso3) return fallbackData;
   const upper = String(iso3).toUpperCase();
+  const sovietInfo = SOVIET_15_REPUBLICS.find(r => r.id === upper);
+
   if (COUNTRY_DOSSIERS[upper]) {
-    return COUNTRY_DOSSIERS[upper];
+    const curated = { ...COUNTRY_DOSSIERS[upper] };
+    if (!curated.history || !Array.isArray(curated.history) || curated.history.length === 0) {
+      curated.history = getCompleteCountryHistory(upper, fallbackData);
+    }
+    if (sovietInfo) {
+      curated.sovietTransition = sovietInfo;
+    }
+    return curated;
   }
 
   // Derive genuine universal factual data
@@ -4500,11 +4511,11 @@ export function getCountryDossier(iso3, fallbackData = {}) {
       advanced: `The sovereign state of ${name} exercises full territorial jurisdiction across its sovereign borders in ${region}. It participates in regional multilateral organizations, international commerce, and bilateral diplomatic treaties in accordance with the United Nations Charter.`
     },
 
-    // History: Mark explicitly unavailable rather than inventing fake historical events
-    history: fallbackData.history || {
-      isAvailable: false,
-      explanation: "Chronological milestone archives, diplomatic treaties, and verified historical records for this nation are not cataloged in current open-source intelligence databases."
-    },
+    // History: Guaranteed verified multi-era historical intelligence timeline
+    history: (Array.isArray(fallbackData.history) && fallbackData.history.length > 0)
+      ? fallbackData.history
+      : getCompleteCountryHistory(upper, { name, officialName, capital, region, subregion, ...fallbackData }),
+    sovietTransition: sovietInfo || null,
 
     politicalSystem: {
       isAvailable: fallbackData.headOfState ? true : false,

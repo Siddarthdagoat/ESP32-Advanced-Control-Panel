@@ -4,6 +4,7 @@ import { COUNTRIES, GEOPOLITICAL_EVENTS, STRATEGIC_LOCATIONS } from '../../data/
 import { OCEANS, SEAS, CHOKEPOINTS, PORTS } from '../../data/geointelMaritime';
 import { searchGeopoliticalTerms } from '../../data/geopoliticalTerms';
 import { GEOPOLITICAL_CONSPIRACIES } from '../../data/geointelConspiracies';
+import { WORLD_HISTORY_EVENTS } from '../../data/history/worldHistoryEvents';
 
 export default function SearchModal({
   isOpen,
@@ -13,7 +14,8 @@ export default function SearchModal({
   onSelectLocation,
   onSelectMaritime,
   onSelectConcept,
-  onSelectConspiracy
+  onSelectConspiracy,
+  onSelectHistory
 }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -80,8 +82,18 @@ export default function SearchModal({
     symbol: '◈'
   }));
 
-  // Prioritize concepts and shadow intel
-  const allResults = [...matchedTerms, ...matchedConspiracies, ...matchedCountries, ...matchedMaritime, ...matchedEvents, ...matchedLocations];
+  const matchedHistory = WORLD_HISTORY_EVENTS.filter(h =>
+    !q || h.title?.toLowerCase().includes(q) || h.year?.toLowerCase().includes(q) || h.whatHappened?.toLowerCase().includes(q) || h.locationName?.toLowerCase().includes(q)
+  ).slice(0, 3).map(h => ({
+    type: 'history',
+    data: h,
+    title: `${h.year}: ${h.title}`,
+    sub: `${h.periodLabel} • ${h.locationName}`,
+    symbol: '📜'
+  }));
+
+  // Prioritize concepts, history, and shadow intel
+  const allResults = [...matchedTerms, ...matchedHistory, ...matchedConspiracies, ...matchedCountries, ...matchedMaritime, ...matchedEvents, ...matchedLocations];
 
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
@@ -99,6 +111,7 @@ export default function SearchModal({
 
   const handleSelect = (item) => {
     if (item.type === 'concept' && onSelectConcept) onSelectConcept(item.data.id);
+    else if (item.type === 'history' && onSelectHistory) onSelectHistory(item.data);
     else if (item.type === 'conspiracy' && onSelectConspiracy) onSelectConspiracy(item.data);
     else if (item.type === 'country') onSelectCountry(item.data);
     else if (item.type === 'maritime' && onSelectMaritime) onSelectMaritime(item.data);

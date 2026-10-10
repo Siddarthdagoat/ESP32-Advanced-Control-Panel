@@ -14,6 +14,10 @@ import path from 'path';
 import { defaultPipeline, getApiKey } from '../scripts/intelligencePipeline.js';
 import { GEOPOLITICAL_CONSPIRACIES } from '../src/data/geointelConspiracies.js';
 import { COUNTRY_DOSSIERS, getCountryDossier } from '../src/data/geointelCountryDossiers.js';
+import { WORLD_HISTORY_EVENTS, HISTORICAL_PERIODS } from '../src/data/history/worldHistoryEvents.js';
+import { SOVIET_15_REPUBLICS, SOVIET_HISTORICAL_ENTITIES_EXPLAINER } from '../src/data/history/sovietRepublicsTransition.js';
+import { HISTORICAL_EMPIRES } from '../src/data/history/historicalEmpires.js';
+import { getCompleteCountryHistory } from '../src/data/history/countryHistoriesRegistry.js';
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -57,7 +61,42 @@ export default async function handler(req, res) {
     });
   }
 
-  // 3. Deep Country Dossier Lookup (e.g. ?country=GRL or ?country=DNK)
+  // 3. World History Timeline Endpoint
+  if (query.type === 'history') {
+    const period = query.period;
+    const items = period && period !== 'ALL'
+      ? WORLD_HISTORY_EVENTS.filter(e => e.period === period)
+      : WORLD_HISTORY_EVENTS;
+
+    return res.status(200).json({
+      success: true,
+      total: items.length,
+      period: period || 'ALL',
+      periods: HISTORICAL_PERIODS,
+      events: items
+    });
+  }
+
+  // 4. The 15 Soviet Republics Transition Database
+  if (query.type === 'soviet_republics' || query.type === 'ussr') {
+    return res.status(200).json({
+      success: true,
+      total: SOVIET_15_REPUBLICS.length,
+      legalEntityExplainer: SOVIET_HISTORICAL_ENTITIES_EXPLAINER,
+      republics: SOVIET_15_REPUBLICS
+    });
+  }
+
+  // 5. Historical Empires Database
+  if (query.type === 'empires') {
+    return res.status(200).json({
+      success: true,
+      total: HISTORICAL_EMPIRES.length,
+      empires: HISTORICAL_EMPIRES
+    });
+  }
+
+  // 6. Deep Country Dossier Lookup (e.g. ?country=GRL or ?country=DNK or ?country=UKR)
   if (query.country) {
     const code = String(query.country).toUpperCase();
     const dossier = getCountryDossier(code, { id: code, name: code });

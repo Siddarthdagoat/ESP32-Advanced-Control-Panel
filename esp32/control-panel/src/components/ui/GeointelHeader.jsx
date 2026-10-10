@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Clock, HelpCircle, Globe2, BookOpen, GitFork, Radio } from 'lucide-react';
+import { Search, Clock, HelpCircle, Globe2, BookOpen, GitFork, Radio, History } from 'lucide-react';
 import { useIntelligenceFeed } from '../../services/intelligenceFeed';
 
 export default function GeointelHeader({
@@ -11,7 +11,8 @@ export default function GeointelHeader({
   onOpenChains,
   onOpenLiveFeed,
   isLiveFeedOpen,
-  onOpenConspiracies
+  onOpenConspiracies,
+  onOpenHistoryTimeline
 }) {
   const [utcTime, setUtcTime] = useState('');
   const { isLive, lastUpdatedUtcString } = useIntelligenceFeed();
@@ -115,6 +116,16 @@ export default function GeointelHeader({
           <span>CONCEPTS</span>
         </button>
 
+        {/* World History & Soviet Republics Timeline Access */}
+        <button
+          onClick={onOpenHistoryTimeline}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-white hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open World History Timeline, The 15 Soviet Republics & Historical Empires"
+        >
+          <History className="w-3 h-3 text-white" />
+          <span>HISTORY</span>
+        </button>
+
         {/* Covert Operations & Conspiracies Access */}
         <button
           onClick={onOpenConspiracies}
@@ -147,6 +158,16 @@ export default function GeointelHeader({
 
       {/* Top Right: Search Trigger, Time & Help */}
       <div className="pointer-events-auto flex items-center gap-2 sm:gap-2.5">
+        {/* Mobile History Trigger */}
+        <button
+          onClick={onOpenHistoryTimeline}
+          className="md:hidden px-2 py-1.5 rounded-lg bg-[#080808]/90 border border-white/20 flex items-center gap-1 text-xs font-mono font-bold text-white transition-all cursor-pointer"
+          title="World History Timeline"
+        >
+          <History className="w-3 h-3" />
+          <span>HIST</span>
+        </button>
+
         {/* Mobile Shadow Intel Trigger */}
         <button
           onClick={onOpenConspiracies}
