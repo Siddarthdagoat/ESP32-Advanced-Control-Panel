@@ -337,6 +337,16 @@ export default function GeointelGlobe({
   const selectedBordersMeshRef = useRef(null);
   const neighborBordersMeshRef = useRef(null);
 
+  // 3D Red Blinking Tactical Recon Globe Indicator Refs
+  const redTargetIndicatorGroupRef = useRef(null);
+  const redBeaconPulseRingRef = useRef(null);
+  const redBeaconOuterRingRef = useRef(null);
+  const redBeaconCoreDotRef = useRef(null);
+  const selectedCountryRef = useRef(selectedCountry);
+  useEffect(() => {
+    selectedCountryRef.current = selectedCountry;
+  }, [selectedCountry]);
+
   // GeoJSON Indexed Database
   const geoDatabaseRef = useRef({
     indexedFeatures: [],
@@ -608,6 +618,77 @@ export default function GeointelGlobe({
     const tacticalFlashpointGroup = new THREE.Group();
     globeGroup.add(tacticalFlashpointGroup);
     tacticalFlashpointGroupRef.current = tacticalFlashpointGroup;
+
+    // Dedicated 3D Red Blinking Tactical Recon Indicator Group
+    const redIndicatorGroup = new THREE.Group();
+    redIndicatorGroup.name = 'red_tactical_beacon';
+    redIndicatorGroup.visible = false;
+
+    // A. Center Red Glowing Core Sphere
+    const beaconCoreGeom = new THREE.SphereGeometry(0.75, 16, 16);
+    const beaconCoreMat = new THREE.MeshBasicMaterial({ color: 0xff1e1e });
+    const beaconCoreMesh = new THREE.Mesh(beaconCoreGeom, beaconCoreMat);
+    beaconCoreMesh.position.set(0, 0, 0.1);
+    redIndicatorGroup.add(beaconCoreMesh);
+    redBeaconCoreDotRef.current = beaconCoreMesh;
+
+    // B. Primary Expanding Pulsing Ring
+    const beaconPulseGeom = new THREE.RingGeometry(0.85, 1.85, 32);
+    const beaconPulseMat = new THREE.MeshBasicMaterial({
+      color: 0xff2222,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.95,
+      depthWrite: false
+    });
+    const beaconPulseMesh = new THREE.Mesh(beaconPulseGeom, beaconPulseMat);
+    beaconPulseMesh.position.set(0, 0, 0.12);
+    redIndicatorGroup.add(beaconPulseMesh);
+    redBeaconPulseRingRef.current = beaconPulseMesh;
+
+    // C. Secondary Outer Radar Shockwave Ring
+    const beaconOuterGeom = new THREE.RingGeometry(1.5, 2.7, 32);
+    const beaconOuterMat = new THREE.MeshBasicMaterial({
+      color: 0xff4444,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.65,
+      depthWrite: false
+    });
+    const beaconOuterMesh = new THREE.Mesh(beaconOuterGeom, beaconOuterMat);
+    beaconOuterMesh.position.set(0, 0, 0.14);
+    redIndicatorGroup.add(beaconOuterMesh);
+    redBeaconOuterRingRef.current = beaconOuterMesh;
+
+    // D. Four Tactical Reticle Tick Markers (N, S, E, W)
+    const tickGeom = new THREE.PlaneGeometry(0.25, 1.4);
+    const tickMat = new THREE.MeshBasicMaterial({
+      color: 0xff3333,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false
+    });
+    const tickN = new THREE.Mesh(tickGeom, tickMat);
+    tickN.position.set(0, 3.4, 0.15);
+    redIndicatorGroup.add(tickN);
+
+    const tickS = new THREE.Mesh(tickGeom, tickMat);
+    tickS.position.set(0, -3.4, 0.15);
+    redIndicatorGroup.add(tickS);
+
+    const tickE = new THREE.Mesh(tickGeom, tickMat);
+    tickE.position.set(3.4, 0, 0.15);
+    tickE.rotation.z = Math.PI / 2;
+    redIndicatorGroup.add(tickE);
+
+    const tickW = new THREE.Mesh(tickGeom, tickMat);
+    tickW.position.set(-3.4, 0, 0.15);
+    tickW.rotation.z = Math.PI / 2;
+    redIndicatorGroup.add(tickW);
+
+    globeGroup.add(redIndicatorGroup);
+    redTargetIndicatorGroupRef.current = redIndicatorGroup;
 
     // Populate subtle floating ocean & marginal sea geographic labels
     const oceanLabels = getOceanAndSeaLabels();
@@ -1108,6 +1189,35 @@ export default function GeointelGlobe({
         });
       }
 
+      // Animate 3D Red Blinking Tactical Globe Indicator
+      if (redTargetIndicatorGroupRef.current && redTargetIndicatorGroupRef.current.visible) {
+        const pulseTime = time * 2.5; // High-cadence tactical beacon pulsation (~2.5 Hz)
+        const cycle1 = pulseTime % 1;
+        const cycle2 = (pulseTime + 0.45) % 1;
+
+        if (redBeaconPulseRingRef.current) {
+          const scale1 = 0.8 + cycle1 * 2.2;
+          redBeaconPulseRingRef.current.scale.set(scale1, scale1, scale1);
+          if (redBeaconPulseRingRef.current.material) {
+            redBeaconPulseRingRef.current.material.opacity = (1 - cycle1) * 0.95;
+          }
+        }
+
+        if (redBeaconOuterRingRef.current) {
+          const scale2 = 0.9 + cycle2 * 2.4;
+          redBeaconOuterRingRef.current.scale.set(scale2, scale2, scale2);
+          if (redBeaconOuterRingRef.current.material) {
+            redBeaconOuterRingRef.current.material.opacity = (1 - cycle2) * 0.65;
+          }
+        }
+
+        if (redBeaconCoreDotRef.current) {
+          // Sharp military strobe blink effect
+          const strobe = (Math.sin(time * 10.0) > 0.1) ? 1.0 : 0.45;
+          redBeaconCoreDotRef.current.scale.setScalar(0.9 + strobe * 0.35);
+        }
+      }
+
       // Dynamic distance-based cluster vs individual event visibility
       if (controlsRef.current && cameraRef.current) {
         const camDist = camera.position.distanceTo(controls.target);
@@ -1192,6 +1302,9 @@ export default function GeointelGlobe({
       selectedMesh.geometry = new THREE.BufferGeometry();
       neighborMesh.geometry.dispose();
       neighborMesh.geometry = new THREE.BufferGeometry();
+      if (redTargetIndicatorGroupRef.current && !currentHoveredCountryRef.current) {
+        redTargetIndicatorGroupRef.current.visible = false;
+      }
       return;
     }
 
@@ -1291,6 +1404,19 @@ export default function GeointelGlobe({
       };
       capGroup.add(hitMesh);
       interactiveMarkersRef.current.push(hitMesh);
+    }
+
+    // Position 3D Red Blinking Tactical Recon Indicator on Selected Country
+    if (redTargetIndicatorGroupRef.current) {
+      const targetLat = capitalCoords?.lat ?? selectedCountry.lat;
+      const targetLng = capitalCoords?.lng ?? selectedCountry.lng;
+      if (targetLat !== undefined && targetLng !== undefined) {
+        const pos = latLngToVector3(targetLat, targetLng, GLOBE_RADIUS * 1.012);
+        const norm = pos.clone().normalize();
+        redTargetIndicatorGroupRef.current.position.copy(pos);
+        redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
+        redTargetIndicatorGroupRef.current.visible = true;
+      }
     }
 
     // Smoothly focus camera onto selected country
@@ -2174,7 +2300,7 @@ export default function GeointelGlobe({
     }
   }, [resetGlobeTrigger, animateCameraTo]);
 
-  // Direct Geographic Picking and Hover Detection
+  // Direct Geographic Picking with 280ms Hover Dwell Delay & 3D Red Blinking Globe Indicator
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -2182,155 +2308,20 @@ export default function GeointelGlobe({
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    const handleMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    // Dwell delay configuration (prevents accidental hover flashes while sweeping or exploring)
+    const HOVER_DWELL_MS = 280;
 
-      if (!cameraRef.current || !globeGroupRef.current || !earthMeshRef.current) return;
-      raycaster.setFromCamera(mouse, cameraRef.current);
+    let hoverTimer = null;
+    let pendingTargetKey = null;
+    let pendingPayload = null;
+    let currentActiveKey = null;
 
-      // Check marker hits first (events / strategic points / maritime markers)
-      if (interactiveMarkersRef.current.length > 0) {
-        const markerHits = raycaster.intersectObjects(interactiveMarkersRef.current, false);
-        if (markerHits.length > 0) {
-          const item = markerHits[0].object.userData;
-          container.style.cursor = 'pointer';
-          if (onHoverChange) {
-            if (item.type === 'capital') {
-              onHoverChange({
-                type: 'capital',
-                data: {
-                  name: `● ${item.data.capital}`,
-                  country: item.data.country,
-                  tagline: item.data.role
-                },
-                x: e.clientX,
-                y: e.clientY
-              });
-            } else if (item.type === 'maritime_marker') {
-              onHoverChange({
-                type: 'maritime',
-                data: {
-                  id: item.maritimeEntity.id,
-                  name: item.maritimeEntity.name,
-                  type: item.maritimeEntity.type,
-                  category: item.marker.markerCategory === 'port' ? 'Strategic Seaport' : 'Maritime Chokepoint',
-                  symbol: item.marker.symbol || '◆',
-                  tagline: item.maritimeEntity.overview?.beginner || 'Strategic Maritime Entity'
-                },
-                x: e.clientX,
-                y: e.clientY
-              });
-            } else if (item.type === 'cluster') {
-              onHoverChange({
-                type: 'cluster',
-                data: item.cluster,
-                x: e.clientX,
-                y: e.clientY
-              });
-            } else if (item.type?.startsWith('sensor_')) {
-              onHoverChange({
-                type: 'sensor',
-                data: item.data,
-                x: e.clientX,
-                y: e.clientY
-              });
-            } else {
-              onHoverChange({
-                type: item.type,
-                data: item.event || item.location,
-                x: e.clientX,
-                y: e.clientY
-              });
-            }
-          }
-          return;
-        }
-      }
+    let isPointerDown = false;
+    let isDragging = false;
+    let dragStartPos = { x: 0, y: 0 };
 
-      // Raycast against the Earth sphere surface
-      const earthHits = raycaster.intersectObject(earthMeshRef.current, false);
-      if (earthHits.length > 0) {
-        const hit = earthHits[0];
-        // Convert world hit point into globe local coordinate space
-        const localPoint = globeGroupRef.current.worldToLocal(hit.point.clone());
-        const { lat, lng } = vector3ToLatLng(localPoint);
-
-        // 1. Find country via pre-indexed point-in-polygon
-        const countryItem = findCountryAt(lat, lng);
-
-        if (countryItem) {
-          container.style.cursor = 'pointer';
-
-          // Update dynamic hover border mesh if changed
-          if (currentHoveredCountryRef.current !== countryItem.iso3) {
-            currentHoveredCountryRef.current = countryItem.iso3;
-            const lines = geoDatabaseRef.current.countryLineMap.get(countryItem.iso3);
-            if (lines && hoverBordersMeshRef.current) {
-              hoverBordersMeshRef.current.geometry.dispose();
-              const hGeom = new THREE.BufferGeometry();
-              hGeom.setAttribute('position', new THREE.BufferAttribute(lines, 3));
-              hoverBordersMeshRef.current.geometry = hGeom;
-            }
-          }
-
-          // Fetch rich dossier or fallback metadata for hover tooltip
-          const dossier = COUNTRY_DOSSIERS[countryItem.iso3] || 
-            COUNTRIES.find(c => c.id === countryItem.iso3 || c.name === countryItem.name);
-
-          if (onHoverChange) {
-            onHoverChange({
-              type: 'country',
-              data: {
-                id: countryItem.iso3,
-                name: countryItem.name,
-                officialName: countryItem.feature.properties.NAME_LONG || countryItem.feature.properties.NAME,
-                region: countryItem.feature.properties.SUBREGION || countryItem.feature.properties.CONTINENT || 'Global',
-                capital: dossier?.capital || 'National Capital',
-                flag: dossier?.flag || '🌐',
-                tagline: dossier?.tagline || dossier?.overview?.beginner || 'Sovereign Geographic Entity'
-              },
-              x: e.clientX,
-              y: e.clientY
-            });
-          }
-          return;
-        }
-
-        // 2. Open Water Raycasting: Detect Oceans and Marginal Seas
-        const maritimeEntity = findMaritimeEntityAtCoordinates(lat, lng);
-        if (maritimeEntity) {
-          container.style.cursor = 'pointer';
-          if (currentHoveredCountryRef.current !== null) {
-            currentHoveredCountryRef.current = null;
-            if (hoverBordersMeshRef.current) {
-              hoverBordersMeshRef.current.geometry.dispose();
-              hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
-            }
-          }
-
-          if (onHoverChange) {
-            onHoverChange({
-              type: 'maritime',
-              data: {
-                id: maritimeEntity.id,
-                name: maritimeEntity.name,
-                type: maritimeEntity.type,
-                category: maritimeEntity.type === 'OCEAN' ? 'Ocean Basin' : 'Marginal Sea',
-                symbol: maritimeEntity.symbol || '🌊',
-                tagline: maritimeEntity.overview?.beginner || 'Strategic Maritime Waterway'
-              },
-              x: e.clientX,
-              y: e.clientY
-            });
-          }
-          return;
-        }
-      }
-
-      // Over outer background space
-      container.style.cursor = 'grab';
+    const clearHoverMeshAndIndicator = () => {
+      currentActiveKey = null;
       if (currentHoveredCountryRef.current !== null) {
         currentHoveredCountryRef.current = null;
         if (hoverBordersMeshRef.current) {
@@ -2338,10 +2329,368 @@ export default function GeointelGlobe({
           hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
         }
       }
+
+      // If a country is actively selected, keep red indicator locked on selected country capital/center
+      if (selectedCountryRef.current) {
+        const sLat = selectedCountryRef.current.capitalCoords?.lat ?? selectedCountryRef.current.lat;
+        const sLng = selectedCountryRef.current.capitalCoords?.lng ?? selectedCountryRef.current.lng;
+        if (sLat !== undefined && sLng !== undefined && redTargetIndicatorGroupRef.current) {
+          const pos = latLngToVector3(sLat, sLng, GLOBE_RADIUS * 1.012);
+          const norm = pos.clone().normalize();
+          redTargetIndicatorGroupRef.current.position.copy(pos);
+          redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
+          redTargetIndicatorGroupRef.current.visible = true;
+          if (onHoverChange) onHoverChange(null);
+          return;
+        }
+      }
+
+      if (redTargetIndicatorGroupRef.current) {
+        redTargetIndicatorGroupRef.current.visible = false;
+      }
       if (onHoverChange) onHoverChange(null);
     };
 
+    const commitCountryHover = (payload) => {
+      if (!payload || !payload.countryItem) return;
+      const { countryItem, lat, lng, x, y } = payload;
+      currentActiveKey = `country_${countryItem.iso3}`;
+      currentHoveredCountryRef.current = countryItem.iso3;
+
+      // 1. Draw dynamic hover border lines
+      const lines = geoDatabaseRef.current.countryLineMap.get(countryItem.iso3);
+      if (lines && hoverBordersMeshRef.current) {
+        hoverBordersMeshRef.current.geometry.dispose();
+        const hGeom = new THREE.BufferGeometry();
+        hGeom.setAttribute('position', new THREE.BufferAttribute(lines, 3));
+        hoverBordersMeshRef.current.geometry = hGeom;
+      }
+
+      // 2. Position and activate 3D Red Blinking Globe Indicator
+      if (redTargetIndicatorGroupRef.current) {
+        const targetLat = lat ?? countryItem.center?.lat;
+        const targetLng = lng ?? countryItem.center?.lng;
+        if (targetLat !== undefined && targetLng !== undefined) {
+          const pos = latLngToVector3(targetLat, targetLng, GLOBE_RADIUS * 1.012);
+          const norm = pos.clone().normalize();
+          redTargetIndicatorGroupRef.current.position.copy(pos);
+          redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
+          redTargetIndicatorGroupRef.current.visible = true;
+        }
+      }
+
+      // 3. Dispatch onHoverChange with rich country data
+      const dossier = COUNTRY_DOSSIERS[countryItem.iso3] || 
+        COUNTRIES.find(c => c.id === countryItem.iso3 || c.name === countryItem.name);
+
+      if (onHoverChange) {
+        onHoverChange({
+          type: 'country',
+          data: {
+            id: countryItem.iso3,
+            name: countryItem.name,
+            officialName: countryItem.feature.properties.NAME_LONG || countryItem.feature.properties.NAME,
+            region: countryItem.feature.properties.SUBREGION || countryItem.feature.properties.CONTINENT || 'Global',
+            capital: dossier?.capital || 'National Capital',
+            flag: dossier?.flag || '🌐',
+            tagline: dossier?.tagline || dossier?.overview?.beginner || 'Sovereign Geographic Entity',
+            lat,
+            lng
+          },
+          x,
+          y
+        });
+      }
+    };
+
+    const commitMaritimeHover = (payload) => {
+      if (!payload || !payload.maritimeEntity) return;
+      const { maritimeEntity, lat, lng, x, y } = payload;
+      currentActiveKey = `maritime_${maritimeEntity.id}`;
+
+      if (currentHoveredCountryRef.current !== null) {
+        currentHoveredCountryRef.current = null;
+        if (hoverBordersMeshRef.current) {
+          hoverBordersMeshRef.current.geometry.dispose();
+          hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
+        }
+      }
+
+      // Position 3D Red Blinking Indicator at hovered sea coordinates
+      if (redTargetIndicatorGroupRef.current && lat !== undefined && lng !== undefined) {
+        const pos = latLngToVector3(lat, lng, GLOBE_RADIUS * 1.012);
+        const norm = pos.clone().normalize();
+        redTargetIndicatorGroupRef.current.position.copy(pos);
+        redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
+        redTargetIndicatorGroupRef.current.visible = true;
+      }
+
+      if (onHoverChange) {
+        onHoverChange({
+          type: 'maritime',
+          data: {
+            id: maritimeEntity.id,
+            name: maritimeEntity.name,
+            type: maritimeEntity.type,
+            category: maritimeEntity.type === 'OCEAN' ? 'Ocean Basin' : 'Marginal Sea',
+            symbol: maritimeEntity.symbol || '🌊',
+            tagline: maritimeEntity.overview?.beginner || 'Strategic Maritime Waterway',
+            lat,
+            lng
+          },
+          x,
+          y
+        });
+      }
+    };
+
+    const commitMarkerHover = (payload) => {
+      if (!payload || !payload.item) return;
+      const { item, x, y, hitPos } = payload;
+      currentActiveKey = payload.targetKey;
+
+      // Position 3D Red Blinking Indicator at marker position
+      if (redTargetIndicatorGroupRef.current && hitPos) {
+        const norm = hitPos.clone().normalize();
+        redTargetIndicatorGroupRef.current.position.copy(hitPos.clone().add(norm.clone().multiplyScalar(0.4)));
+        redTargetIndicatorGroupRef.current.lookAt(hitPos.clone().add(norm));
+        redTargetIndicatorGroupRef.current.visible = true;
+      }
+
+      if (!onHoverChange) return;
+
+      if (item.type === 'capital') {
+        onHoverChange({
+          type: 'capital',
+          data: {
+            name: `● ${item.data.capital}`,
+            country: item.data.country,
+            tagline: item.data.role
+          },
+          x,
+          y
+        });
+      } else if (item.type === 'maritime_marker') {
+        onHoverChange({
+          type: 'maritime',
+          data: {
+            id: item.maritimeEntity.id,
+            name: item.maritimeEntity.name,
+            type: item.maritimeEntity.type,
+            category: item.marker.markerCategory === 'port' ? 'Strategic Seaport' : 'Maritime Chokepoint',
+            symbol: item.marker.symbol || '◆',
+            tagline: item.maritimeEntity.overview?.beginner || 'Strategic Maritime Entity'
+          },
+          x,
+          y
+        });
+      } else if (item.type === 'cluster') {
+        onHoverChange({
+          type: 'cluster',
+          data: item.cluster,
+          x,
+          y
+        });
+      } else if (item.type?.startsWith('sensor_')) {
+        onHoverChange({
+          type: 'sensor',
+          data: item.data,
+          x,
+          y
+        });
+      } else {
+        onHoverChange({
+          type: item.type,
+          data: item.event || item.location,
+          x,
+          y
+        });
+      }
+    };
+
+    const handlePointerDown = (e) => {
+      isPointerDown = true;
+      isDragging = false;
+      dragStartPos = { x: e.clientX, y: e.clientY };
+
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
+      pendingTargetKey = null;
+      pendingPayload = null;
+    };
+
+    const handlePointerMove = (e) => {
+      // Check if user is actively dragging / orbiting the globe
+      if (isPointerDown || e.buttons > 0) {
+        const dist = Math.hypot(e.clientX - dragStartPos.x, e.clientY - dragStartPos.y);
+        if (dist > 5) {
+          isDragging = true;
+        }
+      }
+
+      if (isDragging) {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+          hoverTimer = null;
+        }
+        pendingTargetKey = null;
+        pendingPayload = null;
+        clearHoverMeshAndIndicator();
+        container.style.cursor = 'grabbing';
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      if (!cameraRef.current || !globeGroupRef.current || !earthMeshRef.current) return;
+      raycaster.setFromCamera(mouse, cameraRef.current);
+
+      // 1. Raycast Interactive Markers (capitals, sensors, maritime markers, clusters, events)
+      if (interactiveMarkersRef.current.length > 0) {
+        const markerHits = raycaster.intersectObjects(interactiveMarkersRef.current, false);
+        if (markerHits.length > 0) {
+          const hitObj = markerHits[0].object;
+          const item = hitObj.userData;
+          const targetKey = `marker_${item.type}_${item.data?.id || item.event?.id || item.location?.id || hitObj.id}`;
+          container.style.cursor = 'pointer';
+
+          if (currentActiveKey === targetKey) {
+            // Already active: smoothly update tooltip coordinates without re-triggering
+            if (onHoverChange) {
+              onHoverChange(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
+            }
+            return;
+          }
+
+          if (pendingTargetKey === targetKey) {
+            // Dwell timer in progress: update coordinates
+            pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY, hitPos: hitObj.position };
+            return;
+          }
+
+          // New marker target: start dwell timer
+          if (hoverTimer) clearTimeout(hoverTimer);
+          pendingTargetKey = targetKey;
+          pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY, hitPos: hitObj.position };
+          hoverTimer = setTimeout(() => {
+            commitMarkerHover(pendingPayload);
+          }, HOVER_DWELL_MS);
+          return;
+        }
+      }
+
+      // 2. Raycast Earth Surface (Countries & Oceans)
+      const earthHits = raycaster.intersectObject(earthMeshRef.current, false);
+      if (earthHits.length > 0) {
+        const hit = earthHits[0];
+        const localPoint = globeGroupRef.current.worldToLocal(hit.point.clone());
+        const { lat, lng } = vector3ToLatLng(localPoint);
+
+        // A. Find Country via point-in-polygon
+        const countryItem = findCountryAt(lat, lng);
+        if (countryItem) {
+          const targetKey = `country_${countryItem.iso3}`;
+          container.style.cursor = 'pointer';
+
+          if (currentActiveKey === targetKey) {
+            // Country already actively hovered: smoothly track tooltip coordinates
+            if (onHoverChange) {
+              onHoverChange(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
+            }
+            return;
+          }
+
+          if (pendingTargetKey === targetKey) {
+            // Dwell timer currently ticking for this country: update coordinates
+            pendingPayload = { countryItem, lat, lng, x: e.clientX, y: e.clientY };
+            return;
+          }
+
+          // New country target: start dwell delay timer (280ms)
+          if (hoverTimer) clearTimeout(hoverTimer);
+          pendingTargetKey = targetKey;
+          pendingPayload = { countryItem, lat, lng, x: e.clientX, y: e.clientY };
+          hoverTimer = setTimeout(() => {
+            commitCountryHover(pendingPayload);
+          }, HOVER_DWELL_MS);
+          return;
+        }
+
+        // B. Find Maritime Entity (Oceans & Marginal Seas)
+        const maritimeEntity = findMaritimeEntityAtCoordinates(lat, lng);
+        if (maritimeEntity) {
+          const targetKey = `maritime_${maritimeEntity.id}`;
+          container.style.cursor = 'pointer';
+
+          if (currentActiveKey === targetKey) {
+            if (onHoverChange) {
+              onHoverChange(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
+            }
+            return;
+          }
+
+          if (pendingTargetKey === targetKey) {
+            pendingPayload = { maritimeEntity, lat, lng, x: e.clientX, y: e.clientY };
+            return;
+          }
+
+          if (hoverTimer) clearTimeout(hoverTimer);
+          pendingTargetKey = targetKey;
+          pendingPayload = { maritimeEntity, lat, lng, x: e.clientX, y: e.clientY };
+          hoverTimer = setTimeout(() => {
+            commitMaritimeHover(pendingPayload);
+          }, HOVER_DWELL_MS);
+          return;
+        }
+      }
+
+      // 3. Pointer is over empty ocean or cosmic background
+      container.style.cursor = 'grab';
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
+      pendingTargetKey = null;
+      pendingPayload = null;
+      clearHoverMeshAndIndicator();
+    };
+
+    const handlePointerUp = () => {
+      isPointerDown = false;
+      setTimeout(() => {
+        isDragging = false;
+      }, 60);
+      container.style.cursor = 'grab';
+    };
+
+    const handlePointerLeave = () => {
+      isPointerDown = false;
+      isDragging = false;
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
+      pendingTargetKey = null;
+      pendingPayload = null;
+      clearHoverMeshAndIndicator();
+      container.style.cursor = 'grab';
+    };
+
     const handleClick = (e) => {
+      // If releasing from an orbit/pan drag gesture, ignore click
+      if (isDragging) return;
+
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
+      pendingTargetKey = null;
+      pendingPayload = null;
+
       const rect = container.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -2388,10 +2737,8 @@ export default function GeointelGlobe({
 
         const countryItem = findCountryAt(lat, lng);
         if (countryItem && onCountrySelect) {
-          // Pause auto-rotation immediately
           isRotatingRef.current = false;
 
-          // Lookup full comprehensive dossier or dynamically synthesize complete dossier
           const iso3 = countryItem.iso3;
           const fallbackData = {
             id: iso3,
@@ -2403,6 +2750,15 @@ export default function GeointelGlobe({
             lng: countryItem.center.lng
           };
           const countryPayload = getCountryDossier(iso3, fallbackData);
+
+          // Position 3D Red Blinking Indicator on selected country
+          if (redTargetIndicatorGroupRef.current) {
+            const pos = latLngToVector3(lat, lng, GLOBE_RADIUS * 1.012);
+            const norm = pos.clone().normalize();
+            redTargetIndicatorGroupRef.current.position.copy(pos);
+            redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
+            redTargetIndicatorGroupRef.current.visible = true;
+          }
 
           onCountrySelect(countryPayload);
           return;
@@ -2418,11 +2774,18 @@ export default function GeointelGlobe({
       }
     };
 
-    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('pointerdown', handlePointerDown);
+    container.addEventListener('pointermove', handlePointerMove);
+    container.addEventListener('pointerup', handlePointerUp);
+    container.addEventListener('pointerleave', handlePointerLeave);
     container.addEventListener('click', handleClick);
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
+      if (hoverTimer) clearTimeout(hoverTimer);
+      container.removeEventListener('pointerdown', handlePointerDown);
+      container.removeEventListener('pointermove', handlePointerMove);
+      container.removeEventListener('pointerup', handlePointerUp);
+      container.removeEventListener('pointerleave', handlePointerLeave);
       container.removeEventListener('click', handleClick);
     };
   }, [findCountryAt, onCountrySelect, onEventSelect, onLocationSelect, onSelectMaritimeEntity, onCapitalSelect, onSensorSelect, onHoverChange, onUserInteraction]);

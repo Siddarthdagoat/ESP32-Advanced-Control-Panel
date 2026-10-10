@@ -20,6 +20,22 @@ export default function HoverTooltip({ hoverData }) {
       <div className="glass-panel-elevated px-3 py-2.5 rounded-xl border border-white/15 shadow-2xl backdrop-blur-md min-w-[170px] max-w-[240px]">
         {type === 'country' && (
           <div className="space-y-1.5">
+            {/* Tactical Red Blinking Globe Beacon Indicator */}
+            <div className="flex items-center justify-between pb-1 border-b border-red-500/25">
+              <div className="flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-80" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600 shadow-[0_0_8px_#ef4444]" />
+                </span>
+                <span className="text-[8.5px] font-mono font-bold tracking-widest text-red-400 uppercase">
+                  RECON BEACON
+                </span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-red-950/70 border border-red-500/30 text-red-300 font-semibold">
+                {data.lat && data.lng ? `${Math.abs(data.lat).toFixed(1)}°${data.lat >= 0 ? 'N' : 'S'} ${Math.abs(data.lng).toFixed(1)}°${data.lng >= 0 ? 'E' : 'W'}` : 'LOCKED'}
+              </span>
+            </div>
+
             <div className="flex items-center gap-1.5 pb-1 border-b border-white/10">
               <span className="text-base">{data.flag || '🌐'}</span>
               <div>
