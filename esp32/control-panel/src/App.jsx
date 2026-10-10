@@ -571,28 +571,6 @@ export default function App() {
       {/* 11. Cursor Hover Tooltip */}
       <HoverTooltip hoverData={hoverData} />
 
-      {/* 11b. Tactical Globe Recon HUD Indicator (Red Blinking Beacon) */}
-      <div className="fixed bottom-6 left-6 z-20 pointer-events-none hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#080808]/90 border border-white/15 backdrop-blur-md shadow-2xl">
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-80" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600 shadow-[0_0_8px_#ef4444]" />
-        </span>
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[9px] font-mono font-bold tracking-widest text-white uppercase">
-              {hoverData?.data?.name ? `RECON LOCK: ${hoverData.data.name}` : selectedCountry?.name ? `TARGET: ${selectedCountry.name}` : 'ORBITAL RECON BEACON'}
-            </span>
-            <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-red-950/70 border border-red-500/30 text-red-300 font-semibold">
-              {hoverData?.data ? 'TRACKING' : selectedCountry ? 'LOCKED' : 'ACTIVE'}
-            </span>
-          </div>
-          <span className="text-[8px] font-mono text-[#888888]">
-            {hoverData?.data?.lat && hoverData?.data?.lng 
-              ? `${Math.abs(hoverData.data.lat).toFixed(1)}°${hoverData.data.lat >= 0 ? 'N' : 'S'} ${Math.abs(hoverData.data.lng).toFixed(1)}°${hoverData.data.lng >= 0 ? 'E' : 'W'} · 280ms DWELL LOCK` 
-              : 'HOVER OVER ANY NATION TO ENGAGE 3D BEACON'}
-          </span>
-        </div>
-      </div>
 
       {/* 12. Global Search Command Palette (/) */}
       <SearchModal

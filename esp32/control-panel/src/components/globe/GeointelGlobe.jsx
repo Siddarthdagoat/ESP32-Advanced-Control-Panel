@@ -293,6 +293,7 @@ export default function GeointelGlobe({
   activeLayers = {},
   mapMode = 'monochrome', // 'monochrome' | 'bathymetry' | 'thermal' | 'satellite'
   currentYear = 'PRESENT',
+  hoverDelay = 1200,
   onCountrySelect,
   onEventSelect,
   onLocationSelect,
@@ -337,11 +338,7 @@ export default function GeointelGlobe({
   const selectedBordersMeshRef = useRef(null);
   const neighborBordersMeshRef = useRef(null);
 
-  // 3D Red Blinking Tactical Recon Globe Indicator Refs
-  const redTargetIndicatorGroupRef = useRef(null);
-  const redBeaconPulseRingRef = useRef(null);
-  const redBeaconOuterRingRef = useRef(null);
-  const redBeaconCoreDotRef = useRef(null);
+  // Active selected country reference for hover suppression
   const selectedCountryRef = useRef(selectedCountry);
   useEffect(() => {
     selectedCountryRef.current = selectedCountry;
@@ -618,77 +615,6 @@ export default function GeointelGlobe({
     const tacticalFlashpointGroup = new THREE.Group();
     globeGroup.add(tacticalFlashpointGroup);
     tacticalFlashpointGroupRef.current = tacticalFlashpointGroup;
-
-    // Dedicated 3D Red Blinking Tactical Recon Indicator Group
-    const redIndicatorGroup = new THREE.Group();
-    redIndicatorGroup.name = 'red_tactical_beacon';
-    redIndicatorGroup.visible = false;
-
-    // A. Center Red Glowing Core Sphere
-    const beaconCoreGeom = new THREE.SphereGeometry(0.75, 16, 16);
-    const beaconCoreMat = new THREE.MeshBasicMaterial({ color: 0xff1e1e });
-    const beaconCoreMesh = new THREE.Mesh(beaconCoreGeom, beaconCoreMat);
-    beaconCoreMesh.position.set(0, 0, 0.1);
-    redIndicatorGroup.add(beaconCoreMesh);
-    redBeaconCoreDotRef.current = beaconCoreMesh;
-
-    // B. Primary Expanding Pulsing Ring
-    const beaconPulseGeom = new THREE.RingGeometry(0.85, 1.85, 32);
-    const beaconPulseMat = new THREE.MeshBasicMaterial({
-      color: 0xff2222,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.95,
-      depthWrite: false
-    });
-    const beaconPulseMesh = new THREE.Mesh(beaconPulseGeom, beaconPulseMat);
-    beaconPulseMesh.position.set(0, 0, 0.12);
-    redIndicatorGroup.add(beaconPulseMesh);
-    redBeaconPulseRingRef.current = beaconPulseMesh;
-
-    // C. Secondary Outer Radar Shockwave Ring
-    const beaconOuterGeom = new THREE.RingGeometry(1.5, 2.7, 32);
-    const beaconOuterMat = new THREE.MeshBasicMaterial({
-      color: 0xff4444,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.65,
-      depthWrite: false
-    });
-    const beaconOuterMesh = new THREE.Mesh(beaconOuterGeom, beaconOuterMat);
-    beaconOuterMesh.position.set(0, 0, 0.14);
-    redIndicatorGroup.add(beaconOuterMesh);
-    redBeaconOuterRingRef.current = beaconOuterMesh;
-
-    // D. Four Tactical Reticle Tick Markers (N, S, E, W)
-    const tickGeom = new THREE.PlaneGeometry(0.25, 1.4);
-    const tickMat = new THREE.MeshBasicMaterial({
-      color: 0xff3333,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.9,
-      depthWrite: false
-    });
-    const tickN = new THREE.Mesh(tickGeom, tickMat);
-    tickN.position.set(0, 3.4, 0.15);
-    redIndicatorGroup.add(tickN);
-
-    const tickS = new THREE.Mesh(tickGeom, tickMat);
-    tickS.position.set(0, -3.4, 0.15);
-    redIndicatorGroup.add(tickS);
-
-    const tickE = new THREE.Mesh(tickGeom, tickMat);
-    tickE.position.set(3.4, 0, 0.15);
-    tickE.rotation.z = Math.PI / 2;
-    redIndicatorGroup.add(tickE);
-
-    const tickW = new THREE.Mesh(tickGeom, tickMat);
-    tickW.position.set(-3.4, 0, 0.15);
-    tickW.rotation.z = Math.PI / 2;
-    redIndicatorGroup.add(tickW);
-
-    globeGroup.add(redIndicatorGroup);
-    redTargetIndicatorGroupRef.current = redIndicatorGroup;
 
     // Populate subtle floating ocean & marginal sea geographic labels
     const oceanLabels = getOceanAndSeaLabels();
@@ -1189,35 +1115,6 @@ export default function GeointelGlobe({
         });
       }
 
-      // Animate 3D Red Blinking Tactical Globe Indicator
-      if (redTargetIndicatorGroupRef.current && redTargetIndicatorGroupRef.current.visible) {
-        const pulseTime = time * 2.5; // High-cadence tactical beacon pulsation (~2.5 Hz)
-        const cycle1 = pulseTime % 1;
-        const cycle2 = (pulseTime + 0.45) % 1;
-
-        if (redBeaconPulseRingRef.current) {
-          const scale1 = 0.8 + cycle1 * 2.2;
-          redBeaconPulseRingRef.current.scale.set(scale1, scale1, scale1);
-          if (redBeaconPulseRingRef.current.material) {
-            redBeaconPulseRingRef.current.material.opacity = (1 - cycle1) * 0.95;
-          }
-        }
-
-        if (redBeaconOuterRingRef.current) {
-          const scale2 = 0.9 + cycle2 * 2.4;
-          redBeaconOuterRingRef.current.scale.set(scale2, scale2, scale2);
-          if (redBeaconOuterRingRef.current.material) {
-            redBeaconOuterRingRef.current.material.opacity = (1 - cycle2) * 0.65;
-          }
-        }
-
-        if (redBeaconCoreDotRef.current) {
-          // Sharp military strobe blink effect
-          const strobe = (Math.sin(time * 10.0) > 0.1) ? 1.0 : 0.45;
-          redBeaconCoreDotRef.current.scale.setScalar(0.9 + strobe * 0.35);
-        }
-      }
-
       // Dynamic distance-based cluster vs individual event visibility
       if (controlsRef.current && cameraRef.current) {
         const camDist = camera.position.distanceTo(controls.target);
@@ -1302,9 +1199,6 @@ export default function GeointelGlobe({
       selectedMesh.geometry = new THREE.BufferGeometry();
       neighborMesh.geometry.dispose();
       neighborMesh.geometry = new THREE.BufferGeometry();
-      if (redTargetIndicatorGroupRef.current && !currentHoveredCountryRef.current) {
-        redTargetIndicatorGroupRef.current.visible = false;
-      }
       return;
     }
 
@@ -1406,19 +1300,6 @@ export default function GeointelGlobe({
       interactiveMarkersRef.current.push(hitMesh);
     }
 
-    // Position 3D Red Blinking Tactical Recon Indicator on Selected Country
-    if (redTargetIndicatorGroupRef.current) {
-      const targetLat = capitalCoords?.lat ?? selectedCountry.lat;
-      const targetLng = capitalCoords?.lng ?? selectedCountry.lng;
-      if (targetLat !== undefined && targetLng !== undefined) {
-        const pos = latLngToVector3(targetLat, targetLng, GLOBE_RADIUS * 1.012);
-        const norm = pos.clone().normalize();
-        redTargetIndicatorGroupRef.current.position.copy(pos);
-        redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
-        redTargetIndicatorGroupRef.current.visible = true;
-      }
-    }
-
     // Smoothly focus camera onto selected country
     animateCameraTo(selectedCountry.lat, selectedCountry.lng, 185, 900);
   }, [selectedCountry, animateCameraTo]);
@@ -1465,18 +1346,19 @@ export default function GeointelGlobe({
         sprite.position.copy(pos.clone().add(normal.clone().multiplyScalar(3.2)));
         clusterGroup.add(sprite);
 
-        // Pulsing Halo Ring (Luminous Pure White)
+        // Pulsing Halo Ring (0xFF3030 for clusters with critical alerts, white for standard)
+        const isCriticalCluster = cluster.criticalCount > 0;
         const haloGeom = new THREE.RingGeometry(2.5, 3.8, 24);
         const haloMat = new THREE.MeshBasicMaterial({
-          color: 0xffffff,
+          color: isCriticalCluster ? 0xFF3030 : 0xffffff,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.85
+          opacity: isCriticalCluster ? 0.90 : 0.85
         });
         const haloMesh = new THREE.Mesh(haloGeom, haloMat);
         haloMesh.position.copy(pos.clone().add(normal.clone().multiplyScalar(0.2)));
         haloMesh.lookAt(pos.clone().add(normal));
-        haloMesh.userData = { type: 'pulse_ring', speed: 0.7, phase: 0 };
+        haloMesh.userData = { type: 'pulse_ring', speed: isCriticalCluster ? 1.0 : 0.7, phase: 0 };
         clusterGroup.add(haloMesh);
       });
 
@@ -1505,20 +1387,63 @@ export default function GeointelGlobe({
         eventGroup.add(hitMesh);
         interactiveMarkersRef.current.push(hitMesh);
 
-        // Core marker (Pure luminous white)
-        const coreGeom = new THREE.SphereGeometry(1.2, 16, 16);
-        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
-        coreMesh.position.copy(pos);
-        eventGroup.add(coreMesh);
-
         // Geometric shape based on category and priority
         const isCritical = event.priority === 'CRITICAL';
         const isConflict = event.category === 'conflict';
         const isMilitary = event.category === 'military';
 
-        if (isCritical || isConflict) {
-          // Diamond Geometry (◆ Conflict / Critical)
+        // Core marker (Luminous white or restrained #FF3030 if critical)
+        const coreGeom = new THREE.SphereGeometry(1.2, 16, 16);
+        const coreMat = new THREE.MeshBasicMaterial({ color: isCritical ? 0xFF3030 : 0xffffff });
+        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+        coreMesh.position.copy(pos);
+        eventGroup.add(coreMesh);
+
+        if (isCritical) {
+          // Diamond Geometry (◆ Conflict / Critical in vivid #FF3030)
+          const shapeGeom = new THREE.RingGeometry(1.1, 1.8, 4);
+          const shapeMat = new THREE.MeshBasicMaterial({
+            color: 0xFF3030,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.95
+          });
+          const shapeMesh = new THREE.Mesh(shapeGeom, shapeMat);
+          shapeMesh.position.copy(pos.clone().add(normal.clone().multiplyScalar(0.12)));
+          shapeMesh.lookAt(pos.clone().add(normal));
+          shapeMesh.rotation.z = Math.PI / 4;
+          eventGroup.add(shapeMesh);
+
+          // Restrained Red Glow Halo
+          const glowGeom = new THREE.RingGeometry(0.8, 2.5, 24);
+          const glowMat = new THREE.MeshBasicMaterial({
+            color: 0xFF3030,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.35
+          });
+          const glowMesh = new THREE.Mesh(glowGeom, glowMat);
+          glowMesh.position.copy(pos.clone().add(normal.clone().multiplyScalar(0.08)));
+          glowMesh.lookAt(pos.clone().add(normal));
+          eventGroup.add(glowMesh);
+
+          // Red Blinking Pulsing Rings (#FF3030)
+          for (let r = 0; r < 2; r++) {
+            const ringGeom = new THREE.RingGeometry(1.4, 2.2, 24);
+            const ringMat = new THREE.MeshBasicMaterial({
+              color: 0xFF3030,
+              side: THREE.DoubleSide,
+              transparent: true,
+              opacity: 0.90
+            });
+            const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+            ringMesh.position.copy(pos.clone().add(normal.clone().multiplyScalar(0.1)));
+            ringMesh.lookAt(pos.clone().add(normal));
+            ringMesh.userData = { type: 'pulse_ring', speed: 1.0, phase: r * 0.5 };
+            eventGroup.add(ringMesh);
+          }
+        } else if (isConflict) {
+          // Monochrome White Diamond
           const shapeGeom = new THREE.RingGeometry(1.1, 1.8, 4);
           const shapeMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
@@ -1546,8 +1471,8 @@ export default function GeointelGlobe({
           eventGroup.add(shapeMesh);
         }
 
-        // Animated pulsing rings (Pure White)
-        if (event.category === 'conflict' || event.category === 'military' || event.priority === 'CRITICAL' || event.priority === 'HIGH') {
+        // Animated pulsing rings for other active/high conflict events (Pure White)
+        if (!isCritical && (event.category === 'conflict' || event.category === 'military' || event.priority === 'HIGH')) {
           for (let r = 0; r < 2; r++) {
             const ringGeom = new THREE.RingGeometry(1.4, 2.0, 24);
             const ringMat = new THREE.MeshBasicMaterial({
@@ -2300,7 +2225,7 @@ export default function GeointelGlobe({
     }
   }, [resetGlobeTrigger, animateCameraTo]);
 
-  // Direct Geographic Picking with 280ms Hover Dwell Delay & 3D Red Blinking Globe Indicator
+  // Direct Geographic Picking with 1200ms Hover Dwell Delay & Instant Subtle Border Feedback
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -2308,8 +2233,8 @@ export default function GeointelGlobe({
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    // Dwell delay configuration (prevents accidental hover flashes while sweeping or exploring)
-    const HOVER_DWELL_MS = 280;
+    // Configurable dwell delay defaulting to 1200ms (prevents distracting tooltip flashes while exploring)
+    const HOVER_DWELL_MS = Number(hoverDelay) || 1200;
 
     let hoverTimer = null;
     let pendingTargetKey = null;
@@ -2320,7 +2245,7 @@ export default function GeointelGlobe({
     let isDragging = false;
     let dragStartPos = { x: 0, y: 0 };
 
-    const clearHoverMeshAndIndicator = () => {
+    const clearHoverState = () => {
       currentActiveKey = null;
       if (currentHoveredCountryRef.current !== null) {
         currentHoveredCountryRef.current = null;
@@ -2329,57 +2254,21 @@ export default function GeointelGlobe({
           hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
         }
       }
-
-      // If a country is actively selected, keep red indicator locked on selected country capital/center
-      if (selectedCountryRef.current) {
-        const sLat = selectedCountryRef.current.capitalCoords?.lat ?? selectedCountryRef.current.lat;
-        const sLng = selectedCountryRef.current.capitalCoords?.lng ?? selectedCountryRef.current.lng;
-        if (sLat !== undefined && sLng !== undefined && redTargetIndicatorGroupRef.current) {
-          const pos = latLngToVector3(sLat, sLng, GLOBE_RADIUS * 1.012);
-          const norm = pos.clone().normalize();
-          redTargetIndicatorGroupRef.current.position.copy(pos);
-          redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
-          redTargetIndicatorGroupRef.current.visible = true;
-          if (onHoverChange) onHoverChange(null);
-          return;
-        }
-      }
-
-      if (redTargetIndicatorGroupRef.current) {
-        redTargetIndicatorGroupRef.current.visible = false;
-      }
       if (onHoverChange) onHoverChange(null);
     };
 
     const commitCountryHover = (payload) => {
       if (!payload || !payload.countryItem) return;
       const { countryItem, lat, lng, x, y } = payload;
+
+      // If this country is already selected, suppress the hover tooltip
+      if (selectedCountryRef.current?.id === countryItem.iso3) {
+        return;
+      }
+
       currentActiveKey = `country_${countryItem.iso3}`;
-      currentHoveredCountryRef.current = countryItem.iso3;
 
-      // 1. Draw dynamic hover border lines
-      const lines = geoDatabaseRef.current.countryLineMap.get(countryItem.iso3);
-      if (lines && hoverBordersMeshRef.current) {
-        hoverBordersMeshRef.current.geometry.dispose();
-        const hGeom = new THREE.BufferGeometry();
-        hGeom.setAttribute('position', new THREE.BufferAttribute(lines, 3));
-        hoverBordersMeshRef.current.geometry = hGeom;
-      }
-
-      // 2. Position and activate 3D Red Blinking Globe Indicator
-      if (redTargetIndicatorGroupRef.current) {
-        const targetLat = lat ?? countryItem.center?.lat;
-        const targetLng = lng ?? countryItem.center?.lng;
-        if (targetLat !== undefined && targetLng !== undefined) {
-          const pos = latLngToVector3(targetLat, targetLng, GLOBE_RADIUS * 1.012);
-          const norm = pos.clone().normalize();
-          redTargetIndicatorGroupRef.current.position.copy(pos);
-          redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
-          redTargetIndicatorGroupRef.current.visible = true;
-        }
-      }
-
-      // 3. Dispatch onHoverChange with rich country data
+      // Dispatch onHoverChange with rich country data
       const dossier = COUNTRY_DOSSIERS[countryItem.iso3] || 
         COUNTRIES.find(c => c.id === countryItem.iso3 || c.name === countryItem.name);
 
@@ -2408,23 +2297,6 @@ export default function GeointelGlobe({
       const { maritimeEntity, lat, lng, x, y } = payload;
       currentActiveKey = `maritime_${maritimeEntity.id}`;
 
-      if (currentHoveredCountryRef.current !== null) {
-        currentHoveredCountryRef.current = null;
-        if (hoverBordersMeshRef.current) {
-          hoverBordersMeshRef.current.geometry.dispose();
-          hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
-        }
-      }
-
-      // Position 3D Red Blinking Indicator at hovered sea coordinates
-      if (redTargetIndicatorGroupRef.current && lat !== undefined && lng !== undefined) {
-        const pos = latLngToVector3(lat, lng, GLOBE_RADIUS * 1.012);
-        const norm = pos.clone().normalize();
-        redTargetIndicatorGroupRef.current.position.copy(pos);
-        redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
-        redTargetIndicatorGroupRef.current.visible = true;
-      }
-
       if (onHoverChange) {
         onHoverChange({
           type: 'maritime',
@@ -2446,16 +2318,8 @@ export default function GeointelGlobe({
 
     const commitMarkerHover = (payload) => {
       if (!payload || !payload.item) return;
-      const { item, x, y, hitPos } = payload;
+      const { item, x, y } = payload;
       currentActiveKey = payload.targetKey;
-
-      // Position 3D Red Blinking Indicator at marker position
-      if (redTargetIndicatorGroupRef.current && hitPos) {
-        const norm = hitPos.clone().normalize();
-        redTargetIndicatorGroupRef.current.position.copy(hitPos.clone().add(norm.clone().multiplyScalar(0.4)));
-        redTargetIndicatorGroupRef.current.lookAt(hitPos.clone().add(norm));
-        redTargetIndicatorGroupRef.current.visible = true;
-      }
 
       if (!onHoverChange) return;
 
@@ -2537,7 +2401,7 @@ export default function GeointelGlobe({
         }
         pendingTargetKey = null;
         pendingPayload = null;
-        clearHoverMeshAndIndicator();
+        clearHoverState();
         container.style.cursor = 'grabbing';
         return;
       }
@@ -2553,6 +2417,15 @@ export default function GeointelGlobe({
       if (interactiveMarkersRef.current.length > 0) {
         const markerHits = raycaster.intersectObjects(interactiveMarkersRef.current, false);
         if (markerHits.length > 0) {
+          // Clear country border highlight if moving over marker
+          if (currentHoveredCountryRef.current !== null) {
+            currentHoveredCountryRef.current = null;
+            if (hoverBordersMeshRef.current) {
+              hoverBordersMeshRef.current.geometry.dispose();
+              hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
+            }
+          }
+
           const hitObj = markerHits[0].object;
           const item = hitObj.userData;
           const targetKey = `marker_${item.type}_${item.data?.id || item.event?.id || item.location?.id || hitObj.id}`;
@@ -2568,14 +2441,18 @@ export default function GeointelGlobe({
 
           if (pendingTargetKey === targetKey) {
             // Dwell timer in progress: update coordinates
-            pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY, hitPos: hitObj.position };
+            pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY };
             return;
           }
 
-          // New marker target: start dwell timer
+          // New marker target: clear old tooltip immediately and start 1.2s dwell timer
+          if (currentActiveKey !== null) {
+            currentActiveKey = null;
+            if (onHoverChange) onHoverChange(null);
+          }
           if (hoverTimer) clearTimeout(hoverTimer);
           pendingTargetKey = targetKey;
-          pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY, hitPos: hitObj.position };
+          pendingPayload = { targetKey, item, x: e.clientX, y: e.clientY };
           hoverTimer = setTimeout(() => {
             commitMarkerHover(pendingPayload);
           }, HOVER_DWELL_MS);
@@ -2596,6 +2473,33 @@ export default function GeointelGlobe({
           const targetKey = `country_${countryItem.iso3}`;
           container.style.cursor = 'pointer';
 
+          // Immediate subtle country border highlight for instant geographic orientation
+          if (currentHoveredCountryRef.current !== countryItem.iso3) {
+            currentHoveredCountryRef.current = countryItem.iso3;
+            const lines = geoDatabaseRef.current.countryLineMap.get(countryItem.iso3);
+            if (lines && hoverBordersMeshRef.current) {
+              hoverBordersMeshRef.current.geometry.dispose();
+              const hGeom = new THREE.BufferGeometry();
+              hGeom.setAttribute('position', new THREE.BufferAttribute(lines, 3));
+              hoverBordersMeshRef.current.geometry = hGeom;
+            }
+          }
+
+          // If the country is already selected, suppress the hover tooltip completely
+          if (selectedCountryRef.current?.id === countryItem.iso3) {
+            if (hoverTimer) {
+              clearTimeout(hoverTimer);
+              hoverTimer = null;
+            }
+            pendingTargetKey = null;
+            pendingPayload = null;
+            if (currentActiveKey !== null) {
+              currentActiveKey = null;
+              if (onHoverChange) onHoverChange(null);
+            }
+            return;
+          }
+
           if (currentActiveKey === targetKey) {
             // Country already actively hovered: smoothly track tooltip coordinates
             if (onHoverChange) {
@@ -2610,7 +2514,11 @@ export default function GeointelGlobe({
             return;
           }
 
-          // New country target: start dwell delay timer (280ms)
+          // Entering a new country: clear previously shown tooltip immediately and start fresh 1.2s timer
+          if (currentActiveKey !== null) {
+            currentActiveKey = null;
+            if (onHoverChange) onHoverChange(null);
+          }
           if (hoverTimer) clearTimeout(hoverTimer);
           pendingTargetKey = targetKey;
           pendingPayload = { countryItem, lat, lng, x: e.clientX, y: e.clientY };
@@ -2626,6 +2534,15 @@ export default function GeointelGlobe({
           const targetKey = `maritime_${maritimeEntity.id}`;
           container.style.cursor = 'pointer';
 
+          // Clear country border highlight when moving over water
+          if (currentHoveredCountryRef.current !== null) {
+            currentHoveredCountryRef.current = null;
+            if (hoverBordersMeshRef.current) {
+              hoverBordersMeshRef.current.geometry.dispose();
+              hoverBordersMeshRef.current.geometry = new THREE.BufferGeometry();
+            }
+          }
+
           if (currentActiveKey === targetKey) {
             if (onHoverChange) {
               onHoverChange(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
@@ -2638,6 +2555,11 @@ export default function GeointelGlobe({
             return;
           }
 
+          // Entering new maritime entity: clear old tooltip immediately and start fresh 1.2s timer
+          if (currentActiveKey !== null) {
+            currentActiveKey = null;
+            if (onHoverChange) onHoverChange(null);
+          }
           if (hoverTimer) clearTimeout(hoverTimer);
           pendingTargetKey = targetKey;
           pendingPayload = { maritimeEntity, lat, lng, x: e.clientX, y: e.clientY };
@@ -2656,7 +2578,7 @@ export default function GeointelGlobe({
       }
       pendingTargetKey = null;
       pendingPayload = null;
-      clearHoverMeshAndIndicator();
+      clearHoverState();
     };
 
     const handlePointerUp = () => {
@@ -2676,7 +2598,7 @@ export default function GeointelGlobe({
       }
       pendingTargetKey = null;
       pendingPayload = null;
-      clearHoverMeshAndIndicator();
+      clearHoverState();
       container.style.cursor = 'grab';
     };
 
@@ -2684,12 +2606,15 @@ export default function GeointelGlobe({
       // If releasing from an orbit/pan drag gesture, ignore click
       if (isDragging) return;
 
+      // Cancel hover dwell timer and hide hover tooltip immediately upon clicking
       if (hoverTimer) {
         clearTimeout(hoverTimer);
         hoverTimer = null;
       }
       pendingTargetKey = null;
       pendingPayload = null;
+      currentActiveKey = null;
+      if (onHoverChange) onHoverChange(null);
 
       const rect = container.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -2700,7 +2625,7 @@ export default function GeointelGlobe({
 
       if (onUserInteraction) onUserInteraction();
 
-      // 1. Check direct marker hits first
+      // 1. Check direct marker hits first (instant click selection)
       if (interactiveMarkersRef.current.length > 0) {
         const markerHits = raycaster.intersectObjects(interactiveMarkersRef.current, false);
         if (markerHits.length > 0) {
@@ -2728,7 +2653,7 @@ export default function GeointelGlobe({
         }
       }
 
-      // 2. Direct Geographic Country Picking via Earth Sphere
+      // 2. Direct Geographic Country Picking via Earth Sphere (instant click selection)
       const earthHits = raycaster.intersectObject(earthMeshRef.current, false);
       if (earthHits.length > 0) {
         const hit = earthHits[0];
@@ -2750,15 +2675,6 @@ export default function GeointelGlobe({
             lng: countryItem.center.lng
           };
           const countryPayload = getCountryDossier(iso3, fallbackData);
-
-          // Position 3D Red Blinking Indicator on selected country
-          if (redTargetIndicatorGroupRef.current) {
-            const pos = latLngToVector3(lat, lng, GLOBE_RADIUS * 1.012);
-            const norm = pos.clone().normalize();
-            redTargetIndicatorGroupRef.current.position.copy(pos);
-            redTargetIndicatorGroupRef.current.lookAt(pos.clone().add(norm));
-            redTargetIndicatorGroupRef.current.visible = true;
-          }
 
           onCountrySelect(countryPayload);
           return;
@@ -2788,7 +2704,14 @@ export default function GeointelGlobe({
       container.removeEventListener('pointerleave', handlePointerLeave);
       container.removeEventListener('click', handleClick);
     };
-  }, [findCountryAt, onCountrySelect, onEventSelect, onLocationSelect, onSelectMaritimeEntity, onCapitalSelect, onSensorSelect, onHoverChange, onUserInteraction]);
+  }, [findCountryAt, hoverDelay, onCountrySelect, onEventSelect, onLocationSelect, onSelectMaritimeEntity, onCapitalSelect, onSensorSelect, onHoverChange, onUserInteraction]);
+
+  // Dismiss hover tooltip if selected country changes or opens
+  useEffect(() => {
+    if (selectedCountry && onHoverChange) {
+      onHoverChange(null);
+    }
+  }, [selectedCountry, onHoverChange]);
 
   return (
     <div 
