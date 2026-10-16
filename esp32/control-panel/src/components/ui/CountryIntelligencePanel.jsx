@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, RotateCcw, ChevronDown, ChevronUp, Shield, Compass, BookOpen, 
-  Search, ExternalLink, ArrowRight, AlertTriangle, MapPin, Calendar, 
+  Search, ExternalLink, ArrowRight, ArrowLeft, AlertTriangle, MapPin, Calendar, 
   Cpu, Award, Building, Globe2, Flag, CheckCircle2, Loader2,
   Landmark, DollarSign, Scale, Anchor, Crosshair, Users, Zap, TrendingUp, Navigation
 } from 'lucide-react';
@@ -51,7 +51,10 @@ function DataNotAvailable({ section = "INTELLIGENCE", explanation, className = "
 
 export default function CountryIntelligencePanel({
   country,
+  intelLevel,
   onClose,
+  onBack,
+  backLabel,
   onResetGlobe,
   onSelectRelationship,
   onSelectConcept,
@@ -60,6 +63,7 @@ export default function CountryIntelligencePanel({
   onSelectCountry,
   onSelectLocation,
   onSelectEvent,
+  onSelectMaritimeEntity,
   onSelectRegion,
   onSelectCapital,
   isDocked = false,
@@ -155,6 +159,20 @@ export default function CountryIntelligencePanel({
       {/* Main Glass Dossier */}
       <div className={isDocked ? "h-full flex flex-col bg-[#080808]" : "rounded-t-3xl sm:rounded-2xl border border-[#1A1A1A] shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[calc(100vh-150px)] flex flex-col animate-slide-up-mobile sm:animate-slide-in-right bg-[#080808]/98 backdrop-blur-2xl"}>
         
+        {/* Back navigation button if in history stack */}
+        {onBack && (
+          <div className="px-4 py-2 bg-[#141414] border-b border-[#222222] flex items-center justify-between text-[10.5px] font-mono shrink-0">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1.5 text-white hover:text-white font-bold transition-colors cursor-pointer group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-white group-hover:-translate-x-0.5 transition-transform" />
+              <span>RETURN TO: {backLabel || 'PREVIOUS INTELLIGENCE'}</span>
+            </button>
+            <span className="text-[#666666] uppercase text-[9px]">INTERCONNECTED STACK</span>
+          </div>
+        )}
+
         {/* Header Bar */}
         <div className="p-4 pb-3 border-b border-[#1A1A1A] relative bg-[#0D0D0D]">
           {/* Action Buttons: SITREP, Reset Globe & Close */}
@@ -1033,19 +1051,35 @@ export default function CountryIntelligencePanel({
                     <span className="block text-[9px] font-mono uppercase text-cyan-400 font-bold">MARITIME BASINS & ADJACENT SEAS</span>
                     {dossier.geographyBorders?.majorOceans && (
                       <div>
-                        <strong className="text-slate-400 font-mono text-[9px] uppercase block">Major Oceans:</strong>
-                        <p className="text-[11px] text-cyan-300 font-semibold">{dossier.geographyBorders.majorOceans.join(' • ')}</p>
+                        <strong className="text-slate-400 font-mono text-[9px] uppercase block mb-1">Major Oceans:</strong>
+                        <div className="flex flex-wrap gap-1.5">
+                          {dossier.geographyBorders.majorOceans.map((ocean, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => onSelectMaritimeEntity && onSelectMaritimeEntity(ocean)}
+                              className="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950/40 border border-cyan-800/40 text-cyan-300 hover:text-white hover:border-cyan-400 transition-colors cursor-pointer"
+                              title={`Inspect Maritime Dossier: ${ocean}`}
+                            >
+                              🌊 {ocean}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     )}
                     {dossier.geographyBorders?.seas && (
                       <div className="pt-1 border-t border-white/5">
-                        <strong className="text-slate-400 font-mono text-[9px] uppercase block">Adjacent Seas:</strong>
-                        <div className="space-y-1 pt-0.5">
+                        <strong className="text-slate-400 font-mono text-[9px] uppercase block mb-1">Adjacent Seas:</strong>
+                        <div className="flex flex-wrap gap-1.5 pt-0.5">
                           {dossier.geographyBorders.seas.map((sea, idx) => (
-                            <div key={idx} className="text-[11px] text-slate-200 flex items-start gap-1.5">
+                            <button
+                              key={idx}
+                              onClick={() => onSelectMaritimeEntity && onSelectMaritimeEntity(sea)}
+                              className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#141414] border border-[#262626] text-slate-200 hover:text-white hover:border-cyan-400/60 transition-colors cursor-pointer flex items-center gap-1"
+                              title={`Inspect Maritime Dossier: ${sea}`}
+                            >
                               <span className="text-cyan-400">•</span>
                               <span>{sea}</span>
-                            </div>
+                            </button>
                           ))}
                         </div>
                       </div>

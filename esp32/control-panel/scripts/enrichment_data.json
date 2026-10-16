@@ -1,0 +1,1264 @@
+{
+  "evt_red_sea_houthi": {
+    "chainKey": "CHAIN_ABRAHAM_IMEC",
+    "priorityRationale": "Direct kinetic threat to global container shipping through Bab el-Mandeb chokepoint, inflating freight inflation and forcing Cape of Good Hope diversions.",
+    "whatChanged": "US Central Command and coalition forces intercepted a coordinated salvo of 8 attack drones and 2 anti-ship ballistic missiles in the southern Red Sea corridor.",
+    "background": "The Red Sea crisis erupted in late 2023 when Ansar Allah (Houthis) declared a naval blockade against international shipping in solidarity with Gaza, leveraging Iranian missile technology.",
+    "eventOccurredAt": "2024-01-12T02:45:00Z",
+    "firstDetectedAt": "2024-01-12T01:15:00Z",
+    "lastSubstantiveUpdateAt": "2025-01-15T14:30:00Z",
+    "verification": {
+      "method": "Multi-source satellite radar & naval telemetry",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "CENTCOM",
+        "UKMTO",
+        "Indian Navy"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-01-12T03:00:00Z",
+        "whatChanged": "Operation Prosperity Guardian initiated initial counter-battery missile strikes.",
+        "type": "KINETIC_ENGAGEMENT"
+      },
+      {
+        "timestamp": "2025-01-15T14:30:00Z",
+        "whatChanged": "Commercial container traffic rerouting around Africa exceeds 65% baseline.",
+        "type": "STRATEGIC_ASSESSMENT"
+      }
+    ]
+  },
+  "evt_iran_israel_standoff": {
+    "chainKey": "CHAIN_HORMUZ_OIL",
+    "priorityRationale": "Direct state-on-state conventional ballistic missile exchanges between two regional powers, risking regional war and Strait of Hormuz closure.",
+    "whatChanged": "Satellite telemetry confirmed alert dispersal of mobile ballistic missile transporter-erector-launchers across western Iranian underground bases.",
+    "background": "Following decades of proxy conflict, targeted assassinations and direct airstrikes in 2024 broke deterrence, initiating unprecedented direct missile volleys between Tehran and Tel Aviv.",
+    "eventOccurredAt": "2024-04-13T20:00:00Z",
+    "firstDetectedAt": "2024-04-13T18:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-26T03:15:00Z",
+    "verification": {
+      "method": "Early warning infrared DSP satellites and Aegis radar feeds",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "IDF",
+        "CENTCOM",
+        "IAEA"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-04-14T02:00:00Z",
+        "whatChanged": "Over 300 drones and cruise/ballistic missiles intercepted by Arrow-3 and allied air defense.",
+        "type": "AIR_DEFENSE_INTERCEPT"
+      },
+      {
+        "timestamp": "2024-10-26T04:00:00Z",
+        "whatChanged": "Precision counter-strikes neutralized S-300 radar batteries around Iranian energy nodes.",
+        "type": "SUBSTANTIVE_UPDATE"
+      }
+    ]
+  },
+  "evt_hormuz_surveillance": {
+    "chainKey": "CHAIN_HORMUZ_OIL",
+    "priorityRationale": "Critical energy vulnerability: over 20 million barrels per day (20% of world oil) transit the 39-km Strait of Hormuz.",
+    "whatChanged": "IRGC Navy fast-attack craft conducted high-speed maneuvering within 200 meters of a commercial VLCC tanker navigating the outbound traffic separation lane.",
+    "background": "The Strait of Hormuz has served as Iran's primary asymmetric bargaining counter, with recurring episodes of tanker boardings, limpet mine placement, and electronic navigation spoofing.",
+    "eventOccurredAt": "2024-04-12T06:00:00Z",
+    "firstDetectedAt": "2024-04-12T05:20:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-10T09:45:00Z",
+    "verification": {
+      "method": "Commercial AIS tracking and US 5th Fleet maritime patrol aircraft",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "UKMTO",
+        "IMSC",
+        "US Navy 5th Fleet"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-04-12T06:30:00Z",
+        "whatChanged": "Helicopter boarding and seizure of Portuguese-flagged container vessel MSC Aries.",
+        "type": "VESSEL_SEIZURE"
+      },
+      {
+        "timestamp": "2024-11-10T10:00:00Z",
+        "whatChanged": "Increased maritime escort alerts issued for Gulf of Oman entry lanes.",
+        "type": "NAVIGATIONAL_ALERT"
+      }
+    ]
+  },
+  "evt_ukraine_eastern_front": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "Largest high-intensity conventional war in Europe since 1945, determining European security architecture and global agricultural stability.",
+    "whatChanged": "Russian mechanized units launched glide-bomb supported assaults west of Avdiivka toward the Pokrovsk logistical rail junction.",
+    "background": "Originating with the 2014 annexation of Crimea and Donbas separatist war, Russia launched a full-scale invasion in February 2022, creating a 1,200 km fortified frontline.",
+    "eventOccurredAt": "2022-02-24T03:00:00Z",
+    "firstDetectedAt": "2022-02-24T02:15:00Z",
+    "lastSubstantiveUpdateAt": "2024-12-05T16:00:00Z",
+    "verification": {
+      "method": "NASA FIRMS thermal anomaly satellite feeds and verified battlefield geolocations",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ISW",
+        "General Staff of Ukraine",
+        "OSINT"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-02-24T04:00:00Z",
+        "whatChanged": "Full-scale Russian cross-border offensive launched across multiple operational axes.",
+        "type": "INVASION_DECLARATION"
+      },
+      {
+        "timestamp": "2024-12-05T16:00:00Z",
+        "whatChanged": "Intense urban fighting reported along the outer industrial defenses of Pokrovsk.",
+        "type": "FRONTLINE_SHIFT"
+      }
+    ]
+  },
+  "evt_baltic_infrastructure_alert": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "Systemic critical infrastructure vulnerability: undersea communications cables and energy pipelines face recurring hybrid sabotage risks.",
+    "whatChanged": "Joint Finnish and Estonian investigators deployed underwater ROVs to inspect severed communications cables between Helsinki and Tallinn.",
+    "background": "Following the September 2022 Nord Stream explosions, the Baltic Sea has become a primary arena of hybrid warfare involving anchor-dragging commercial vessels.",
+    "eventOccurredAt": "2023-10-08T01:20:00Z",
+    "firstDetectedAt": "2023-10-08T01:05:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-18T11:30:00Z",
+    "verification": {
+      "method": "Subsea hydrophone seismic recording and AIS track reconstruction",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Finnish Border Guard",
+        "Estonian Navy",
+        "NATO MARCOM"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-10-08T02:00:00Z",
+        "whatChanged": "Balticconnector gas pipeline pressure drop registered and isolated.",
+        "type": "INFRASTRUCTURE_SEVERANCE"
+      },
+      {
+        "timestamp": "2024-11-18T12:00:00Z",
+        "whatChanged": "C-Lion1 submarine telecom cable damaged in Swedish EEZ.",
+        "type": "SUBSEA_INTERDICTION"
+      }
+    ]
+  },
+  "evt_suwalki_gap_hardening": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "NATO's primary land vulnerability: a 65-km corridor between Kaliningrad and Belarus whose severance would isolate the Baltic states.",
+    "whatChanged": "Polish military engineers commenced construction of pre-positioned concrete anti-tank barriers under the $2.5B Shield-East defense plan.",
+    "background": "Identified since the collapse of the USSR, the Suwa\u0142ki Gap links Poland to Lithuania; Russian forces in Belarus make this a key defensive priority.",
+    "eventOccurredAt": "2022-03-01T08:00:00Z",
+    "firstDetectedAt": "2022-03-01T07:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-05-20T10:00:00Z",
+    "verification": {
+      "method": "Ground imagery and Polish Ministry of National Defence announcements",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "NATO SHAPE",
+        "Polish Armed Forces",
+        "Lithuanian MoD"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-03-01T08:00:00Z",
+        "whatChanged": "NATO enhanced Forward Presence battlegroups placed on high alert.",
+        "type": "ALERT_STATUS"
+      },
+      {
+        "timestamp": "2024-05-20T10:00:00Z",
+        "whatChanged": "Formal launch of the Eastern Shield fortification program along Belarus border.",
+        "type": "FORTIFICATION_INITIATIVE"
+      }
+    ]
+  },
+  "evt_taiwan_strait_airsea": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "Highest global risk point: over 50% of container shipping and 90% of advanced semiconductor fabrication transit or reside within this zone.",
+    "whatChanged": "PLA Eastern Theater Command deployed 32 combat aircraft and 8 naval vessels across the median line during Joint Sword exercises.",
+    "background": "Since the 1995-96 crisis, China has rapidly modernized the PLA Navy and Rocket Force, normalizing ADIZ incursions to erode Taiwan's defensive buffer.",
+    "eventOccurredAt": "2022-08-04T04:00:00Z",
+    "firstDetectedAt": "2022-08-04T03:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-14T02:00:00Z",
+    "verification": {
+      "method": "Taiwan MND radar tracking and commercial satellite imaging",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Taiwan MND",
+        "US INDOPACOM",
+        "JMSDF"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-08-04T05:00:00Z",
+        "whatChanged": "DF-15 ballistic missiles fired over Taipei following US Congressional visit.",
+        "type": "MISSILE_PROJECTION"
+      },
+      {
+        "timestamp": "2024-10-14T03:00:00Z",
+        "whatChanged": "Joint Sword-2024B simulated blockade drills conducted in 6 perimeter zones.",
+        "type": "BLOCKADE_REHEARSAL"
+      }
+    ]
+  },
+  "evt_south_china_sea_shoal": {
+    "chainKey": "CHAIN_BRAHMOS_AUTONOMY",
+    "priorityRationale": "Direct flashpoint between China and a US treaty ally (Philippines), testing the 1951 Mutual Defense Treaty and UNCLOS adherence.",
+    "whatChanged": "Chinese Coast Guard vessels used high-pressure water cannons against Philippine resupply vessels near Second Thomas Shoal.",
+    "background": "The Philippines grounded the BRP Sierra Madre on Ayungin Shoal in 1999 to uphold its sovereign EEZ rights under UNCLOS, defying China's nine-dash line.",
+    "eventOccurredAt": "2023-08-05T01:45:00Z",
+    "firstDetectedAt": "2023-08-05T01:10:00Z",
+    "lastSubstantiveUpdateAt": "2024-06-17T06:30:00Z",
+    "verification": {
+      "method": "Onboard Philippine Coast Guard video telemetry and satellite surveillance",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Philippine PCG",
+        "US 7th Fleet",
+        "AFP"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-08-05T02:00:00Z",
+        "whatChanged": "First documented water cannon interdiction against BRP Sierra Madre resupply mission.",
+        "type": "COAST_GUARD_RAMMING"
+      },
+      {
+        "timestamp": "2024-06-17T07:00:00Z",
+        "whatChanged": "High-intensity boarding clash resulting in damage to Philippine naval rigid inflatables.",
+        "type": "KINETIC_CONFRONTATION"
+      }
+    ]
+  },
+  "evt_korean_peninsula_missiles": {
+    "chainKey": "CHAIN_KOREAN_PENINSULA_DETERRENCE",
+    "priorityRationale": "Accelerated development of solid-fuel ICBMs and tactical nuclear preemption capabilities targeting Northeast Asia and the US mainland.",
+    "whatChanged": "North Korea conducted a successful lofted flight test of the Hwasong-18 solid-fuel ICBM, reaching an altitude of 7,000 km.",
+    "background": "Following the collapse of the 2019 Hanoi talks, North Korea codified a first-use nuclear doctrine in 2022 and formalized military mutual assistance with Russia in 2024.",
+    "eventOccurredAt": "2023-04-13T22:30:00Z",
+    "firstDetectedAt": "2023-04-13T22:23:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-31T22:15:00Z",
+    "verification": {
+      "method": "Japanese JMSDF Aegis radar and South Korean Joint Chiefs of Staff tracking",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ROK JCS",
+        "Japan MoD",
+        "US INDOPACOM"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-04-13T23:00:00Z",
+        "whatChanged": "First flight test of Hwasong-18 solid-fuel road-mobile ICBM.",
+        "type": "ICBM_FLIGHT_TEST"
+      },
+      {
+        "timestamp": "2024-10-31T23:00:00Z",
+        "whatChanged": "Hwasong-19 heavy ICBM test achieved record 86-minute flight duration.",
+        "type": "BALLISTIC_ADVANCEMENT"
+      }
+    ]
+  },
+  "evt_lac_disengagement_verification": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Stabilization along the 3,488 km Himalayan border between two nuclear-armed Asian powers with forward deployments exceeding 100,000 troops.",
+    "whatChanged": "Indian Army and PLA sector commanders completed joint physical and UAV patrol verifications in Demchok and Depsang Plains.",
+    "background": "The June 2020 Galwan clash resulted in 20 Indian and at least 4 Chinese soldier casualties, leading to 21 rounds of Corps Commander talks and the October 2024 Kazan accord.",
+    "eventOccurredAt": "2020-05-05T12:00:00Z",
+    "firstDetectedAt": "2020-05-05T11:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-30T10:00:00Z",
+    "verification": {
+      "method": "Satellite imagery and Indian Ministry of External Affairs official briefings",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "MEA India",
+        "PLA Western Theater Command",
+        "OSINT"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2020-06-15T18:00:00Z",
+        "whatChanged": "Galwan Valley clash initiated multi-year frozen standoff.",
+        "type": "LETHAL_BORDER_CLASH"
+      },
+      {
+        "timestamp": "2024-10-30T10:30:00Z",
+        "whatChanged": "Completion of coordinated patrol disengagement at Depsang and Demchok.",
+        "type": "DIPLOMATIC_DISENGAGEMENT"
+      }
+    ]
+  },
+  "evt_pak_afghan_durand_clashes": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Escalating cross-border militancy and conventional artillery exchanges along the contested 2,670 km Durand Line frontier.",
+    "whatChanged": "Pakistani Air Force jets conducted retaliatory airstrikes on suspected TTP training camps in Khost and Paktika provinces of Afghanistan.",
+    "background": "The Afghan Taliban has historically rejected the colonial British-drawn 1893 Durand Line, refusing to expel Tehrik-i-Taliban Pakistan (TTP) fighters launching attacks into Khyber Pakhtunkhwa.",
+    "eventOccurredAt": "2023-12-15T04:00:00Z",
+    "firstDetectedAt": "2023-12-15T03:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-03-18T05:00:00Z",
+    "verification": {
+      "method": "Local Pakistani ISPR statements and Afghan Taliban military communiques",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ISPR Pakistan",
+        "Taliban MoD",
+        "UNAMA"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-12-15T05:00:00Z",
+        "whatChanged": "Torkham border crossing sealed following mortar exchanges.",
+        "type": "BORDER_CLOSURE"
+      },
+      {
+        "timestamp": "2024-03-18T06:00:00Z",
+        "whatChanged": "Operation Azm-e-Istehkam airstrikes struck TTP safehouses in eastern Afghanistan.",
+        "type": "CROSS_BORDER_STRIKE"
+      }
+    ]
+  },
+  "evt_maldives_strategic_recalibration": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Geopolitical competition over vital Indian Ocean sea lines of communication linking the Middle East and the Malacca Strait.",
+    "whatChanged": "Maldives finalized a bilateral currency swap agreement with the Reserve Bank of India ($400M USD) while renegotiating debt obligations.",
+    "background": "Following the 'India Out' campaign that brought President Mohamed Muizzu to power, Male initially pivoted toward Beijing before executing a pragmatic diplomatic rebalance with New Delhi.",
+    "eventOccurredAt": "2023-11-17T10:00:00Z",
+    "firstDetectedAt": "2023-11-17T09:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-07T12:00:00Z",
+    "verification": {
+      "method": "Official statements from the Government of Maldives and Indian Ministry of External Affairs",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "MEA India",
+        "President's Office Maldives",
+        "RBI"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-11-17T11:00:00Z",
+        "whatChanged": "Request for withdrawal of Indian military aviation personnel operating ALH Dhruv helicopters.",
+        "type": "FORCE_POSTURE_SHIFT"
+      },
+      {
+        "timestamp": "2024-10-07T14:00:00Z",
+        "whatChanged": "President Muizzu completed state visit to New Delhi, signing Vision for Comprehensive Economic and Maritime Security Partnership.",
+        "type": "DIPLOMATIC_RESET"
+      }
+    ]
+  },
+  "evt_sudan_civil_war_redsea": {
+    "chainKey": "CHAIN_SAHEL_SECURITY",
+    "priorityRationale": "Severe civil conflict in Africa's third-largest state, displacing over 10 million people and threatening maritime security along the Red Sea.",
+    "whatChanged": "SAF forces deployed Iranian-supplied Mohajer-6 drones to break the RSF encirclement around the Omdurman military base.",
+    "background": "Tensions between General al-Burhan (SAF) and Hemedti (RSF) over integration into a unified military erupted into full-scale war in Khartoum in April 2023.",
+    "eventOccurredAt": "2023-04-15T07:30:00Z",
+    "firstDetectedAt": "2023-04-15T06:45:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-20T16:00:00Z",
+    "verification": {
+      "method": "Commercial high-resolution satellite imagery and UN OCHA humanitarian data",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "UN OCHA",
+        "ACLED",
+        "WHO"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-04-15T08:00:00Z",
+        "whatChanged": "Outbreak of intense urban fighting across central Khartoum and Khartoum International Airport.",
+        "type": "CIVIL_WAR_OUTBREAK"
+      },
+      {
+        "timestamp": "2024-11-20T17:00:00Z",
+        "whatChanged": "Port Sudan reinforced as the permanent operational administrative hub of the Sovereign Council.",
+        "type": "CAPITAL_RELOCATION"
+      }
+    ]
+  },
+  "evt_sahel_confederation_aes": {
+    "chainKey": "CHAIN_SAHEL_SECURITY",
+    "priorityRationale": "Decisive geopolitical realignment across West Africa: severance from Western alliances, expulsion of French and US troops, and pivot to Russia.",
+    "whatChanged": "The leaders of Mali, Burkina Faso, and Niger formally ratified the treaty establishing the Confederation of Sahel States (AES) in Niamey.",
+    "background": "A series of military coups between 2020 and 2023 ousted French-backed civilian governments in the Sahel, leading to the expulsion of Western forces and entry of Russia's Africa Corps.",
+    "eventOccurredAt": "2023-09-16T12:00:00Z",
+    "firstDetectedAt": "2023-09-16T11:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-07-06T15:00:00Z",
+    "verification": {
+      "method": "Official AES summit communiques and ECOWAS commission releases",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ECOWAS",
+        "African Union",
+        "AES Directorate"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-09-16T14:00:00Z",
+        "whatChanged": "Liptako-Gourma Charter signed establishing mutual defense pact.",
+        "type": "ALLIANCE_FORMATION"
+      },
+      {
+        "timestamp": "2024-07-06T16:00:00Z",
+        "whatChanged": "First AES summit convened in Niamey, confirming definitive withdrawal from ECOWAS.",
+        "type": "CONFEDERATION_ESTABLISHED"
+      }
+    ]
+  },
+  "evt_us_china_tariffs_semiconductors": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "Systemic tech war dividing global computing infrastructure into rival technology spheres and restricting access to advanced chip lithography.",
+    "whatChanged": "US Department of Commerce enacted expanded export restrictions targeting high-bandwidth memory (HBM) and advanced gate-all-around (GAA) chip tools.",
+    "background": "Beginning with Section 301 tariffs under Trump and formalized by Biden's October 2022 semiconductor export controls, Washington seeks to deny Beijing cutting-edge AI silicon.",
+    "eventOccurredAt": "2022-10-07T14:00:00Z",
+    "firstDetectedAt": "2022-10-07T13:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-12-02T15:00:00Z",
+    "verification": {
+      "method": "Federal Register publications and Chinese Ministry of Commerce retaliatory statements",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "US Dept of Commerce (BIS)",
+        "MOFCOM China",
+        "ASML"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-10-07T15:00:00Z",
+        "whatChanged": "Unprecedented restrictions placed on US citizens working for Chinese semiconductor fabs.",
+        "type": "REGULATORY_RESTRICTION"
+      },
+      {
+        "timestamp": "2024-12-02T16:00:00Z",
+        "whatChanged": "China banned direct exports of gallium, germanium, and antimony to US military end-users.",
+        "type": "MINERALS_RETALIATION"
+      }
+    ]
+  },
+  "evt_essequibo_venezuela_guyana": {
+    "chainKey": "CHAIN_BRAHMOS_AUTONOMY",
+    "priorityRationale": "Territorial threat over oil-rich Guayana Esequiba, comprising two-thirds of Guyana's landmass and billions of barrels of offshore crude.",
+    "whatChanged": "Venezuelan National Assembly enacted the Organic Law for the Defense of Guayana Esequiba following a disputed national referendum.",
+    "background": "The 1899 Paris Arbitral Award settled the border, but Venezuela revived its 1962 Geneva Agreement claims after ExxonMobil discovered massive offshore reserves in the Stabroek Block.",
+    "eventOccurredAt": "2023-12-03T18:00:00Z",
+    "firstDetectedAt": "2023-12-03T16:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-04-03T14:00:00Z",
+    "verification": {
+      "method": "CARICOM joint declarations and satellite tracking of Venezuelan border troop deployments",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ICJ",
+        "CARICOM",
+        "Guyana MoD"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-12-03T20:00:00Z",
+        "whatChanged": "Venezuela held consultative referendum claiming annexation of Esequiba territory.",
+        "type": "TERRITORIAL_CLAIM"
+      },
+      {
+        "timestamp": "2024-04-03T15:00:00Z",
+        "whatChanged": "Venezuela signed law designating Esequiba as a new federal state, prompting joint US-Guyana air drills.",
+        "type": "LEGAL_ANNEXATION"
+      }
+    ]
+  },
+  "evt_arctic_northern_sea_route": {
+    "chainKey": "CHAIN_ARCTIC_SCRAMBLE",
+    "priorityRationale": "Geopolitical scramble over opening Arctic waterways, slashing maritime transit between Europe and Asia by 40% under Russian naval control.",
+    "whatChanged": "Rosatom launched the nuclear icebreaker Yakutiya into regular service escorting commercial container traffic along the Northern Sea Route.",
+    "background": "Rapid polar ice melting has transformed the Arctic from an inaccessible wilderness into a navigable commercial and military domain contested between Russia, China, and NATO.",
+    "eventOccurredAt": "2023-07-20T08:00:00Z",
+    "firstDetectedAt": "2023-07-20T07:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-12T10:00:00Z",
+    "verification": {
+      "method": "CryoSat-2 polar radar telemetry and Rosatom marine navigation registry",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Rosatom",
+        "Arctic Council",
+        "Norwegian Coast Guard"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-07-20T09:00:00Z",
+        "whatChanged": "First non-ice-class container ship completed continuous transit from Saint Petersburg to China.",
+        "type": "COMMERCIAL_TRANSIT"
+      },
+      {
+        "timestamp": "2024-11-12T11:00:00Z",
+        "whatChanged": "Russian nuclear submarine Perm tested Tsirkon hypersonic missile in Barents Sea.",
+        "type": "ARCTIC_WEAPONS_TEST"
+      }
+    ]
+  },
+  "evt_brics_financial_dedollarization": {
+    "chainKey": "CHAIN_S400_CAATSA",
+    "priorityRationale": "Systemic challenge to Western financial hegemony through local-currency trade settlements and alternative cross-border payment platforms (BRICS Bridge).",
+    "whatChanged": "BRICS summit in Kazan endorsed the creation of the BRICS Cross-Border Payment Initiative and expansion of national currency billing.",
+    "background": "G7 weaponization of the SWIFT network and freezing of $300B in Russian central bank reserves in 2022 accelerated non-Western interest in de-dollarization.",
+    "eventOccurredAt": "2023-08-24T10:00:00Z",
+    "firstDetectedAt": "2023-08-24T09:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-23T12:00:00Z",
+    "verification": {
+      "method": "BRICS Kazan Declaration and central bank currency settlement statistics",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "New Development Bank",
+        "Reserve Bank of India",
+        "Bank of Russia"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-08-24T12:00:00Z",
+        "whatChanged": "Historic expansion admitted UAE, Iran, Egypt, and Ethiopia into BRICS membership.",
+        "type": "MEMBERSHIP_EXPANSION"
+      },
+      {
+        "timestamp": "2024-10-23T14:00:00Z",
+        "whatChanged": "Kazan Summit established BRICS Partner Country category and local currency settlement guidelines.",
+        "type": "FINANCIAL_DECLARATION"
+      }
+    ]
+  },
+  "evt_black_sea_naval_drones": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "Revolution in naval warfare: asymmetric explosive sea drones and cruise missiles neutralized Russian surface dominance in the western Black Sea.",
+    "whatChanged": "Ukrainian Magura V5 sea drones intercepted and sank the Russian guided-missile corvette Ivanovets near Lake Donuzlav in Crimea.",
+    "background": "Lacking a conventional navy, Ukraine developed indigenously produced autonomous unmanned surface vessels (USVs) that forced the Russian Black Sea Fleet to withdraw from Sevastopol.",
+    "eventOccurredAt": "2022-10-29T03:30:00Z",
+    "firstDetectedAt": "2022-10-29T03:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-03-05T04:00:00Z",
+    "verification": {
+      "method": "Verified onboard optical telemetry from Ukrainian HUR drones and satellite imagery",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "HUR Ukraine",
+        "Russian MoD",
+        "Black Sea OSINT"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-10-29T05:00:00Z",
+        "whatChanged": "First coordinated drone boat attack on Sevastopol naval harbor.",
+        "type": "NAVAL_DRONE_SWARM"
+      },
+      {
+        "timestamp": "2024-03-05T06:00:00Z",
+        "whatChanged": "Patrol ship Sergey Kotov sunk off Kerch Strait by Magura V5 pack.",
+        "type": "WARSHIP_SUNK"
+      }
+    ]
+  },
+  "evt_aukus_pillar_submarines": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "Trilateral security pact transferring nuclear-powered submarine technology to Australia, fundamentally reshaping naval deterrence in the Indo-Pacific.",
+    "whatChanged": "Australia finalized a $4.6B bilateral industrial funding agreement with the UK to expand Rolls-Royce submarine nuclear reactor production.",
+    "background": "Announced in September 2021, AUKUS unites Australia, the UK, and the US to build SSN-AUKUS submarines and co-develop hypersonic, quantum, and AI defense tech.",
+    "eventOccurredAt": "2021-09-15T21:00:00Z",
+    "firstDetectedAt": "2021-09-15T20:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-03-21T06:00:00Z",
+    "verification": {
+      "method": "Trilateral ministerial communiques and IAEA safeguards consultation reports",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "DoD USA",
+        "Australian DoD",
+        "UK MoD",
+        "IAEA"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2021-09-15T22:00:00Z",
+        "whatChanged": "Formal unveiling of the AUKUS security pact and cancellation of French conventional submarine contract.",
+        "type": "PACT_ANNOUNCED"
+      },
+      {
+        "timestamp": "2024-03-21T07:00:00Z",
+        "whatChanged": "Selection of BAE Systems and ASC as primary shipbuilders for SSN-AUKUS fleet.",
+        "type": "INDUSTRIAL_CONTRACT"
+      }
+    ]
+  },
+  "evt_bangladesh_interim_transition": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Abrupt political transformation of the world's 8th most populous country, reshaping regional security adjacent to India's sensitive Siliguri Corridor.",
+    "whatChanged": "Chief Adviser Dr. Muhammad Yunus formed a National Electoral Reform Commission to prepare for free parliamentary elections.",
+    "background": "Student-led anti-quota protests in July-August 2024 escalated into a nationwide popular uprising that forced Prime Minister Sheikh Hasina to resign and flee to India.",
+    "eventOccurredAt": "2024-08-05T09:00:00Z",
+    "firstDetectedAt": "2024-08-05T08:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-15T10:00:00Z",
+    "verification": {
+      "method": "Official gazette notifications and international wire corroboration",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Bangladesh Cabinet Division",
+        "UN High Commissioner for Human Rights",
+        "MEA India"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-08-05T10:00:00Z",
+        "whatChanged": "Army Chief General Waker-uz-Zaman announced the resignation of Sheikh Hasina.",
+        "type": "REGIME_COLLAPSE"
+      },
+      {
+        "timestamp": "2024-08-08T15:00:00Z",
+        "whatChanged": "Nobel Laureate Dr. Muhammad Yunus sworn in as Chief Adviser of the Interim Government.",
+        "type": "INTERIM_SWEARING_IN"
+      }
+    ]
+  },
+  "evt_ethiopia_somaliland_berbera": {
+    "chainKey": "CHAIN_SAHEL_SECURITY",
+    "priorityRationale": "Geopolitical dispute over sovereign maritime access in the Horn of Africa, risking regional conflict between Ethiopia, Somalia, and Egypt.",
+    "whatChanged": "Somalia and Egypt concluded joint military exercises in Mogadishu following the deployment of Egyptian tactical military equipment.",
+    "background": "On January 1, 2024, landlocked Ethiopia signed a Memorandum of Understanding with the breakaway Republic of Somaliland to lease 20 km of coastline at Berbera port.",
+    "eventOccurredAt": "2024-01-01T10:00:00Z",
+    "firstDetectedAt": "2024-01-01T09:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-08-27T14:00:00Z",
+    "verification": {
+      "method": "Official signing ceremonies and African Union Peace and Security Council statements",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Somali Ministry of Foreign Affairs",
+        "Ethiopian MFA",
+        "Arab League"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-01-01T11:00:00Z",
+        "whatChanged": "Signing of the controversial Berbera port lease MoU between PM Abiy Ahmed and President Muse Bihi.",
+        "type": "MOU_SIGNING"
+      },
+      {
+        "timestamp": "2024-08-27T16:00:00Z",
+        "whatChanged": "Egyptian military cargo flights landed in Mogadishu carrying defense materiel under new bilateral pact.",
+        "type": "MILITARY_DEPLOYMENT"
+      }
+    ]
+  },
+  "evt_drc_coltan_m23_conflict": {
+    "chainKey": "CHAIN_SAHEL_SECURITY",
+    "priorityRationale": "Critical mineral supply security: eastern DR Congo produces 70% of the world's coltan (tantalum) essential for smartphones and aerospace.",
+    "whatChanged": "M23 rebel forces advanced toward the mining hub of Rubaya, disrupting global supply lines of tantalum and columbite-tantalite.",
+    "background": "Rooted in the aftermath of the 1994 Rwandan genocide, eastern DRC has experienced decades of resource conflict fueled by rival ethnic militias and mineral smuggling.",
+    "eventOccurredAt": "2022-03-28T05:00:00Z",
+    "firstDetectedAt": "2022-03-28T04:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-05-02T12:00:00Z",
+    "verification": {
+      "method": "UN Group of Experts on the DRC reports and MONUSCO field briefings",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "UN MONUSCO",
+        "DRC Ministry of Mines",
+        "SADC Force"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-03-28T06:00:00Z",
+        "whatChanged": "M23 launched major offensive capturing strategic border post of Bunagana.",
+        "type": "REBEL_OFFENSIVE"
+      },
+      {
+        "timestamp": "2024-05-02T13:00:00Z",
+        "whatChanged": "M23 captured Rubaya coltan mining complex, enforcing direct extraction taxation.",
+        "type": "MINING_NODE_SEIZURE"
+      }
+    ]
+  },
+  "evt_myanmar_civil_war_kaladan": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Direct security threat to India's $500M Kaladan Multi-Modal Transit Transport corridor linking Kolkata to Mizoram through Sittwe port.",
+    "whatChanged": "Arakan Army fighters established full control over Paletwa township in southern Chin State, severing the overland link of the Kaladan project.",
+    "background": "The February 2021 military coup triggered nationwide resistance; the Arakan Army capitalized by capturing military outposts across Rakhine State.",
+    "eventOccurredAt": "2023-11-13T02:00:00Z",
+    "firstDetectedAt": "2023-11-13T01:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-02-15T09:00:00Z",
+    "verification": {
+      "method": "Field video releases by the Arakan Army and Indian Ministry of External Affairs advisories",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "MEA India",
+        "Arakan Army Military Command",
+        "Tatmadaw"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-11-13T03:00:00Z",
+        "whatChanged": "Arakan Army ended informal ceasefire, attacking border guard outposts across Rakhine.",
+        "type": "CEASEFIRE_COLLAPSE"
+      },
+      {
+        "timestamp": "2024-02-15T10:00:00Z",
+        "whatChanged": "Fall of Paletwa and Myebon townships encircled the deepwater port of Sittwe.",
+        "type": "CORRIDOR_SEVERANCE"
+      }
+    ]
+  },
+  "evt_turkey_montreux_straits": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "Enforcement of the 1936 Montreux Convention: Turkey's closure of the Bosporus and Dardanelles straits blocks Russian naval reinforcements into the Black Sea.",
+    "whatChanged": "Turkish maritime authorities re-issued notice barring the transit of non-Black Sea littoral warships under Article 19 of the Montreux Convention.",
+    "background": "Signed in 1936, the Montreux Convention grants Turkey sovereign control over the Turkish Straits; Turkey invoked Article 19 within days of the 2022 Ukraine invasion.",
+    "eventOccurredAt": "2022-02-28T16:00:00Z",
+    "firstDetectedAt": "2022-02-28T15:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-01-03T11:00:00Z",
+    "verification": {
+      "method": "Official statements from the Turkish Ministry of Foreign Affairs and UN maritime notifications",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Turkish MFA",
+        "NATO",
+        "Russian Navy Black Sea Fleet"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-02-28T17:00:00Z",
+        "whatChanged": "Ankara officially declared the conflict a 'war', closing the straits to belligerent warships.",
+        "type": "MONTREUX_CLOSURE"
+      },
+      {
+        "timestamp": "2024-01-03T12:00:00Z",
+        "whatChanged": "Turkey barred transit of British-donated Sandown-class minehunter vessels to Ukraine.",
+        "type": "NEUTRALITY_ENFORCEMENT"
+      }
+    ]
+  },
+  "evt_counter_space_gps_electronic": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "Systemic vulnerability of space-based assets: low-Earth orbit electronic warfare, GPS spoofing, and satellite jamming affecting commercial airlines and smart munitions.",
+    "whatChanged": "Baltic and Nordic civil aviation agencies reported pervasive GPS spoofing forcing passenger flights to divert from Tartu airport in Estonia.",
+    "background": "Electronic warfare systems based in Kaliningrad (Tobol, Krasukha-4) have systematically targeted GPS and Galileo positioning signals across Northern and Eastern Europe.",
+    "eventOccurredAt": "2023-12-25T08:00:00Z",
+    "firstDetectedAt": "2023-12-25T07:15:00Z",
+    "lastSubstantiveUpdateAt": "2024-04-29T10:00:00Z",
+    "verification": {
+      "method": "Eurocontrol navigation interference reports and GPSJam telemetry maps",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Eurocontrol",
+        "Finnair",
+        "Swedish Transport Agency"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-12-25T09:00:00Z",
+        "whatChanged": "Spike in Baltic GPS jamming affecting commercial aviation across southern Sweden and Poland.",
+        "type": "ELECTRONIC_WARFARE_SPIKE"
+      },
+      {
+        "timestamp": "2024-04-29T11:00:00Z",
+        "whatChanged": "Suspension of Finnair flights to Tartu following dual GPS jamming incidents.",
+        "type": "AIRLINE_SERVICE_HALT"
+      }
+    ]
+  },
+  "evt_panama_canal_transit_recovery": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "Severe climate shock to global maritime supply lines: historic drought reduced freshwater Gatun Lake levels, cutting daily transits by 35%.",
+    "whatChanged": "Panama Canal Authority (ACP) raised daily vessel transit slots to 36 per day following the onset of rainy season replenishment.",
+    "background": "The 82-km Panama Canal connects the Atlantic and Pacific oceans, handling 5% of world maritime trade; severe El Ni\u00f1o droughts forced drastic rationing in 2023.",
+    "eventOccurredAt": "2023-08-08T12:00:00Z",
+    "firstDetectedAt": "2023-08-08T11:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-09-01T08:00:00Z",
+    "verification": {
+      "method": "Panama Canal Authority (ACP) advisory notices to shipping and satellite water level altimetry",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Autoridad del Canal de Panam\u00e1",
+        "IMO",
+        "S&P Global"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-08-08T13:00:00Z",
+        "whatChanged": "Daily transit slots restricted to 24 ships, causing massive anchor queues.",
+        "type": "TRANSIT_RESTRICTION"
+      },
+      {
+        "timestamp": "2024-09-01T09:00:00Z",
+        "whatChanged": "Full draft limit restored to 50 feet as Gatun Lake water levels recovered.",
+        "type": "CAPACITY_RESTORED"
+      }
+    ]
+  },
+  "evt_sri_lanka_colombo_terminal": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Strategic transshipment hub in the Indian Ocean: Colombo port handles over 60% of India's container transshipment cargo.",
+    "whatChanged": "Adani Ports and Special Economic Zone commissioned the first phase of the West Container Terminal (WCT) at the Port of Colombo.",
+    "background": "Following Sri Lanka's 2022 sovereign debt default, New Delhi extended $4B in humanitarian and credit assistance, strengthening Colombo port partnerships.",
+    "eventOccurredAt": "2022-05-19T06:00:00Z",
+    "firstDetectedAt": "2022-05-19T05:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-05T10:00:00Z",
+    "verification": {
+      "method": "Sri Lanka Ports Authority operational releases and US DFC investment documentation",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "SLPA",
+        "US DFC",
+        "Adani Ports"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-05-19T07:00:00Z",
+        "whatChanged": "Sri Lanka defaulted on foreign sovereign debt, prompting Indian emergency fuel credit lines.",
+        "type": "ECONOMIC_DEFAULT"
+      },
+      {
+        "timestamp": "2024-11-05T11:00:00Z",
+        "whatChanged": "First test cranes operationalized at the Colombo West Container Terminal.",
+        "type": "TERMINAL_COMMISSIONING"
+      }
+    ]
+  },
+  "evt_lebanon_israel_litani": {
+    "chainKey": "CHAIN_ABRAHAM_IMEC",
+    "priorityRationale": "Highest-intensity warfare along the Blue Line since 2006, testing UN Resolution 1701 and stability in the Eastern Mediterranean.",
+    "whatChanged": "IDF forward mechanized elements engaged in targeted ground clearance operations in border villages south of the Litani River.",
+    "background": "Hostilities began on October 8, 2023, with Hezbollah firing rockets in solidarity with Gaza; September 2024 saw pager detonations and the elimination of Hassan Nasrallah.",
+    "eventOccurredAt": "2024-09-23T06:00:00Z",
+    "firstDetectedAt": "2024-09-23T05:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-27T04:00:00Z",
+    "verification": {
+      "method": "UNIFIL situation reports and verified satellite radar damage mapping",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "UNIFIL",
+        "IDF",
+        "Lebanese Armed Forces"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-09-23T07:00:00Z",
+        "whatChanged": "Operation Northern Arrows launched with massive precision airstrikes across southern Lebanon.",
+        "type": "AIR_CAMPAIGN_LAUNCH"
+      },
+      {
+        "timestamp": "2024-11-27T05:00:00Z",
+        "whatChanged": "US-French negotiated 60-day ceasefire took effect along the Blue Line.",
+        "type": "CEASEFIRE_ENACTMENT"
+      }
+    ]
+  },
+  "evt_syria_post_conflict_golan": {
+    "chainKey": "CHAIN_ABRAHAM_IMEC",
+    "priorityRationale": "Historic political upheaval: the collapse of the 54-year Assad dynasty fundamentally alters the regional balance of power in the Levant.",
+    "whatChanged": "Israeli military engineering units fortified observation outposts within the demilitarized UNDOF buffer zone on Mount Hermon.",
+    "background": "A lightning 11-day offensive by Hayat Tahrir al-Sham (HTS) and allied rebel factions in November-December 2024 captured Aleppo, Hama, Homs, and Damascus.",
+    "eventOccurredAt": "2024-12-08T03:00:00Z",
+    "firstDetectedAt": "2024-12-08T02:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-12-10T12:00:00Z",
+    "verification": {
+      "method": "IDF aerial reconnaissance, UNDOF verification, and international diplomatic statements",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "IDF",
+        "UNDOF",
+        "Syrian Transitional Authority"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-12-08T04:00:00Z",
+        "whatChanged": "Rebel forces entered Damascus; Bashar al-Assad fled to Moscow.",
+        "type": "REGIME_COLLAPSE"
+      },
+      {
+        "timestamp": "2024-12-10T13:00:00Z",
+        "whatChanged": "IDF carried out over 250 precision strikes neutralizing Syrian naval and missile assets.",
+        "type": "STRATEGIC_INTERDICTION"
+      }
+    ]
+  },
+  "evt_saudi_iran_normalization": {
+    "chainKey": "CHAIN_ABRAHAM_IMEC",
+    "priorityRationale": "Historic diplomatic rapprochement brokered by Beijing, reducing proxy friction in Yemen and restoring diplomatic embassies.",
+    "whatChanged": "Saudi Chief of General Staff General Fayyad al-Ruwaili held bilateral security talks with Iranian Armed Forces Chief in Tehran.",
+    "background": "Rivalry dating back to the 1979 Iranian Revolution severed formal ties in 2016; Chinese mediation in March 2023 produced the landmark Beijing Agreement.",
+    "eventOccurredAt": "2023-03-10T14:00:00Z",
+    "firstDetectedAt": "2023-03-10T13:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-11-10T16:00:00Z",
+    "verification": {
+      "method": "Trilateral joint communiques released by Beijing, Riyadh, and Tehran",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Saudi Ministry of Foreign Affairs",
+        "Iranian MFA",
+        "Chinese MFA"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-03-10T15:00:00Z",
+        "whatChanged": "Signing of the historic Beijing Accord re-opening diplomatic embassies.",
+        "type": "ACCORD_SIGNING"
+      },
+      {
+        "timestamp": "2024-11-10T17:00:00Z",
+        "whatChanged": "First official visit by a Saudi military chief to Tehran in decades.",
+        "type": "MILITARY_DIPLOMACY"
+      }
+    ]
+  },
+  "evt_senkaku_diaoyu_standoff": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "High-risk sovereignty standoff between China and Japan over contested East China Sea islets, backed by the US-Japan Security Treaty.",
+    "whatChanged": "Four armed Chinese Coast Guard vessels maintained a record 36-hour patrol within the contiguous zone of the Senkaku Islands.",
+    "background": "Japan nationalized the Senkaku islets in 2012; China responded by establishing an East China Sea ADIZ and maintaining persistent Coast Guard patrols.",
+    "eventOccurredAt": "2023-01-26T06:00:00Z",
+    "firstDetectedAt": "2023-01-26T05:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-06-25T08:00:00Z",
+    "verification": {
+      "method": "Japan Coast Guard (JCG) 11th Regional Headquarters radar tracking",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Japan Coast Guard",
+        "Chinese CCG",
+        "JMSDF"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-01-26T07:00:00Z",
+        "whatChanged": "Chinese Coast Guard vessels challenged Japanese fishing vessels inside territorial waters.",
+        "type": "TERRITORIAL_INCURSION"
+      },
+      {
+        "timestamp": "2024-06-25T09:00:00Z",
+        "whatChanged": "First deployment of a Chinese Coast Guard cutter armed with a 76mm main naval gun.",
+        "type": "WEAPONS_ESCALATION"
+      }
+    ]
+  },
+  "evt_luzon_archipelago_defense": {
+    "chainKey": "CHAIN_BRAHMOS_AUTONOMY",
+    "priorityRationale": "Militarization of the First Island Chain: the Bashi Channel and Luzon Strait connect the South China Sea to the Western Pacific.",
+    "whatChanged": "US Marine Corps 3rd Marine Littoral Regiment deployed the NMESIS anti-ship missile system to northern Luzon during Balikatan 2024.",
+    "background": "The 2014 Enhanced Defense Cooperation Agreement (EDCA) expanded in 2023 with four new sites in northern Luzon facing Taiwan.",
+    "eventOccurredAt": "2023-04-11T04:00:00Z",
+    "firstDetectedAt": "2023-04-11T03:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-05-08T06:00:00Z",
+    "verification": {
+      "method": "Balikatan joint exercise telemetry and satellite tracking",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "AFP Philippines",
+        "US INDOPACOM",
+        "JGSDF"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-04-11T05:00:00Z",
+        "whatChanged": "Unveiling of Camilo Osias and Lal-lo naval airstrip EDCA sites in Cagayan.",
+        "type": "BASING_EXPANSION"
+      },
+      {
+        "timestamp": "2024-05-08T07:00:00Z",
+        "whatChanged": "Simulated sinking of a decommissioned naval tanker off Ilocos Norte.",
+        "type": "LIVE_FIRE_SINKING"
+      }
+    ]
+  },
+  "evt_gwadar_port_cpec_security": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Security threat to China's flagship $62B Belt and Road corridor, providing direct access to the Arabian Sea near the Strait of Hormuz.",
+    "whatChanged": "Baloch Liberation Army (BLA) suicide bombers attacked a convoy of Chinese engineers outside Karachi International Airport.",
+    "background": "Developed by China Overseas Port Holding Company, Gwadar port has faced persistent attacks from Baloch separatist insurgents opposing resource extraction.",
+    "eventOccurredAt": "2023-08-13T09:00:00Z",
+    "firstDetectedAt": "2023-08-13T08:30:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-06T18:00:00Z",
+    "verification": {
+      "method": "Balochistan provincial police statements and Chinese Embassy security alerts",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "ISPR Pakistan",
+        "Chinese Embassy Islamabad",
+        "BLA Communiques"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-08-13T10:00:00Z",
+        "whatChanged": "BLA attack on Chinese engineer convoy repelled near Gwadar port.",
+        "type": "INSURGENT_ATTACK"
+      },
+      {
+        "timestamp": "2024-10-06T19:00:00Z",
+        "whatChanged": "Suicide VBIED detonated against Chinese personnel convoy outside Karachi airport.",
+        "type": "SUICIDE_BOMBING"
+      }
+    ]
+  },
+  "evt_teesta_river_barrage": {
+    "chainKey": "CHAIN_SOUTH_ASIA_LAC",
+    "priorityRationale": "Transboundary hydropolitics: the Teesta River feeds 14% of Bangladesh's arable land, serving as a key bilateral issue with India.",
+    "whatChanged": "Bangladesh interim government announced a review of the Teesta Comprehensive Management Project feasibility study.",
+    "background": "Originating in Sikkim, India and Bangladesh negotiated a draft water sharing treaty in 2011, which stalled over state-level irrigation allocations.",
+    "eventOccurredAt": "2020-08-18T10:00:00Z",
+    "firstDetectedAt": "2020-08-18T09:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-09-12T11:00:00Z",
+    "verification": {
+      "method": "Joint Rivers Commission (JRC) records and Ministry of Water Resources releases",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "JRC India-Bangladesh",
+        "Water Resources Ministry Bangladesh",
+        "MEA India"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2020-08-18T11:00:00Z",
+        "whatChanged": "China offered $1 Billion loan for Teesta river dredging and embankment project.",
+        "type": "LOAN_PROPOSAL"
+      },
+      {
+        "timestamp": "2024-09-12T12:00:00Z",
+        "whatChanged": "Interim administration prioritised equitable river basin negotiations with India.",
+        "type": "POLICY_REASSESSMENT"
+      }
+    ]
+  },
+  "evt_france_germany_defense": {
+    "chainKey": "CHAIN_UKRAINE_EUROPE_ENERGY",
+    "priorityRationale": "European strategic autonomy: cooperation between Paris and Berlin on next-generation tanks (MGCS) and fighter aircraft (FCAS).",
+    "whatChanged": "French Defense Minister and German counterpart signed a binding phase-1A industrial contract for the Main Ground Combat System (MGCS).",
+    "background": "Initiated in 2017 to pool defense industrial scale, the Franco-German defense axis has wrestled with industrial workshare disputes and export clearance disagreements.",
+    "eventOccurredAt": "2022-04-26T14:00:00Z",
+    "firstDetectedAt": "2022-04-26T13:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-04-26T10:00:00Z",
+    "verification": {
+      "method": "Joint ministerial communiques and European Defense Agency registers",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "French MoD",
+        "German Bundeswehr",
+        "KNDS"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-04-26T15:00:00Z",
+        "whatChanged": "First ministerial breakthrough dividing MGCS tank systems into 8 work packages.",
+        "type": "WORKSHARE_AGREEMENT"
+      },
+      {
+        "timestamp": "2024-04-26T11:00:00Z",
+        "whatChanged": "Formal signing of the 50-50 industrial split contract in Paris.",
+        "type": "CONTRACT_FINALIZATION"
+      }
+    ]
+  },
+  "evt_nordic_defense_integration": {
+    "chainKey": "CHAIN_ARCTIC_SCRAMBLE",
+    "priorityRationale": "Creation of an integrated Nordic Air Operations Command fielding 250 advanced combat aircraft across Sweden, Finland, Norway, and Denmark.",
+    "whatChanged": "Nordic air chiefs carried out the first joint air policing drills under the unified Nordic Air Operations Command.",
+    "background": "With Finland and Sweden joining NATO, the four Nordic air forces signed a declaration in March 2023 to operate seamlessly as a single collective force.",
+    "eventOccurredAt": "2023-03-24T12:00:00Z",
+    "firstDetectedAt": "2023-03-24T11:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-03-15T14:00:00Z",
+    "verification": {
+      "method": "Joint Nordic Defence Cooperation (NORDEFCO) official declarations",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Swedish Air Force",
+        "Finnish Air Force",
+        "RNoAF",
+        "RDAF"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-03-24T13:00:00Z",
+        "whatChanged": "Four Nordic air chiefs signed letter of intent for integrated air operations.",
+        "type": "AGREEMENT_SIGNED"
+      },
+      {
+        "timestamp": "2024-03-15T15:00:00Z",
+        "whatChanged": "Execution of Nordic Response 2024 exercise integrating 20,000 allied troops.",
+        "type": "TACTICAL_EXERCISE"
+      }
+    ]
+  },
+  "evt_libya_oil_central_bank": {
+    "chainKey": "CHAIN_SAHEL_SECURITY",
+    "priorityRationale": "Severe energy disruption: political showdown over Central Bank leadership shut in over 700,000 bpd of high-grade Libyan light sweet crude.",
+    "whatChanged": "National Oil Corporation (NOC) declared force majeure on crude oil exports from the Sharara and El Feel oilfields.",
+    "background": "Divided since 2014 between the Tripoli-based Government of National Unity and General Haftar's forces in the east, control of oil revenues remains the central fault line.",
+    "eventOccurredAt": "2024-08-26T10:00:00Z",
+    "firstDetectedAt": "2024-08-26T09:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-10-03T11:00:00Z",
+    "verification": {
+      "method": "Libyan National Oil Corporation declarations and tanker tracking data",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "NOC Libya",
+        "UNSMIL",
+        "OPEC Secretariat"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2024-08-26T11:00:00Z",
+        "whatChanged": "Eastern administration announced total shutdown of all oilfields and export terminals.",
+        "type": "OIL_SHUTDOWN"
+      },
+      {
+        "timestamp": "2024-10-03T12:00:00Z",
+        "whatChanged": "UNSMIL-brokered agreement resolved Central Bank leadership, lifting force majeure.",
+        "type": "PRODUCTION_RESUMPTION"
+      }
+    ]
+  },
+  "evt_svalbard_treaty_arctic": {
+    "chainKey": "CHAIN_ARCTIC_SCRAMBLE",
+    "priorityRationale": "Arctic legal and sovereignty friction: the 1920 Svalbard Treaty demilitarizes the archipelago while granting equal commercial rights to 46 signatory states.",
+    "whatChanged": "Norwegian Coast Guard stepped up environmental and fishery surveillance around the Barents Sea continental shelf off Spitsbergen.",
+    "background": "Signed in 1920, Norway exercises sovereignty over Svalbard; Russia operates mining settlements (Barentsburg) and challenges Norwegian continental shelf limits.",
+    "eventOccurredAt": "2022-06-28T12:00:00Z",
+    "firstDetectedAt": "2022-06-28T11:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-02-09T14:00:00Z",
+    "verification": {
+      "method": "Norwegian Ministry of Justice releases and Russian Ministry of Foreign Affairs diplomatic protests",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Norwegian Polar Institute",
+        "Russian MFA",
+        "Governor of Svalbard"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-06-28T13:00:00Z",
+        "whatChanged": "Norway blocked Russian cargo transit to Barentsburg under EU sanctions, prompting cyberattacks.",
+        "type": "TRANSIT_STANDOFF"
+      },
+      {
+        "timestamp": "2024-02-09T15:00:00Z",
+        "whatChanged": "Norway revised environmental regulations tightening access to eastern Svalbard reserves.",
+        "type": "REGULATORY_AMENDMENT"
+      }
+    ]
+  },
+  "evt_critical_minerals_cartel": {
+    "chainKey": "CHAIN_TAIWAN_MALACCA",
+    "priorityRationale": "Geopolitical race for critical energy transition minerals: securing non-Chinese supply chains for lithium, cobalt, nickel, and rare earths.",
+    "whatChanged": "Minerals Security Partnership (MSP) members committed $180M in public financing for graphite and rare earth processing in Africa and Australia.",
+    "background": "China refines 60% of the world's lithium and over 90% of rare earth elements, prompting the US, EU, and QUAD partners to establish the Minerals Security Partnership.",
+    "eventOccurredAt": "2022-06-14T14:00:00Z",
+    "firstDetectedAt": "2022-06-14T13:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-09-23T16:00:00Z",
+    "verification": {
+      "method": "US State Department official communiques and IEA Critical Minerals Market reports",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "US State Dept",
+        "IEA",
+        "Indian Ministry of Mines"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2022-06-14T15:00:00Z",
+        "whatChanged": "Formation of the Minerals Security Partnership (MSP) announced at PDAC Toronto.",
+        "type": "PARTNERSHIP_LAUNCH"
+      },
+      {
+        "timestamp": "2024-09-23T17:00:00Z",
+        "whatChanged": "Launch of the MSP Finance Network uniting G7 export credit agencies.",
+        "type": "FINANCE_NETWORK"
+      }
+    ]
+  },
+  "evt_greenland_superpower_scramble": {
+    "chainKey": "CHAIN_ARCTIC_SCRAMBLE",
+    "priorityRationale": "Arctic minerals and sovereignty contestation: Greenland holds massive unexploited deposits of rare earth elements and critical battery metals.",
+    "whatChanged": "Greenland's parliament approved regulatory guidelines for strategic mineral mining while maintaining bans on uranium extraction.",
+    "background": "President Trump's 2019 proposal to purchase Greenland highlighted its critical strategic value; Greenland balances autonomy from Denmark with great-power mineral interest.",
+    "eventOccurredAt": "2019-08-16T18:00:00Z",
+    "firstDetectedAt": "2019-08-16T17:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-06-10T12:00:00Z",
+    "verification": {
+      "method": "Naalakkersuisut (Government of Greenland) mineral licencing records",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "Government of Greenland",
+        "Danish Ministry of Defence",
+        "USGS"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2019-08-16T19:00:00Z",
+        "whatChanged": "Diplomatic row over US proposal to purchase Greenland firmly rejected by Nuuk and Copenhagen.",
+        "type": "DIPLOMATIC_STANDOFF"
+      },
+      {
+        "timestamp": "2024-06-10T13:00:00Z",
+        "whatChanged": "US Export-Import Bank issued letter of interest for $650M financing for Kvanefjeld/Tanbreez rare earth project.",
+        "type": "MINERALS_FINANCING"
+      }
+    ]
+  },
+  "evt_greenland_pituffik_space_defense": {
+    "chainKey": "CHAIN_ARCTIC_SCRAMBLE",
+    "priorityRationale": "Northernmost US military installation: operates AN/FPS-132 phased array radar detecting intercontinental ballistic missile launches over the Arctic.",
+    "whatChanged": "US Space Force 12th Space Warning Squadron commissioned updated telemetry receivers for deep space tracking at Pituffik Space Base.",
+    "background": "Established under the 1951 US-Denmark defense agreement as Thule Air Base, it was renamed Pituffik Space Base in 2023, serving as a critical node in NORAD's early warning architecture.",
+    "eventOccurredAt": "2023-04-06T14:00:00Z",
+    "firstDetectedAt": "2023-04-06T13:00:00Z",
+    "lastSubstantiveUpdateAt": "2024-08-14T10:00:00Z",
+    "verification": {
+      "method": "US Space Force official announcements and NORAD operational readiness bulletins",
+      "confidence": "VERIFIED",
+      "corroboratedBy": [
+        "US Space Force",
+        "NORAD",
+        "Danish Defence Command"
+      ]
+    },
+    "updateHistory": [
+      {
+        "timestamp": "2023-04-06T15:00:00Z",
+        "whatChanged": "Thule Air Base officially renamed Pituffik Space Base to honor local Greenlandic heritage.",
+        "type": "BASE_RENAMING"
+      },
+      {
+        "timestamp": "2024-08-14T11:00:00Z",
+        "whatChanged": "Upgraded solid-state early warning radar integration completed with Space Command.",
+        "type": "RADAR_MODERNIZATION"
+      }
+    ]
+  }
+}

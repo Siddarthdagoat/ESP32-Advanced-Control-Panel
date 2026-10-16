@@ -296,5 +296,241 @@ export const GEOPOLITICAL_CHAINS = {
         causalLink: 'Sustains American sovereign debt borrowing power while incentivizing China and India to test local-currency oil settlement.'
       }
     ]
+  },
+
+  CHAIN_UKRAINE_EUROPE_ENERGY: {
+    id: 'CHAIN_UKRAINE_EUROPE_ENERGY',
+    title: 'Ukraine War, Nord Stream Sabotage & European Energy Realignment',
+    tagline: 'How the termination of cheap Russian pipeline gas transformed European industrial competitiveness and transatlantic energy logistics.',
+    primaryPair: 'RUS_UKR',
+    nodes: [
+      {
+        id: 'node_1',
+        title: 'Russian Gas Interruption & Pipeline Severance',
+        type: 'event',
+        badge: 'SUPPLY CHOC',
+        conceptId: 'CRITICAL_INFRASTRUCTURE',
+        country: 'Russia / Germany',
+        summary: 'Underwater explosions severed three of four Nord Stream pipeline conduits on the Baltic seabed, permanently terminating decades of direct Russian natural gas deliveries to Germany.',
+        causalLink: 'Eliminated Europe’s baseline cheap industrial energy model overnight, forcing emergency rationing protocols.'
+      },
+      {
+        id: 'node_2',
+        title: 'Surge in Transatlantic US LNG Shipments',
+        type: 'energy',
+        badge: 'LOGISTICS PIVOT',
+        conceptId: 'ENERGY_SECURITY',
+        country: 'USA / European Union',
+        summary: 'European nations rapidly deployed floating storage regasification units (FSRUs), contracting record volumes of US liquefied natural gas at premium pricing.',
+        causalLink: 'Deepened European strategic economic dependence on American energy infrastructure while eroding European manufacturing cost parity.'
+      },
+      {
+        id: 'node_3',
+        title: 'G7 Price Cap & Russian Oil Redirection',
+        type: 'concept',
+        badge: 'SANCTIONS SHOCK',
+        conceptId: 'ECONOMIC_SANCTIONS',
+        country: 'Global Markets',
+        summary: 'The G7 and EU imposed a $60/barrel maritime price cap on Russian seaborne crude, enforced through Western maritime insurance denial.',
+        causalLink: 'Created the "shadow tanker fleet" and rerouted millions of barrels of Urals crude eastward to refineries in India and China.'
+      },
+      {
+        id: 'node_4',
+        title: 'Refined Fuel Re-Export to Europe',
+        type: 'doctrine',
+        badge: 'ARBITRAGE CIRCUIT',
+        conceptId: 'STRATEGIC_AUTONOMY',
+        country: 'India / Europe',
+        summary: 'Indian refineries processed discounted Russian crude into diesel and jet fuel, legally exporting refined petroleum products back to European consumers.',
+        causalLink: 'Stabilized European transport fuel supplies without formal breach of sanctions, illustrating the structural indispensability of strategic multi-alignment.'
+      }
+    ]
+  },
+
+  CHAIN_KOREAN_PENINSULA_DETERRENCE: {
+    id: 'CHAIN_KOREAN_PENINSULA_DETERRENCE',
+    title: 'North Korean Nuclear Advances & Trilateral Deterrence Integration',
+    tagline: 'How solid-fueled ICBM testing transformed East Asian alliance architecture and nuclear deterrence dynamics.',
+    primaryPair: 'KOR_PRK',
+    nodes: [
+      {
+        id: 'node_1',
+        title: 'North Korean Solid-Fuel ICBM Proliferation',
+        type: 'military',
+        badge: 'MISSILE ADVANCE',
+        conceptId: 'NUCLEAR_PROLIFERATION',
+        country: 'North Korea',
+        summary: 'Pyongyang operationalizes solid-propellant road-mobile Hwasong-18 ICBMs, eliminating the vulnerable liquid-fueling phase and threatening the continental US.',
+        causalLink: 'Compelled Washington and Seoul to address the credibility of the American extended nuclear umbrella.'
+      },
+      {
+        id: 'node_2',
+        title: 'The Washington Declaration & NCG',
+        type: 'doctrine',
+        badge: 'ALLIANCE PACT',
+        conceptId: 'EXTENDED_DETERRENCE',
+        country: 'USA / South Korea',
+        summary: 'Presidents Biden and Yoon establish the Nuclear Consultative Group (NCG) and resume US nuclear-powered ballistic submarine (SSBN) port visits to South Korea.',
+        causalLink: 'Dampened domestic South Korean political calls for an independent indigenous nuclear weapons program.'
+      },
+      {
+        id: 'node_3',
+        title: 'Camp David Trilateral Historic Rapprochement',
+        type: 'event',
+        badge: 'TRILATERAL PACT',
+        conceptId: 'COLLECTIVE_SECURITY',
+        country: 'USA / Japan / South Korea',
+        summary: 'Overcoming decades of colonial historical friction, Japan and South Korea institutionalize real-time missile warning data sharing at Camp David.',
+        causalLink: 'Unified Northeast Asian missile defense networks into a cohesive, coordinated theater perimeter.'
+      },
+      {
+        id: 'node_4',
+        title: 'Russia-North Korea Military Alliance Pact',
+        type: 'concept',
+        badge: 'MUTUAL DEFENSE',
+        conceptId: 'BALANCE_OF_POWER',
+        country: 'Russia / North Korea',
+        summary: 'Vladimir Putin and Kim Jong Un sign the 2024 Treaty on Comprehensive Strategic Partnership, reviving Soviet-era mutual defense assistance.',
+        causalLink: 'Supplied millions of North Korean artillery shells and ballistic missiles to the Russian military in exchange for advanced missile and space telemetry.'
+      }
+    ]
+  },
+
+  CHAIN_ARCTIC_SCRAMBLE: {
+    id: 'CHAIN_ARCTIC_SCRAMBLE',
+    title: 'Melting Polar Ice, Northern Sea Route & Arctic Resource Scramble',
+    tagline: 'How climate change opened shortest maritime passages, igniting superpower competition over Greenland minerals and Russian polar bastions.',
+    primaryPair: 'DNK_GRL',
+    nodes: [
+      {
+        id: 'node_1',
+        title: 'Polar Ice Recession & Maritime Opening',
+        type: 'concept',
+        badge: 'GEOGRAPHIC SHIFT',
+        conceptId: 'SLOC',
+        country: 'Arctic Ocean',
+        summary: 'Accelerated Arctic ice melting opens seasonal commercial navigation along Russia’s Northern Sea Route (NSR), cutting Asia-Europe transit by 40%.',
+        causalLink: 'Transforms the frozen top of the world into a viable commercial maritime transit corridor.'
+      },
+      {
+        id: 'node_2',
+        title: 'Greenland Rare Earths & Sovereignty Standoff',
+        type: 'doctrine',
+        badge: 'CRITICAL MINERALS',
+        conceptId: 'RESOURCE_CURSE',
+        country: 'Greenland / Denmark / USA',
+        summary: 'Greenland’s vast undeveloped rare earth deposits attract US and European defense interest to counter Chinese mineral supply dominance.',
+        causalLink: 'Sparked US territorial purchase overtures and increased Danish domestic defense spending in the North Atlantic.'
+      },
+      {
+        id: 'node_3',
+        title: 'Russian Arctic Bastion Militarization',
+        type: 'military',
+        badge: 'A2/AD BASTION',
+        conceptId: 'A2_AD',
+        country: 'Russia',
+        summary: 'Russia re-opens dozens of Soviet-era Arctic radar stations, airfield strips, and deploys Bastion coastal missile batteries to defend Northern Fleet SSBNs.',
+        causalLink: 'Asserted unilateral regulatory control over foreign commercial navigation along the Northern Sea Route.'
+      },
+      {
+        id: 'node_4',
+        title: 'NATO Nordic Expansion & Polar Frontier',
+        type: 'event',
+        badge: 'ALLIANCE FRONTIER',
+        conceptId: 'COLLECTIVE_SECURITY',
+        country: 'Finland / Sweden / NATO',
+        summary: 'Accession of Finland and Sweden completes NATO’s Nordic perimeter, integrating modern Arctic combat forces and air superiority over the high north.',
+        causalLink: 'Converts the Baltic and European Arctic into integrated allied defensive operational space.'
+      }
+    ]
+  },
+
+  CHAIN_SOUTH_ASIA_LAC: {
+    id: 'CHAIN_SOUTH_ASIA_LAC',
+    title: 'Himalayan LAC Standoff, Infrastructure Build-Up & Multi-Domain Balancing',
+    tagline: 'How the 2020 Galwan Valley clash triggered unprecedented military infrastructure construction, QUAD alignment, and two-front deterrence.',
+    primaryPair: 'IND_CHN',
+    nodes: [
+      {
+        id: 'node_1',
+        title: 'Galwan Valley Clash & Border Rupture',
+        type: 'event',
+        badge: 'KINETIC TRIGGER',
+        conceptId: 'LAC',
+        country: 'India / China',
+        summary: 'Violent physical clashes in the Galwan Valley resulted in the first military casualties along the Line of Actual Control (LAC) in 45 years.',
+        causalLink: 'Shattered the 1993 Border Peace and Tranquility Agreement and ended three decades of peaceful bilateral economic compartmentalization.'
+      },
+      {
+        id: 'node_2',
+        title: 'Massive Himalayan Infrastructure Modernization',
+        type: 'military',
+        badge: 'LOGISTICS RACE',
+        conceptId: 'CRITICAL_INFRASTRUCTURE',
+        country: 'India / China',
+        summary: 'Both states constructed dual-use all-weather roads, high-altitude airbases, underground ammunition storage tunnels, and smart border model villages.',
+        causalLink: 'Eliminated seasonal winter withdrawal protocols, turning the high-altitude border into a permanently manned, forward-deployed militarized frontier.'
+      },
+      {
+        id: 'node_3',
+        title: 'India’s Quad Maritime Balancing Strategy',
+        type: 'doctrine',
+        badge: 'EXTERNAL BALANCE',
+        conceptId: 'QUAD',
+        country: 'India / USA / Japan / Australia',
+        summary: 'India accelerated its defense interoperability with the QUAD, signing foundational military logistics agreements (LEMOA, COMCASA, BECA).',
+        causalLink: 'Signaled to Beijing that continued pressure on the continental land border would prompt reciprocal Indian naval pressure across Indo-Pacific maritime chokepoints.'
+      },
+      {
+        id: 'node_4',
+        title: 'Bilateral Disengagement & Strategic Prudence',
+        type: 'concept',
+        badge: 'TACTICAL DETENTE',
+        conceptId: 'STRATEGIC_AUTONOMY',
+        country: 'India / China',
+        summary: 'Diplomatic negotiations achieved coordinated disengagement protocols at Depsang and Demchok prior to the 2024 BRICS Kazan summit.',
+        causalLink: 'Restored baseline border patrolling rights without compromising sovereign territorial postures.'
+      }
+    ]
+  },
+
+  CHAIN_SAHEL_SECURITY: {
+    id: 'CHAIN_SAHEL_SECURITY',
+    title: 'Sahel Military Coups, Resource Nationalism & Wagner/Africa Corps Resurgence',
+    tagline: 'How the collapse of Western counter-terror architecture across Mali, Niger, and Burkina Faso opened the door to Russian mercenary security compacts.',
+    primaryPair: 'USA_RUS',
+    nodes: [
+      {
+        id: 'node_1',
+        title: 'Wave of Military Juntas Across the Sahel',
+        type: 'event',
+        badge: 'JUNTAS EMERGENCE',
+        conceptId: 'GOVERNANCE_CRISIS',
+        country: 'Mali / Burkina Faso / Niger',
+        summary: 'Frustration over jihadist insurgencies and neo-colonial dependency fueled military coups across the Sahel, establishing the Alliance of Sahel States (AES).',
+        causalLink: 'Led to the immediate expulsion of French Operation Barkhane troops and the termination of US drone base access (Air Base 201 in Agadez).'
+      },
+      {
+        id: 'node_2',
+        title: 'Russian Wagner / Africa Corps Security Umbrella',
+        type: 'military',
+        badge: 'MERCENARY ACCORD',
+        conceptId: 'PROXY_WAR',
+        country: 'Russia / Sahel Nations',
+        summary: 'Military juntas signed direct sovereign security pacts with Moscow, deploying Russian Africa Corps contractors in exchange for mining concessions.',
+        causalLink: 'Granted Moscow decisive leverage over trans-Saharan migration routes and gold/uranium export flows.'
+      },
+      {
+        id: 'node_3',
+        title: 'Critical Mineral Resource Nationalism',
+        type: 'concept',
+        badge: 'RESOURCE SOVEREIGNTY',
+        conceptId: 'RESOURCE_CURSE',
+        country: 'Niger / Mali',
+        summary: 'Juntas nationalized mineral exploitation rights, revoking French Orano’s operating permit for the Imouraren uranium deposit in Niger.',
+        causalLink: 'Disrupted European nuclear reactor fuel supply chains and accelerated non-Western mineral partnerships.'
+      }
+    ]
   }
 };
+

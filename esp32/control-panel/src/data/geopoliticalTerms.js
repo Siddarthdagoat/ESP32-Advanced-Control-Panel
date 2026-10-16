@@ -2137,6 +2137,299 @@ export const GEOPOLITICAL_TERMS = {
     ],
     claimType: 'VERIFIED',
     lastVerified: '2026-03'
+  },
+
+  'asymmetric-warfare': {
+    id: 'asymmetric-warfare',
+    name: 'Asymmetric Warfare',
+    aliases: ['asymmetric-warfare', 'asymmetric warfare', 'Asymmetric Warfare', 'ASYMMETRIC_WARFARE'],
+    category: 'Military Strategy',
+    shortDefinition: 'Conflict where belligerents have significantly unequal military power or technological capability, compelling the weaker force to employ unconventional strategies to exploit vulnerabilities.',
+    detailedExplanation: 'Rather than contesting symmetric battles line-for-line, asymmetric combatants use loitering munitions, sea drones, guerrilla tactics, cyber operations, and commercial technology. A primary objective is cost imposition: forcing high-tech adversaries to expend million-dollar interceptors against mass-produced $20,000 drones.',
+    whyItMatters: 'Neutralizes conventional naval and armored superiority, allowing non-state militias and smaller nations to disrupt global shipping and counter superpower military coalitions.',
+    contextualFraming: {
+      IND: 'India counters asymmetric cross-border proxy networks while fielding its own asymmetric border defenses (smart sensor fencing, loitering drone swarms).',
+      USA: 'The US military has spent billions adapting conventional carrier strike groups to defend against cheap asymmetric drone swarms in the Red Sea.',
+      IRN: 'Iran is the premier state sponsor of asymmetric warfare, using its "Axis of Resistance" network armed with ballistic missiles and Shahed drones.'
+    },
+    majorActors: ['Iran', 'Yemen (Houthis)', 'United States', 'Israel', 'India'],
+    historicalBackground: 'Practiced throughout military history from ancient guerrilla skirmishes to the Vietnam War, transformed in the 2020s by low-cost autonomous drone technologies.',
+    currentRelevance: 'Dominates modern conflict theaters including the Red Sea commercial shipping interdiction and Ukrainian autonomous maritime sea-drone strikes.',
+    relatedCountries: ['IRN', 'YEM', 'USA', 'UKR', 'RUS', 'ISR'],
+    relatedEvents: ['Red Sea Commercial Shipping Attacks', 'Black Sea Drone Strikes'],
+    relatedTerms: ['proxy-war', 'grey-zone-warfare', 'attrition-warfare', 'a2-ad'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Asymmetric_warfare',
+    officialSources: [
+      { title: 'US Joint Chiefs of Staff Doctrine for Asymmetric Operations', type: 'doctrine', url: 'https://www.jcs.mil' }
+    ],
+    sources: [
+      { title: 'IISS Strategic Survey', type: 'research', url: 'https://www.iiss.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'nuclear-proliferation': {
+    id: 'nuclear-proliferation',
+    name: 'Nuclear Proliferation',
+    aliases: ['nuclear-proliferation', 'nuclear proliferation', 'Nuclear Proliferation', 'NUCLEAR_PROLIFERATION'],
+    category: 'Arms Control & Deterrence',
+    shortDefinition: 'The spread of nuclear weapons, fissionable material, and weapons-applicable nuclear technology to additional sovereign nations beyond recognized nuclear states.',
+    detailedExplanation: 'Encompasses horizontal proliferation (new countries building nuclear warheads) and vertical proliferation (existing nuclear powers expanding arsenal stockpile numbers and delivery systems). Governed by the 1968 Nuclear Non-Proliferation Treaty (NPT) and IAEA inspection safeguards.',
+    whyItMatters: 'Alters regional balances of power instantly. A newly nuclear state gains immediate immunity against conventional foreign invasion, but raises acute crisis instability and triggers regional nuclear domino races.',
+    contextualFraming: {
+      IND: 'India conducted nuclear tests in 1974 and 1998, rejecting the NPT as discriminatory. Operates a strict No First Use (NFU) policy backed by a secure ballistic submarine triad.',
+      PRK: 'North Korea withdrew from the NPT in 2003 and has assembled an estimated 50+ nuclear warheads with intercontinental ballistic missiles capable of targeting North America.',
+      IRN: 'Iran has enriched uranium up to 60% purity, operating thousands of advanced IR-6 centrifuges and reducing weapon breakout time to several weeks.'
+    },
+    majorActors: ['United States', 'Russia', 'China', 'North Korea', 'Iran', 'India', 'Pakistan', 'Israel'],
+    historicalBackground: 'Sparked by the Manhattan Project in 1945, regulated by the NPT in 1968, and challenged by non-signatory nuclear powers in South Asia and the Middle East.',
+    currentRelevance: 'The potential expiration of New START and Iranian uranium enrichment have reignited global proliferation debates in South Korea and Saudi Arabia.',
+    relatedCountries: ['USA', 'RUS', 'CHN', 'PRK', 'IRN', 'IND', 'PAK', 'ISR'],
+    relatedEvents: ['1998 Pokhran-II Tests', '2015 JCPOA Iran Deal', 'North Korean ICBM Tests'],
+    relatedTerms: ['nuclear-triad', 'deterrence', 'extended-deterrence', 'strategic-stability'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Nuclear_proliferation',
+    officialSources: [
+      { title: 'IAEA Safeguards Implementation Reports', type: 'official', url: 'https://www.iaea.org' }
+    ],
+    sources: [
+      { title: 'Arms Control Association', type: 'ngo', url: 'https://www.armscontrol.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'attrition-warfare': {
+    id: 'attrition-warfare',
+    name: 'Attrition Warfare',
+    aliases: ['attrition-warfare', 'attrition warfare', 'Attrition Warfare', 'WAR_OF_ATTRITION', 'ATTRITION_WARFARE'],
+    category: 'Military Strategy',
+    shortDefinition: 'A strategic military approach that seeks to wear down an adversary’s physical capacity to wage war through the continuous, sustained destruction of personnel, materiel, and ammunition stocks.',
+    detailedExplanation: 'Contrasts with maneuver warfare. Rather than seeking rapid encirclements, attrition warfare is decided by industrial manufacturing volume, defense industrial labor capacity, artillery shell expenditure rates, and national political endurance over long time horizons.',
+    whyItMatters: 'Shifts the deciding strategic variable from high-tech weapon sophistication to industrial supply chain depth, factory output, and mobilization capacity.',
+    contextualFraming: {
+      RUS: 'Russia shifted its strategy in Ukraine to continuous positional attrition, utilizing superior artillery barrel numbers, glide bomb sorties, and round-the-clock defense factory shifts.',
+      UKR: 'Ukraine relies on Western allied military production packages and low-cost drone swarms to inflict asymmetric hardware attrition on advancing Russian mechanized units.'
+    },
+    majorActors: ['Russia', 'Ukraine', 'United States', 'European Union'],
+    historicalBackground: 'Defined World War I trench warfare on the Western Front (Verdun, the Somme) and the 1967–1970 War of Attrition in the Middle East.',
+    currentRelevance: 'The defining tactical characteristic of the Russian-Ukrainian frontlines, driving global defense industrial rearmament across NATO and Asia.',
+    relatedCountries: ['RUS', 'UKR', 'USA', 'DEU', 'POL'],
+    relatedEvents: ['Battle of Bakhmut', 'European Defense Industrial Expansion'],
+    relatedTerms: ['asymmetric-warfare', 'critical-infrastructure', 'land-warfare'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Attrition_warfare',
+    officialSources: [
+      { title: 'US Army Combined Arms Center Combat Studies', type: 'doctrine', url: 'https://usacac.army.mil' }
+    ],
+    sources: [
+      { title: 'Royal United Services Institute (RUSI)', type: 'research', url: 'https://www.rusi.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'critical-infrastructure': {
+    id: 'critical-infrastructure',
+    name: 'Critical Infrastructure',
+    aliases: ['critical-infrastructure', 'critical infrastructure', 'Critical Infrastructure', 'CRITICAL_INFRASTRUCTURE'],
+    category: 'National Security & Resilience',
+    shortDefinition: 'Physical and virtual systems, assets, and networks so essential to a sovereign state that their disruption would incapacitate national defense, economic security, or public health.',
+    detailedExplanation: 'Encompasses 16 recognized critical sectors: power grids, nuclear facilities, undersea fiber-optic telecommunications cables, petroleum/gas pipelines, maritime ports, financial clearing systems (SWIFT/RTGS), water supplies, and satellite constellations.',
+    whyItMatters: 'Primary targets in modern hybrid and grey-zone warfare, where states use deniable sabotage or cyber attacks to paralyze adversary societies without triggering formal military retaliation.',
+    contextualFraming: {
+      IND: 'Safeguarded by the National Critical Information Infrastructure Protection Centre (NCIIPC) against foreign state-backed cyber intrusions targeting state power transmission grids.',
+      EU: 'European nations dramatically elevated Baltic and North Sea naval patrols following the mysterious undersea Nord Stream pipeline explosions and fiber-optic cable cuts.'
+    },
+    majorActors: ['United States', 'Russia', 'China', 'European Union', 'India'],
+    historicalBackground: 'Formally codified post-Cold War as industrial digitization created central systemic vulnerabilities to physical and cyber attacks.',
+    currentRelevance: 'Central target in the European energy crisis, Baltic Sea cable severance incidents, and widespread GPS jamming across commercial aviation corridors.',
+    relatedCountries: ['USA', 'RUS', 'CHN', 'IND', 'DEU', 'DNK', 'SWE'],
+    relatedEvents: ['Nord Stream Pipeline Sabotage', 'Baltic Sea Underwater Cable Severance'],
+    relatedTerms: ['hybrid-warfare', 'grey-zone-warfare', 'economic-sanctions'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Critical_infrastructure',
+    officialSources: [
+      { title: 'Cybersecurity and Infrastructure Security Agency (CISA)', type: 'official', url: 'https://www.cisa.gov' }
+    ],
+    sources: [
+      { title: 'Center for Strategic and International Studies (CSIS)', type: 'think-tank', url: 'https://www.csis.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'economic-sanctions': {
+    id: 'economic-sanctions',
+    name: 'Economic Sanctions',
+    aliases: ['economic-sanctions', 'economic sanctions', 'Economic Sanctions', 'SANCTIONS', 'ECONOMIC_SANCTIONS'],
+    category: 'Geoeconomics & Statecraft',
+    shortDefinition: 'Commercial, financial, and trade penalties applied by one or more nations against a targeted state or entity to coerce changes in behavior without direct military engagement.',
+    detailedExplanation: 'Ranging from comprehensive embargoes to targeted asset freezes, technology export controls (semiconductors, advanced machine tools), and secondary sanctions that penalize non-participating third-party banks and trading firms.',
+    whyItMatters: 'The primary coercive foreign policy tool of Western powers. Simultaneously accelerates global fragmentation by incentivizing targeted powers to build alternative de-dollarized trade architectures.',
+    contextualFraming: {
+      RUS: 'Targeted by over 16,000 distinct Western sanctions, the G7 $60/barrel crude price cap, and SWIFT financial ban, prompting Moscow to redirect energy flows to India and China.',
+      IND: 'India strictly maintains that it adheres exclusively to United Nations sanctions rather than unilateral bloc sanctions, enabling New Delhi to buy discounted Russian oil while expanding trade with the West.'
+    },
+    majorActors: ['United States', 'European Union', 'Russia', 'China', 'Iran'],
+    historicalBackground: 'Used since antiquity (Megarian Decree 432 BC), codified in the UN Charter Article 41, and modernized through US Treasury OFAC secondary sanctions after 2001.',
+    currentRelevance: 'Dominates international commerce surrounding Russian energy exports, Chinese high-tech semiconductor export controls, and Iranian oil trade.',
+    relatedCountries: ['USA', 'RUS', 'IRN', 'CHN', 'IND', 'DEU'],
+    relatedEvents: ['G7 Oil Price Cap Implementation', 'SWIFT Financial Disconnection of Russian Banks'],
+    relatedTerms: ['de-dollarization', 'strategic-autonomy', 'brics'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Economic_sanctions',
+    officialSources: [
+      { title: 'US Treasury Office of Foreign Assets Control (OFAC)', type: 'official', url: 'https://ofac.treasury.gov' }
+    ],
+    sources: [
+      { title: 'Peterson Institute for International Economics (PIIE)', type: 'research', url: 'https://www.piie.com' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'food-security': {
+    id: 'food-security',
+    name: 'Food Security',
+    aliases: ['food-security', 'food security', 'Food Security', 'FOOD_SECURITY'],
+    category: 'Geoeconomics & Human Security',
+    shortDefinition: 'The state wherein all people have physical and economic access to sufficient, safe, and nutritious food to meet dietary needs, now recognized as a vital geopolitical stability parameter.',
+    detailedExplanation: 'Exposed to severe geopolitical weaponization through maritime blockade of agricultural ports, export restrictions on chemical fertilizer precursors (potash, ammonia, phosphates), and supply chain bottlenecks.',
+    whyItMatters: 'Sharp food price spikes trigger rapid political instability, violent bread riots, state collapse, and mass migration surges across import-dependent developing nations.',
+    contextualFraming: {
+      IND: 'India is the world\'s largest exporter of rice and a leading wheat producer. Employs targeted export regulations to curb domestic food inflation while executing sovereign food aid diplomacy.',
+      EGY: 'Egypt imports over 60% of its wheat consumption, historically depending on Black Sea shipping to maintain constitutional bread subsidies for 70 million citizens.'
+    },
+    majorActors: ['India', 'Ukraine', 'Russia', 'Egypt', 'United Nations World Food Programme'],
+    historicalBackground: 'Central driver of civil uprisings throughout human history; pivotal trigger of the 2011 Arab Spring revolts sparked by global grain price shocks.',
+    currentRelevance: 'High priority during Black Sea naval hostilities and global fertilizer trade realignments.',
+    relatedCountries: ['IND', 'UKR', 'RUS', 'EGY', 'TUR'],
+    relatedEvents: ['UN Black Sea Grain Initiative', 'Global Fertilizer Supply Realignment'],
+    relatedTerms: ['critical-infrastructure', 'economic-sanctions', 'resource-curse'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Food_security',
+    officialSources: [
+      { title: 'UN Food and Agriculture Organization (FAO) Food Price Index', type: 'official', url: 'https://www.fao.org' }
+    ],
+    sources: [
+      { title: 'World Food Programme (WFP) Hunger Map', type: 'ngo', url: 'https://www.wfp.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'resource-curse': {
+    id: 'resource-curse',
+    name: 'Resource Curse (Paradox of Plenty)',
+    aliases: ['resource-curse', 'resource curse', 'paradox-of-plenty', 'RESOURCE_CURSE'],
+    category: 'Geoeconomics & Governance',
+    shortDefinition: 'The economic and geopolitical paradox where countries rich in non-renewable natural resources (oil, gas, minerals) experience lower growth, worse governance, and higher conflict.',
+    detailedExplanation: 'Generated by "Dutch Disease" (currency appreciation gutting non-resource manufacturing exports), rentier state dynamics (leaders accountable to oil wells rather than taxpaying citizens), and armed competition to control mining territories.',
+    whyItMatters: 'Explains ongoing armed violence and foreign proxy mercenary competition across resource-rich developing nations in Africa (DR Congo coltan/cobalt, Sudan gold) and Latin America.',
+    contextualFraming: {
+      COD: 'The DR Congo possesses over 70% of the world\'s cobalt reserves essential for the global clean energy transition, yet endures chronic armed militia conflicts and illegal mineral smuggling.',
+      VEN: 'Venezuela holds the world’s largest proven crude oil reserves, yet experienced near-total economic collapse due to single-commodity dependence and institutional decline.'
+    },
+    majorActors: ['DR Congo', 'Venezuela', 'Nigeria', 'Angola', 'Sudan'],
+    historicalBackground: 'First coined by economic geographer Richard Auty in 1993 to explain why mineral windfalls systematically failed to produce sustained national prosperity.',
+    currentRelevance: 'At the heart of great-power competition for African critical minerals (cobalt, lithium, rare earths) essential for artificial intelligence and electric vehicles.',
+    relatedCountries: ['COD', 'VEN', 'NGA', 'SDN', 'CHN', 'USA'],
+    relatedEvents: ['Sahel Critical Mineral Mining Re-nationalization', 'Congo Basin Conflict Standoff'],
+    relatedTerms: ['critical-infrastructure', 'food-security', 'proxy-war'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Resource_curse',
+    officialSources: [
+      { title: 'Extractive Industries Transparency Initiative (EITI)', type: 'official', url: 'https://eiti.org' }
+    ],
+    sources: [
+      { title: 'World Bank Policy Research Reports on Natural Resources', type: 'research', url: 'https://www.worldbank.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'early-warning': {
+    id: 'early-warning',
+    name: 'Early Warning System (BMEWS)',
+    aliases: ['early-warning', 'early warning system', 'Early Warning System', 'EARLY_WARNING', 'BMEWS'],
+    category: 'Military Strategy & Aerospace',
+    shortDefinition: 'A terrestrial and space-based radar and sensor network engineered to detect hostile ballistic missile launches and air assaults at the earliest feasible trajectory.',
+    detailedExplanation: 'Combines space-based infrared satellites that detect the extreme heat of rocket booster ignitions with high-power over-the-horizon phased-array radars that track ballistic trajectories and compute exact impact coordinates within seconds.',
+    whyItMatters: 'The technological linchpin of nuclear deterrence. Provides national leadership with the 15 to 30 minutes of warning required to authorize defensive interceptions or retaliatory nuclear strikes before destruction.',
+    contextualFraming: {
+      USA: 'Operates the Space-Based Infrared System (SBIRS) and Upgraded Early Warning Radars (UEWR) across Thule (Greenland), Fylingdales (UK), and Clear (Alaska).',
+      RUS: 'Operates the Voronezh-DM and Voronezh-M ultra-high-frequency radar perimeter ring surrounding the entire Russian Federation.',
+      IND: 'Fields the indigenous Swordfish Long-Range Tracking Radar (LRTR) and dedicated GSAT-7 series military communication/sensor satellites.'
+    },
+    majorActors: ['United States', 'Russia', 'China', 'India', 'Israel'],
+    historicalBackground: 'Pioneered in the 1950s (Distant Early Warning Line across the Arctic) to alert North America against incoming Soviet nuclear bomber waves.',
+    currentRelevance: 'Attacks on early-warning radar stations (such as drone strikes on Russian Armavir radar stations in 2024) trigger extreme nuclear escalation concerns under Russian nuclear doctrine.',
+    relatedCountries: ['USA', 'RUS', 'CHN', 'IND', 'ISR'],
+    relatedEvents: ['Cold War DEW Line Construction', 'Russian Armavir Radar Drone Strike Incident'],
+    relatedTerms: ['ballistic-missile-defense', 'nuclear-triad', 'strategic-stability'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Early-warning_radar',
+    officialSources: [
+      { title: 'US Space Command Missile Warning Factsheet', type: 'official', url: 'https://www.spacecom.mil' }
+    ],
+    sources: [
+      { title: 'Bulletin of the Atomic Scientists', type: 'journal', url: 'https://thebulletin.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'ballistic-missile-defense': {
+    id: 'ballistic-missile-defense',
+    name: 'Ballistic Missile Defense (BMD)',
+    aliases: ['ballistic-missile-defense', 'ballistic missile defense', 'Ballistic Missile Defense', 'BMD', 'BALLISTIC_MISSILE_DEFENSE'],
+    category: 'Air & Missile Defense',
+    shortDefinition: 'A multi-layered defensive system designed to detect, track, intercept, and destroy offensive ballistic missiles at various phases of their flight trajectory.',
+    detailedExplanation: 'Operates across three distinct phases: Boost Phase (shortly after launch), Mid-Course Phase (in the vacuum of outer space, e.g. GMD, Arrow 3, SM-3), and Terminal Phase (during atmospheric re-entry descent, e.g. THAAD, Patriot PAC-3 MSE, S-400).',
+    whyItMatters: 'Transforms strategic deterrence by offering protection against rogue missile strikes, but can trigger arms race instability by incentivizing adversaries to deploy hypersonic glide vehicles and decoy warheads.',
+    contextualFraming: {
+      IND: 'Developed an indigenous two-tier Ballistic Missile Defence shield: Prithvi Air Defence (PAD/PDV) for high-altitude exo-atmospheric interception, and Advanced Air Defence (AAD) for endo-atmospheric terminal defense.',
+      ISR: 'Fields the most battle-tested multi-layer missile shield in the world: Iron Dome (short-range), David\'s Sling (medium-range), and Arrow-2/Arrow-3 (exo-atmospheric).'
+    },
+    majorActors: ['United States', 'Israel', 'India', 'Russia', 'China'],
+    historicalBackground: 'Accelerated by President Reagan\'s 1983 Strategic Defense Initiative ("Star Wars") and the 2002 US withdrawal from the 1972 Anti-Ballistic Missile (ABM) Treaty.',
+    currentRelevance: 'Successfully intercepted massive saturated salvos of over 300 Iranian ballistic and cruise missiles fired at Israel in April and October 2024.',
+    relatedCountries: ['USA', 'ISR', 'IND', 'RUS', 'CHN'],
+    relatedEvents: ['2002 US ABM Treaty Withdrawal', '2024 Middle East Ballistic Interception Defense'],
+    relatedTerms: ['early-warning', 'nuclear-triad', 'strategic-stability', 'a2-ad'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Missile_defense',
+    officialSources: [
+      { title: 'US Missile Defense Agency (MDA) Overview', type: 'official', url: 'https://www.mda.mil' }
+    ],
+    sources: [
+      { title: 'CSIS Missile Defense Project', type: 'think-tank', url: 'https://missilethreat.csis.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
+  },
+
+  'strategic-stability': {
+    id: 'strategic-stability',
+    name: 'Strategic Stability',
+    aliases: ['strategic-stability', 'strategic stability', 'Strategic Stability', 'STRATEGIC_STABILITY'],
+    category: 'Deterrence & Nuclear Strategy',
+    shortDefinition: 'A strategic condition between nuclear-armed states where neither side has an incentive to launch a pre-emptive first strike (crisis stability) nor to expand its nuclear arsenal (arms-race stability).',
+    detailedExplanation: 'Underpinned by secure, survivable second-strike retaliatory capabilities (Mutually Assured Destruction). Threatened in the modern era by hypersonic missiles that eliminate reaction windows, space-based anti-satellite weapons, and cyber warfare.',
+    whyItMatters: 'The central theoretical construct that has prevented direct hot wars between nuclear superpowers since 1945. Its breakdown increases the probabilistic risk of accidental nuclear war.',
+    contextualFraming: {
+      IND: 'Maintained with Pakistan and China through a credible minimum deterrent, a strict No First Use (NFU) policy, and an operational nuclear submarine triad (INS Arihant).',
+      USA: 'Strained with Russia following the collapse of bilateral arms control treaties (INF, Open Skies, New START suspension) and the rapid expansion of China\'s nuclear silo fields.'
+    },
+    majorActors: ['United States', 'Russia', 'China', 'India', 'Pakistan'],
+    historicalBackground: 'Formulated during the Cold War by theorists Thomas Schelling and Bernard Brodie to prevent nuclear miscalculation between Washington and Moscow.',
+    currentRelevance: 'Under acute threat worldwide as the bilateral US-Russia nuclear balance transitions into an unconstrained trilateral nuclear competition including China.',
+    relatedCountries: ['USA', 'RUS', 'CHN', 'IND', 'PAK'],
+    relatedEvents: ['1972 SALT I Treaty', '2010 New START Agreement', '2023 Russian New START Suspension'],
+    relatedTerms: ['nuclear-triad', 'nuclear-proliferation', 'early-warning', 'ballistic-missile-defense'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Strategic_stability',
+    officialSources: [
+      { title: 'US State Department Bureau of Arms Control, Deterrence, and Stability', type: 'official', url: 'https://www.state.gov' }
+    ],
+    sources: [
+      { title: 'SIPRI Yearbook on Armaments, Disarmament and International Security', type: 'research', url: 'https://www.sipri.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-03'
   }
 };
 

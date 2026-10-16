@@ -409,6 +409,97 @@ export default function HistoricalTimelineModal({
                       </div>
                     )}
 
+                    {/* Cause-and-Effect Pathways Matrix */}
+                    {((activeEvent.causedByEventIds && activeEvent.causedByEventIds.length > 0) || (activeEvent.ledToEventIds && activeEvent.ledToEventIds.length > 0)) && (
+                      <div className="p-3.5 rounded-xl bg-[#111111] border border-white/20 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <History className="w-3.5 h-3.5 text-white" />
+                            <span>HISTORICAL CAUSE-AND-EFFECT PATHWAYS</span>
+                          </span>
+                          <span className="text-[9px] font-mono text-[#888888]">
+                            DYNAMIC CAUSAL GRAPH
+                          </span>
+                        </div>
+
+                        {/* Caused By Preceding Events */}
+                        {activeEvent.causedByEventIds && activeEvent.causedByEventIds.length > 0 && (
+                          <div className="space-y-1.5">
+                            <span className="text-[9px] font-mono text-[#888888] uppercase block flex items-center gap-1">
+                              <ArrowLeft className="w-3 h-3 text-[#888888]" />
+                              <span>HISTORICAL ANTECEDENTS (CAUSED BY):</span>
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {activeEvent.causedByEventIds.map(cId => {
+                                const target = WORLD_HISTORY_EVENTS.find(e => e.id === cId);
+                                return (
+                                  <button
+                                    key={cId}
+                                    onClick={() => setSelectedEventId(cId)}
+                                    className="px-2.5 py-1 rounded bg-[#181818] border border-[#2A2A2A] hover:border-white text-[10.5px] font-mono text-[#E0E0E0] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                                    title={`Jump to: ${target?.title || cId}`}
+                                  >
+                                    <span className="text-[9px] text-[#888888]">{target?.year || 'PREV'}</span>
+                                    <span>{target?.title || cId}</span>
+                                    <span className="text-[#888888]">←</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Led To Subsequent Events */}
+                        {activeEvent.ledToEventIds && activeEvent.ledToEventIds.length > 0 && (
+                          <div className="space-y-1.5 pt-1 border-t border-[#1F1F1F]">
+                            <span className="text-[9px] font-mono text-white uppercase block flex items-center gap-1 font-semibold">
+                              <ArrowRight className="w-3 h-3 text-white" />
+                              <span>DOWNSTREAM CONSEQUENCES (LED TO):</span>
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {activeEvent.ledToEventIds.map(lId => {
+                                const target = WORLD_HISTORY_EVENTS.find(e => e.id === lId);
+                                return (
+                                  <button
+                                    key={lId}
+                                    onClick={() => setSelectedEventId(lId)}
+                                    className="px-2.5 py-1 rounded bg-[#1C1C1C] border border-white/20 hover:border-white text-[10.5px] font-mono text-white transition-colors cursor-pointer flex items-center gap-1.5 group"
+                                    title={`Jump to: ${target?.title || lId}`}
+                                  >
+                                    <span className="text-[9px] text-[#888888]">{target?.year || 'NEXT'}</span>
+                                    <span className="font-semibold">{target?.title || lId}</span>
+                                    <ArrowRight className="w-3 h-3 text-[#888888] group-hover:translate-x-0.5 transition-transform" />
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Related Treaties & Accords */}
+                    {activeEvent.relatedTreaties && activeEvent.relatedTreaties.length > 0 && (
+                      <div className="p-3 rounded-xl bg-[#0D0D0D] border border-[#1A1A1A] space-y-1.5">
+                        <span className="text-[9.5px] font-mono font-bold text-white uppercase block">
+                          TREATIES, ACCORDS & STRATEGIC PACTS
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {activeEvent.relatedTreaties.map((treaty, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => onSelectAgreement && onSelectAgreement(treaty)}
+                              className="px-2 py-0.5 rounded bg-[#141414] border border-[#262626] hover:border-white text-[10px] font-mono text-[#D0D0D0] hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+                              title={`Inspect Agreement: ${treaty}`}
+                            >
+                              <span>📜</span>
+                              <span>{treaty}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Participating Actors & Affected Countries */}
                     <div className="p-3 rounded-xl bg-[#0D0D0D] border border-[#1A1A1A] space-y-2">
                       <span className="text-[9.5px] font-mono font-bold text-[#888888] uppercase block">

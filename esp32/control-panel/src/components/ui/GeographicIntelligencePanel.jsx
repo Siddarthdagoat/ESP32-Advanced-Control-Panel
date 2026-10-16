@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  X, Compass, Shield, ArrowRight, AlertTriangle, 
+  X, Compass, Shield, ArrowRight, ArrowLeft, AlertTriangle, 
   MapPin, Anchor, Waves, Ship, Globe2, Radio, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { getMaritimeEntity } from '../../data/geointelMaritime.js';
@@ -10,7 +10,10 @@ import InteractiveText from './InteractiveText';
 
 export default function GeographicIntelligencePanel({
   entity,
+  intelLevel,
   onClose,
+  onBack,
+  backLabel,
   onSelectMaritimeEntity,
   onSelectCountry,
   onSelectConcept,
@@ -83,6 +86,20 @@ export default function GeographicIntelligencePanel({
       aria-label="Geographic & Maritime Intelligence Dossier"
       className="fixed top-14 right-0 bottom-12 w-[520px] max-w-[94vw] bg-[#080808]/98 backdrop-blur-2xl border-l border-[#1A1A1A] z-40 flex flex-col shadow-2xl transition-all duration-300 animate-in slide-in-from-right text-[#BDBDBD]"
     >
+      {/* Back navigation button if in history stack */}
+      {onBack && (
+        <div className="px-5 py-2 bg-[#141414] border-b border-[#222222] flex items-center justify-between text-[10.5px] font-mono shrink-0">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1.5 text-white hover:text-white font-bold transition-colors cursor-pointer group"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-white group-hover:-translate-x-0.5 transition-transform" />
+            <span>RETURN TO: {backLabel || 'PREVIOUS INTELLIGENCE'}</span>
+          </button>
+          <span className="text-[#666666] uppercase text-[9px]">INTERCONNECTED STACK</span>
+        </div>
+      )}
+
       {/* Top Status Header */}
       <div className="flex items-center justify-between px-5 py-2.5 bg-[#000000] border-b border-[#1A1A1A] text-xs">
         <div className="flex items-center gap-2">

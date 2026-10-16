@@ -27,7 +27,7 @@ export const ISO3_TO_ISO2 = {
   ZAF: 'za', NAM: 'na', BWA: 'bw', ZWE: 'zw', MOZ: 'mz', ZMB: 'zm',
   MWI: 'mw', AGO: 'ao', MDG: 'mg', MUS: 'mu', SYC: 'sc', COM: 'km',
   IRQ: 'iq', SYR: 'sy', LBN: 'lb', JOR: 'jo', PSE: 'ps', KWT: 'kw',
-  BHR: 'bh', QAT: 'qa', UAE: 'ae', OMN: 'om', YEM: 'ye', AFG: 'af',
+  BHR: 'bh', QAT: 'qa', UAE: 'ae', ARE: 'ae', OMN: 'om', YEM: 'ye', AFG: 'af',
   TJK: 'tj', UZB: 'uz', TKM: 'tm', KGZ: 'kg', MNG: 'mn', MMR: 'mm',
   THA: 'th', LAO: 'la', KHM: 'kh', VNM: 'vn', MYS: 'my', SGP: 'sg',
   IDN: 'id', BRN: 'bn', PHL: 'ph', TLS: 'tl', BGD: 'bd', LKA: 'lk',

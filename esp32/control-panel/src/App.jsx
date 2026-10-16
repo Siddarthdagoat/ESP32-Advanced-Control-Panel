@@ -56,6 +56,7 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [hoverData, setHoverData] = useState(null);
+  const [navStack, setNavStack] = useState([]);
 
   // Deep Educational Knowledge Modals State
   const [selectedConcept, setSelectedConcept] = useState(null);
@@ -146,14 +147,74 @@ export default function App() {
     );
   };
 
+  // Push active context onto breadcrumb history stack before transitioning
+  const pushCurrentToStack = (incomingType, incomingId) => {
+    if (selectedEvent && !(incomingType === 'event' && selectedEvent.id === incomingId)) {
+      setNavStack(prev => {
+        if (prev.length > 0 && prev[prev.length - 1].type === 'event' && prev[prev.length - 1].data?.id === selectedEvent.id) {
+          return prev;
+        }
+        return [...prev.slice(-19), {
+          type: 'event',
+          data: selectedEvent,
+          label: selectedEvent.title || selectedEvent.id
+        }];
+      });
+    } else if (selectedCountry && !(incomingType === 'country' && (selectedCountry.id === incomingId || selectedCountry.ISO_A3 === incomingId))) {
+      setNavStack(prev => {
+        if (prev.length > 0 && prev[prev.length - 1].type === 'country' && prev[prev.length - 1].data?.id === selectedCountry.id) {
+          return prev;
+        }
+        return [...prev.slice(-19), {
+          type: 'country',
+          data: selectedCountry,
+          label: selectedCountry.name || selectedCountry.id
+        }];
+      });
+    } else if (selectedMaritimeEntity && !(incomingType === 'maritime' && selectedMaritimeEntity.id === incomingId)) {
+      setNavStack(prev => {
+        if (prev.length > 0 && prev[prev.length - 1].type === 'maritime' && prev[prev.length - 1].data?.id === selectedMaritimeEntity.id) {
+          return prev;
+        }
+        return [...prev.slice(-19), {
+          type: 'maritime',
+          data: selectedMaritimeEntity,
+          label: selectedMaritimeEntity.name || selectedMaritimeEntity.id
+        }];
+      });
+    }
+  };
+
+  const handlePopNav = () => {
+    if (navStack.length === 0) return;
+    const previous = navStack[navStack.length - 1];
+    setNavStack(prev => prev.slice(0, -1));
+
+    setSelectedEvent(null);
+    setSelectedCountry(null);
+    setSelectedMaritimeEntity(null);
+    setSelectedLocation(null);
+    setSelectedCapital(null);
+
+    if (previous.type === 'event') {
+      setSelectedEvent(previous.data);
+    } else if (previous.type === 'country') {
+      setSelectedCountry(previous.data);
+    } else if (previous.type === 'maritime') {
+      setSelectedMaritimeEntity(previous.data);
+    }
+  };
+
   // Handle Country Selection
   const handleSelectCountry = (country) => {
     handleUserInteraction();
+    let countryObj = typeof country === 'string' ? findCountry(country) : country;
+    const targetId = countryObj ? (countryObj.id || countryObj.ISO_A3 || countryObj.isoCode) : country;
+    pushCurrentToStack('country', targetId);
     setSelectedEvent(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
     setSelectedCapital(null);
-    let countryObj = typeof country === 'string' ? findCountry(country) : country;
     if (countryObj) {
       const iso3 = countryObj.id || countryObj.ISO_A3 || countryObj.isoCode;
       const fullDossier = getCountryDossier(iso3, countryObj);
@@ -166,6 +227,7 @@ export default function App() {
   // Handle Event Selection
   const handleSelectEvent = (event) => {
     handleUserInteraction();
+    pushCurrentToStack('event', event?.id);
     setSelectedCountry(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
@@ -186,10 +248,11 @@ export default function App() {
   // Handle Maritime Entity Selection (Ocean, Sea, Chokepoint, Port)
   const handleSelectMaritimeEntity = (entity) => {
     handleUserInteraction();
+    const resolved = typeof entity === 'string' ? getMaritimeEntity(entity) : entity;
+    pushCurrentToStack('maritime', resolved?.id || entity);
     setSelectedCountry(null);
     setSelectedEvent(null);
     setSelectedLocation(null);
-    const resolved = typeof entity === 'string' ? getMaritimeEntity(entity) : entity;
     setSelectedMaritimeEntity(resolved);
     setIsRotating(false);
     setWorkstationTab('dossier');
@@ -252,6 +315,10 @@ export default function App() {
     setSelectedEvent(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
+    setSelectedCapital(null);
+    setActiveScenario(null);
+    setTacticalFlashpoint(null);
+    setNavStack([]);
     setResetGlobeCounter(prev => prev + 1);
     setIsRotating(true);
   };
@@ -269,6 +336,7 @@ export default function App() {
     setSelectedRelationship(null);
     setActiveChain(null);
     setWhyExplainerItem(null);
+    setNavStack([]);
     setIsRotating(true);
   };
 
@@ -499,8 +567,11 @@ export default function App() {
           intelLevel={intelLevel}
           onClose={() => {
             setSelectedCountry(null);
+            setNavStack([]);
             setIsRotating(true);
           }}
+          onBack={navStack.length > 0 ? handlePopNav : null}
+          backLabel={navStack.length > 0 ? navStack[navStack.length - 1].label : null}
           onResetGlobe={handleResetGlobe}
           onOpenSitrep={handleOpenSitrep}
           onSelectRelationship={(pairId) => setSelectedRelationship(pairId)}
@@ -510,6 +581,7 @@ export default function App() {
           onSelectCountry={handleSelectCountry}
           onSelectLocation={handleSelectLocation}
           onSelectEvent={handleSelectEvent}
+          onSelectMaritimeEntity={handleSelectMaritimeEntity}
           onSelectRegion={handleSelectRegion}
           onSelectCapital={setSelectedCapital}
         />
@@ -522,8 +594,11 @@ export default function App() {
           intelLevel={intelLevel}
           onClose={() => {
             setSelectedMaritimeEntity(null);
+            setNavStack([]);
             setIsRotating(true);
           }}
+          onBack={navStack.length > 0 ? handlePopNav : null}
+          backLabel={navStack.length > 0 ? navStack[navStack.length - 1].label : null}
           onSelectMaritimeEntity={handleSelectMaritimeEntity}
           onSelectCountry={handleSelectCountry}
           onSelectConcept={(cId) => setSelectedConcept(cId)}
@@ -535,7 +610,12 @@ export default function App() {
         <EventOverlay
           event={selectedEvent}
           intelLevel={intelLevel}
-          onClose={() => setSelectedEvent(null)}
+          onClose={() => {
+            setSelectedEvent(null);
+            setNavStack([]);
+          }}
+          onBack={navStack.length > 0 ? handlePopNav : null}
+          backLabel={navStack.length > 0 ? navStack[navStack.length - 1].label : null}
           onExploreTimeline={() => setActiveMode('timeline')}
           onSelectConcept={(cId) => setSelectedConcept(cId)}
           onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
@@ -648,6 +728,8 @@ export default function App() {
           relationshipId={selectedRelationship}
           intelLevel={intelLevel}
           onClose={() => setSelectedRelationship(null)}
+          onBack={navStack.length > 0 ? handlePopNav : null}
+          backLabel={navStack.length > 0 ? navStack[navStack.length - 1].label : null}
           onSelectConcept={(id) => setSelectedConcept(id)}
           onSelectAgreement={(id) => setSelectedAgreement(id)}
           onSelectMilitary={(id) => setSelectedMilitarySystem(id)}

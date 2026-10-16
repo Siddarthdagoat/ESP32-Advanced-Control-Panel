@@ -1,6 +1,7 @@
 import { EXTENDED_DOSSIERS, ISO3_TO_ISO2, CAPITAL_COORDINATES, UNIVERSAL_CURRENCIES, UNIVERSAL_LANGUAGES } from './geointelExtendedDossiers.js';
 import { getCompleteCountryHistory } from './history/countryHistoriesRegistry.js';
 import { SOVIET_15_REPUBLICS } from './history/sovietRepublicsTransition.js';
+import { FRONTLINE_COUNTRY_DOSSIERS } from './geointelFrontlineCountries.js';
 
 export const COUNTRY_DOSSIERS = {
     "DNK": {
@@ -4410,7 +4411,8 @@ export const COUNTRY_DOSSIERS = {
       ]
     }
   },
-  ...EXTENDED_DOSSIERS
+  ...EXTENDED_DOSSIERS,
+  ...FRONTLINE_COUNTRY_DOSSIERS
 };
 
 export function getCountryDossier(iso3, fallbackData = {}) {

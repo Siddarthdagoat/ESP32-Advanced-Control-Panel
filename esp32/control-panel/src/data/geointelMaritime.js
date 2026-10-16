@@ -670,6 +670,197 @@ export const SEAS = {
       ]
     },
     sources: 'U.S. Southern Command / CARICOM Secretariat'
+  },
+
+  GULF_OF_ADEN: {
+    id: 'GULF_OF_ADEN',
+    name: 'Gulf of Aden',
+    type: 'GULF',
+    center: { lat: 12.8, lng: 48.0 },
+    bbox: [10, 43, 16, 53],
+    overview: 'The Gulf of Aden is an oceanic basin located between Yemen on the southern Arabian Peninsula and Somalia and Djibouti in the Horn of Africa. Linked to the Red Sea via Bab el-Mandeb, it carries approximately 11% of global seaborne petroleum and over 20,000 commercial transit vessels annually.',
+    geography: {
+      area: '410,000 km²',
+      littoralNations: ['Yemen', 'Somalia', 'Djibouti']
+    },
+    strategicSignificance: 'Mandatory maritime bottleneck connecting the Indian Ocean to the Red Sea and Suez Canal. Heavy concentration of multinational naval task forces (CMF, EU NAVFOR Atalanta, Indian Navy).',
+    chokepointsConnected: ['BAB_EL_MANDEB'],
+    majorPorts: ['DJIBOUTI_PORT'],
+    currentTensions: [
+      'Houthi drone and anti-ship missile strikes against merchant vessels and naval escorts',
+      'Resurgence of opportunistic Somali pirate boarding attempts targeting slowed commercial vessels'
+    ],
+    indiaConnection: {
+      headline: 'Frontline Operational Theater of Indian Navy Operation Sankalp',
+      points: [
+        'Indian Navy maintains persistent deployment of guided-missile destroyers and maritime patrol aircraft (P-8I).',
+        'Directly executed dozens of high-risk rescue missions, firefighting operations, and hijacked vessel recaptures.'
+      ]
+    },
+    sources: 'Combined Maritime Forces (CMF) / Indian Navy Information Fusion Centre'
+  },
+
+  YELLOW_SEA: {
+    id: 'YELLOW_SEA',
+    name: 'Yellow Sea (West Sea)',
+    type: 'SEA',
+    center: { lat: 35.0, lng: 123.0 },
+    bbox: [32, 119, 41, 127],
+    overview: 'The Yellow Sea is a marginal sea of the western Pacific Ocean bounded by mainland China and the Korean Peninsula. Highly contested littoral environment serving as the maritime approaches to Beijing, Tianjin, and Seoul.',
+    geography: {
+      area: '380,000 km²',
+      littoralNations: ['China', 'South Korea', 'North Korea']
+    },
+    strategicSignificance: 'Strategic buffer zone for northern China and the Korean Peninsula; vital gateway to the Bohai Sea and China’s capital region.',
+    chokepointsConnected: ['BOHAI_STRAIT'],
+    majorPorts: ['SHANGHAI_PORT'],
+    currentTensions: [
+      'Northern Limit Line (NLL) naval disputes and artillery live-fire drills between North and South Korea',
+      'Chinese naval exercises asserting dominance over the inner maritime perimeter'
+    ],
+    indiaConnection: {
+      headline: 'High-Volume Commercial Conduit for East Asian Bilateral Commerce',
+      points: [
+        'Transits significant Indian trade bound for Incheon, Busan, and northern Chinese industrial ports.'
+      ]
+    },
+    sources: 'ROK Ministry of National Defense / CSIS Korea Chair'
+  },
+
+  GULF_OF_GUINEA: {
+    id: 'GULF_OF_GUINEA',
+    name: 'Gulf of Guinea',
+    type: 'GULF',
+    center: { lat: 2.0, lng: 3.0 },
+    bbox: [-5, -10, 6, 12],
+    overview: 'The Gulf of Guinea is the northeasternmost part of the tropical Atlantic Ocean, extending along the west coast of Africa from Cape Palmas (Liberia) to Cape Lopez (Gabon). It produces over 4 million barrels of crude oil daily.',
+    geography: {
+      area: '2,350,000 km²',
+      littoralNations: ['Nigeria', 'Ghana', 'Cote d\'Ivoire', 'Cameroon', 'Equatorial Guinea', 'Gabon', 'Togo', 'Benin']
+    },
+    strategicSignificance: 'One of the world’s foremost offshore hydrocarbon basins (sweet crude oil and LNG) serving Europe, the Americas, and Asia.',
+    chokepointsConnected: [],
+    majorPorts: [],
+    currentTensions: [
+      'Maritime piracy, tanker hijacking for cargo theft, and kidnap-for-ransom operations in the Niger Delta approaches',
+      'Illegal, Unreported, and Unregulated (IUU) industrial fishing depleting local artisanal fish stocks'
+    ],
+    indiaConnection: {
+      headline: 'Vital Energy Import Hub & Indian Navy Anti-Piracy Patrols',
+      points: [
+        'Nigeria is one of India\'s largest crude oil suppliers in Africa (Bonny Light crude).',
+        'Indian Navy warships deploy to the Gulf of Guinea to execute joint maritime security patrols with littoral navies.'
+      ]
+    },
+    sources: 'Yaoundé Maritime Architecture / International Maritime Bureau Piracy Reporting Centre'
+  },
+
+  BARENTS_SEA: {
+    id: 'BARENTS_SEA',
+    name: 'Barents Sea',
+    type: 'SEA',
+    center: { lat: 75.0, lng: 40.0 },
+    bbox: [68, 16, 81, 60],
+    overview: 'The Barents Sea is a marginal sea of the Arctic Ocean off the northern coasts of Norway and Russia. It hosts the headquarters and main nuclear submarine bastion of Russia’s Northern Fleet on the Kola Peninsula.',
+    geography: {
+      area: '1,400,000 km²',
+      littoralNations: ['Russia', 'Norway']
+    },
+    strategicSignificance: 'Nuclear submarine sanctuary where Russian Borei and Delta-IV SSBNs maintain continuous at-sea nuclear deterrence patrols under Arctic ice.',
+    chokepointsConnected: [],
+    majorPorts: ['VLADIVOSTOK_PORT'],
+    currentTensions: [
+      'Heightened anti-submarine warfare (ASW) tracking between NATO P-8A Poseidon aircraft and Russian attack submarines',
+      'Militarization of Arctic archipelago installations and border surveillance post-NATO Nordic expansion'
+    ],
+    indiaConnection: {
+      headline: 'Scientific Arctic Observation via Himadri Station',
+      points: [
+        'India’s permanent Arctic research base, Himadri, is located at Ny-Ålesund, Svalbard, on the Barents/Greenland Sea boundary.'
+      ]
+    },
+    sources: 'Norwegian Ministry of Defence / IISS Military Balance'
+  },
+
+  ANDAMAN_SEA: {
+    id: 'ANDAMAN_SEA',
+    name: 'Andaman Sea',
+    type: 'SEA',
+    center: { lat: 10.0, lng: 96.0 },
+    bbox: [5, 92, 16, 99],
+    overview: 'The Andaman Sea is a marginal sea in the northeastern Indian Ocean bounded by Myanmar, Thailand, Malaysia, and the Andaman and Nicobar Islands of India. It sits directly across the western entrance to the Malacca Strait.',
+    geography: {
+      area: '798,000 km²',
+      littoralNations: ['India', 'Myanmar', 'Thailand', 'Malaysia', 'Indonesia']
+    },
+    strategicSignificance: 'Decisive naval choke point controlling the western approaches to the Malacca Strait, through which passes 80% of East Asia’s oil supplies.',
+    chokepointsConnected: ['MALACCA_STRAIT'],
+    majorPorts: ['SINGAPORE_PORT'],
+    currentTensions: [
+      'Reported Chinese intelligence and radar tracking installations on Myanmar’s Coco Islands, 20 km north of Indian territory',
+      'Maritime surveillance flights monitoring PLA Navy submarine transits between the Pacific and Indian oceans'
+    ],
+    indiaConnection: {
+      headline: 'Sovereign Tri-Service Bastion & China-Interdiction Chokepoint',
+      points: [
+        'Anchored by the Andaman and Nicobar Command (ANC), India’s only unified tri-service theater command at Port Blair.',
+        'Positions Indian BrahMos batteries and Su-30MKI strike fighters to interdict foreign naval forces entering the Indian Ocean.'
+      ]
+    },
+    sources: 'Andaman & Nicobar Command / Indian Navy Headquarters / CSIS Asia Maritime'
+  },
+
+  LACCADIVE_SEA: {
+    id: 'LACCADIVE_SEA',
+    name: 'Laccadive Sea (Lakshadweep Sea)',
+    type: 'SEA',
+    center: { lat: 8.0, lng: 75.0 },
+    bbox: [5, 71, 13, 80],
+    overview: 'The Laccadive Sea is a body of water in the northern Indian Ocean bordering the southwestern coast of India, the Maldives, and Sri Lanka. It commands the central sea lines of communication between the Arabian Sea and the Bay of Bengal.',
+    geography: {
+      area: '786,000 km²',
+      littoralNations: ['India', 'Maldives', 'Sri Lanka']
+    },
+    strategicSignificance: 'Hosts critical international shipping corridors (Eight Degree Channel, Nine Degree Channel) carrying supertankers moving between the Persian Gulf and East Asia.',
+    chokepointsConnected: [],
+    majorPorts: ['MUMBAI_PORT', 'COLOMBO_PORT'],
+    currentTensions: [
+      'Geopolitical competition between New Delhi and Beijing over naval basing rights and surveillance hydrography in the Maldives'
+    ],
+    indiaConnection: {
+      headline: 'Home Waters of the Indian Navy Southern Naval Command',
+      points: [
+        'Base of INS Dweeprakshak (Kavaratti) and INS Jatayu (Minicoy), projecting Indian maritime dominance across key equatorial shipping lanes.'
+      ]
+    },
+    sources: 'Indian Navy Headquarters / National Institute of Oceanography'
+  },
+
+  NORWEGIAN_SEA: {
+    id: 'NORWEGIAN_SEA',
+    name: 'Norwegian Sea',
+    type: 'SEA',
+    center: { lat: 67.0, lng: 2.0 },
+    bbox: [61, -5, 74, 15],
+    overview: 'The Norwegian Sea is a marginal sea in the North Atlantic along the northwest coast of Norway, between the North Sea and the Greenland Sea. Keystone of the NATO GIUK (Greenland-Iceland-UK) Gap anti-submarine surveillance barrier.',
+    geography: {
+      area: '1,383,000 km²',
+      littoralNations: ['Norway', 'Iceland', 'United Kingdom']
+    },
+    strategicSignificance: 'Primary maritime avenue through which Russian Northern Fleet submarines must pass to reach the open Atlantic to threaten transatlantic sea lanes.',
+    chokepointsConnected: [],
+    majorPorts: ['ROTTERDAM_PORT'],
+    currentTensions: [
+      'Intensified NATO anti-submarine patrols and sonar buoy drops tracking quiet Russian Yasen-M nuclear cruise missile submarines',
+      'Protection of Norwegian undersea natural gas pipeline networks supplying over 30% of Europe’s gas consumption'
+    ],
+    indiaConnection: {
+      headline: 'Energy Supply Stability & Polar Scientific Navigation',
+      points: [
+        'Vital for European energy market stability, dampening global LNG price volatility for Indian industrial consumers.'
+      ]
+    },
+    sources: 'NATO Allied Maritime Command / Norwegian Petroleum Directorate'
   }
 };
 
@@ -843,6 +1034,210 @@ export const CHOKEPOINTS = {
       ]
     },
     sources: 'CSIS China Power / Taiwan Ministry of National Defense / Bloomberg Economics'
+  },
+
+  DANISH_STRAITS: {
+    id: 'DANISH_STRAITS',
+    name: 'Danish Straits (Storebælt, Lillebælt, Øresund)',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: 55.60,
+    lng: 11.00,
+    overview: 'The Danish Straits are three natural channels (Great Belt, Little Belt, and Øresund) connecting the Baltic Sea to the Kattegat and North Sea. They are the sole natural maritime gateway linking Russian Baltic ports (St. Petersburg, Kaliningrad) and Scandinavian commerce to the world ocean.',
+    geography: {
+      width: 'Øresund narrows to 4 km at Helsingør-Helsingborg; Great Belt bridge clearance: 65 m',
+      littoralNations: ['Denmark', 'Sweden'],
+      connects: 'Baltic Sea to Kattegat & North Sea'
+    },
+    strategicSignificance: {
+      tradeVolume: 'Carries over 20,000 ships annually, including the Russian "shadow fleet" exporting Urals crude oil from Primorsk and Ust-Luga.',
+      militaryImpact: 'Danish Navy monitors and escorts all Russian naval warships exiting the Baltic Sea.'
+    },
+    militaryDynamics: 'Subject to intense NATO maritime surveillance; monitored by Danish radar installations and maritime patrol vessels.',
+    currentTensions: 'EU debates over environmental inspections of aging uninsured Russian shadow-tankers carrying crude through shallow Danish navigational channels.',
+    indiaConnection: {
+      headline: 'Transit Route for Baltic Seaborne Energy & Nordic Technology',
+      points: [
+        'A portion of discounted Russian crude oil destined for Indian refineries loads at Baltic ports and navigates through the Great Belt.',
+        'Conduit for high-technology engineering and telecommunications exports from Scandinavia to India.'
+      ]
+    },
+    sources: 'Danish Maritime Authority / Baltic and International Maritime Council (BIMCO)'
+  },
+
+  BERING_STRAIT: {
+    id: 'BERING_STRAIT',
+    name: 'Bering Strait',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: 65.80,
+    lng: -168.90,
+    overview: 'The Bering Strait is an 82-kilometer narrow passage separating the easternmost point of the Asian continent (Cape Dezhnev, Russia) from the westernmost point of the North American continent (Cape Prince of Wales, United States). It connects the Pacific Ocean (Bering Sea) with the Arctic Ocean (Chukchi Sea).',
+    geography: {
+      width: '82 km at narrowest point; Big Diomede (Russia) and Little Diomede (USA) separated by only 3.8 km',
+      depth: 'Relatively shallow (30 to 50 meters)',
+      littoralNations: ['Russia', 'United States'],
+      connects: 'Pacific Ocean (Bering Sea) to Arctic Ocean (Chukchi Sea)'
+    },
+    strategicSignificance: {
+      tradeVolume: 'Sole maritime choke point governing access to the Northern Sea Route (NSR) from the Pacific and Asia.',
+      militaryImpact: 'Frontline boundary between the Russian Pacific Fleet and the US Northern Command / Coast Guard District 17.'
+    },
+    militaryDynamics: 'Russian coastal Bastion anti-ship missile systems stationed on Chukotka; US Coast Guard Arctic cutters conducting regular sovereignty patrols.',
+    currentTensions: 'Joint Russian-Chinese naval combat patrols operating within the US Exclusive Economic Zone off Alaska; disputes over foreign warship innocent passage.',
+    indiaConnection: {
+      headline: 'Terminal Gate for Chennai–Vladivostok Arctic Expansion',
+      points: [
+        'India monitors the Bering Strait as the Pacific terminus of the Northern Sea Route for potential long-term energy diversification.',
+        'Indian seafarers trained in Vladivostok prepare for ice-class Arctic navigation through the strait.'
+      ]
+    },
+    sources: 'U.S. Coast Guard / Russian Ministry for Far East and Arctic Development'
+  },
+
+  LOMBOK_STRAIT: {
+    id: 'LOMBOK_STRAIT',
+    name: 'Lombok Strait',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: -8.45,
+    lng: 115.75,
+    overview: 'The Lombok Strait is a deep, wide passage connecting the Java Sea to the Indian Ocean between the Indonesian islands of Bali and Lombok. With depths exceeding 250 meters, it is the primary alternative for supertankers (VLCCs and ULCCs) that exceed the shallow 25-meter draft limit of the Malacca Strait.',
+    geography: {
+      width: 'Minimum width 18 km; maximum depth over 250 meters (no draft limit)',
+      littoralNations: ['Indonesia'],
+      connects: 'Java Sea (Pacific basin) to Indian Ocean'
+    },
+    strategicSignificance: {
+      oilVolume: 'Transports over 3.5 million barrels of oil daily, especially ultra-heavy tankers that cannot physically traverse Malacca.',
+      militaryImpact: 'Strategic deepwater submerged transit corridor for nuclear attack and ballistic missile submarines moving between the Pacific and Indian oceans.'
+    },
+    militaryDynamics: 'Subject to Indonesian Archipelagic Sea Lanes (ALKI II) navigation regulations; intensely monitored by regional anti-submarine sonar nets.',
+    currentTensions: 'Vulnerability to foreign submarine infiltration; balance between Indonesian sovereignty and international transit passage rights.',
+    indiaConnection: {
+      headline: 'Critical Strategic Malacca Bypass Route',
+      points: [
+        'Provides the Indian Navy surveillance opportunities along the southern approaches of the Indonesian archipelago.',
+        'Alternative energy transit route for crude oil bound for East Asia if the Malacca Strait faces wartime interdiction.'
+      ]
+    },
+    sources: 'Indonesian Hydrographic and Oceanographic Center (Pushidrosal) / CSIS'
+  },
+
+  SUNDA_STRAIT: {
+    id: 'SUNDA_STRAIT',
+    name: 'Sunda Strait',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: -5.90,
+    lng: 105.80,
+    overview: 'The Sunda Strait connects the Java Sea to the Indian Ocean between the Indonesian islands of Java and Sumatra. While shallower and narrower in its northeastern entrance than Lombok, it offers an direct southern alternative to the Malacca Strait.',
+    geography: {
+      width: 'Narrows to 24 km at its northeastern end; canalized by islands including Anak Krakatau',
+      depth: 'Varies from 20 to 100 meters',
+      littoralNations: ['Indonesia'],
+      connects: 'Java Sea to Indian Ocean'
+    },
+    strategicSignificance: {
+      tradeVolume: 'Designated Indonesian Archipelagic Sea Lane (ALKI I), carrying bulk mineral exports and regional cargo.',
+      militaryImpact: 'Historical site of the 1942 naval battle; key choke point for naval movements between the Bay of Bengal and South China Sea.'
+    },
+    militaryDynamics: 'Volcanic and seismic hazards from Anak Krakatau; monitored by Indonesian naval stations at Merak and Lampung.',
+    currentTensions: 'Maritime safety concerns, tsunami risks, and congestion from domestic inter-island ferry services crossing international transit routes.',
+    indiaConnection: {
+      headline: 'Maritime Domain Awareness in the Eastern Indian Ocean',
+      points: [
+        'India’s Andaman and Nicobar Command tracks naval vessels transitioning from the Sunda Strait toward the Bay of Bengal.',
+        'Serves as an alternate route for Australian iron ore and coal shipping heading to Indian industrial ports.'
+      ]
+    },
+    sources: 'International Hydrographic Organization / Indonesian Navy'
+  },
+
+  DARDANELLES: {
+    id: 'DARDANELLES',
+    name: 'Dardanelles Strait (Çanakkale Strait)',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: 40.20,
+    lng: 26.40,
+    overview: 'The Dardanelles is a 61-kilometer natural strait in northwestern Turkey connecting the Aegean Sea with the Sea of Marmara. Together with the Bosphorus, it forms the Turkish Straits system, the sole maritime route between the Black Sea and the Mediterranean.',
+    geography: {
+      length: '61 km; width varies from 1.2 km to 6 km',
+      country: 'Turkey',
+      connects: 'Aegean Sea to Sea of Marmara'
+    },
+    strategicSignificance: {
+      tradeVolume: 'Carries over 40,000 vessels annually, including Black Sea agricultural exports and Russian refined hydrocarbons.',
+      militaryImpact: 'Strictly governed under the 1936 Montreux Convention, giving Turkey sovereign rights to regulate and close warship transit during wartime.'
+    },
+    militaryDynamics: 'Heavily fortified historically; modern Turkish radar surveillance and vessel traffic service (VTS) control every commercial transit.',
+    currentTensions: 'Closure to belligerent warships since February 2022 under Montreux Article 19, barring Russian naval reinforcements from entering the Black Sea.',
+    indiaConnection: {
+      headline: 'Crucial Supply Channel for Black Sea Agricultural Commodities',
+      points: [
+        'Vital for Indian sunflower oil and chemical fertilizer imports loading at Black Sea terminals.'
+      ]
+    },
+    sources: 'Turkish Ministry of Foreign Affairs / Montreux Convention 1936'
+  },
+
+  PANAMA_CANAL: {
+    id: 'PANAMA_CANAL',
+    name: 'Panama Canal',
+    type: 'CANAL',
+    symbol: '◆',
+    lat: 9.08,
+    lng: -79.68,
+    overview: 'The Panama Canal is an 82-kilometer artificial waterway across the Isthmus of Panama connecting the Atlantic and Pacific oceans. Featuring lock systems and the expanded Neopanamax locks opened in 2016, it eliminates the 15,000 km perilous voyage around Cape Horn.',
+    geography: {
+      length: '82 km across Lake Gatun and the Culebra Cut',
+      country: 'Panama (Panama Canal Authority - ACP)',
+      connects: 'Caribbean Sea (Atlantic) to Gulf of Panama (Pacific)'
+    },
+    strategicSignificance: {
+      tradeVolume: 'Handles approximately 5% of all global maritime trade and over 40% of US container vessel traffic.',
+      economicImpact: 'Severe freshwater droughts linked to climate change forced canal authorities to reduce daily vessel transits by 30-40% in 2023–2024.'
+    },
+    militaryDynamics: 'Guaranteed neutrality under the 1977 Torrijos-Carter Treaties; vital for U.S. Navy fleet re-positioning between Atlantic and Pacific coasts.',
+    currentTensions: 'Freshwater resource limitations restricting daily booking slots and vessel drafts; Chinese consortium management of ports at both ends (Balboa and Cristóbal).',
+    indiaConnection: {
+      headline: 'Key Conduit for Indian US East Coast & Latin American Exports',
+      points: [
+        'Carries Indian manufactured goods, automotive components, and pharmaceutical exports entering the US Gulf and East Coast ports.',
+        'Indian bulk agricultural commodities transiting to Pacific South America use the canal.'
+      ]
+    },
+    sources: 'Panama Canal Authority (ACP) / US Congressional Research Service'
+  },
+
+  LUZON_STRAIT: {
+    id: 'LUZON_STRAIT',
+    name: 'Luzon Strait',
+    type: 'STRAIT',
+    symbol: '◆',
+    lat: 21.00,
+    lng: 121.00,
+    overview: 'The Luzon Strait is a 250-kilometer wide waterway between Taiwan and the Philippine island of Luzon connecting the South China Sea with the Philippine Sea. It is a critical gateway for telecommunications and naval forces passing through the First Island Chain.',
+    geography: {
+      width: '250 km; contains Batanes and Babuyan islands and the Bashi Channel',
+      littoralNations: ['Philippines', 'Taiwan'],
+      connects: 'South China Sea to Philippine Sea / Pacific Ocean'
+    },
+    strategicSignificance: {
+      telecomImpact: 'Contains one of the world’s densest clusters of undersea fiber-optic telecommunications cables, vulnerable to anchor dragging and sabotage.',
+      militaryImpact: 'Key deepwater transit avenue for Chinese PLA Navy submarines deploying from Yalong Bay (Hainan) into the deep Pacific Ocean.'
+    },
+    militaryDynamics: 'Philippines deploying newly acquired BrahMos supersonic anti-ship missile batteries to Western and Northern Luzon to cover the strait.',
+    currentTensions: 'Daily Chinese naval and aerial incursions into Taiwan’s southwestern ADIZ; Philippine-US joint naval patrols in the Bashi Channel.',
+    indiaConnection: {
+      headline: 'Deployment Site for India-Exported BrahMos Missile Batteries',
+      points: [
+        'The Philippine Marine Corps deployed India-supplied BrahMos supersonic anti-ship cruise missiles along the Luzon coast to defend this waterway.',
+        'High-tech semiconductor supply chain shipments from Taiwan to India pass through or near this corridor.'
+      ]
+    },
+    sources: 'Philippine Department of National Defense / CSIS Asia Maritime Transparency Initiative'
   }
 };
 

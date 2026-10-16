@@ -6,6 +6,7 @@ import {
   TrendingUp, 
   AlertTriangle, 
   ArrowRight, 
+  ArrowLeft,
   GitFork, 
   ShieldCheck, 
   ExternalLink, 
@@ -32,6 +33,8 @@ export default function EventOverlay({
   event,
   intelLevel = 'advanced',
   onClose,
+  onBack,
+  backLabel,
   onExploreTimeline,
   onSelectConcept,
   onSelectAgreement,
@@ -116,6 +119,20 @@ export default function EventOverlay({
 
       <div className="rounded-t-3xl sm:rounded-2xl border border-white/15 shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[calc(100vh-88px)] flex flex-col animate-slide-up-mobile sm:animate-slide-in-right bg-[#080808]/98 backdrop-blur-2xl">
         
+        {/* Back navigation button if in history stack */}
+        {onBack && (
+          <div className="px-4 py-2 bg-[#141414] border-b border-[#222222] flex items-center justify-between text-[10.5px] font-mono">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1.5 text-white hover:text-white font-bold transition-colors cursor-pointer group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-white group-hover:-translate-x-0.5 transition-transform" />
+              <span>RETURN TO: {backLabel || 'PREVIOUS INTELLIGENCE'}</span>
+            </button>
+            <span className="text-[#666666] uppercase text-[9px]">INTERCONNECTED STACK</span>
+          </div>
+        )}
+
         {/* ============================================================== */}
         {/* HEADER: Priority, Status, Freshness & Close Trigger            */}
         {/* ============================================================== */}
@@ -330,6 +347,25 @@ export default function EventOverlay({
                       <span>Direct Reference</span>
                       <ExternalLink className="w-3 h-3 text-[#888888]" />
                     </a>
+                  </div>
+                )}
+
+                {event.verification && (
+                  <div className="pt-2 border-t border-[#1A1A1A] text-[9.5px] font-mono space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#888888]">CONFIDENCE LEVEL:</span>
+                      <span className="text-white font-bold">{event.verification.confidence || 'VERIFIED'}</span>
+                    </div>
+                    {event.verification.method && (
+                      <div className="text-[#888888]">
+                        <span className="text-[#666666]">Methodology:</span> <span className="text-[#BDBDBD]">{event.verification.method}</span>
+                      </div>
+                    )}
+                    {event.verification.corroboratedBy && event.verification.corroboratedBy.length > 0 && (
+                      <div className="text-[#888888]">
+                        <span className="text-[#666666]">Corroborated by:</span> <span className="text-[#E8E8E8]">{event.verification.corroboratedBy.join(', ')}</span>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -738,7 +774,7 @@ export default function EventOverlay({
           </button>
           
           <button
-            onClick={() => onExploreChain && onExploreChain('CHAIN_BRAHMOS_AUTONOMY')}
+            onClick={() => onExploreChain && onExploreChain(event.chainKey || 'CHAIN_BRAHMOS_AUTONOMY')}
             className="py-2 px-3 rounded-lg bg-[#111111] hover:bg-[#1A1A1A] border border-white/20 text-white font-mono text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Explore Geopolitical Causal Chain"
           >
