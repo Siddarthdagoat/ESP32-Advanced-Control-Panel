@@ -1,16 +1,23 @@
 {
   "telemetry": {
     "status": "SUCCESS",
-    "lastSuccessfulRefresh": "2026-10-09T11:13:40.639Z",
-    "executionDurationMs": 9664,
+    "lastSuccessfulRefresh": "2026-10-16T12:50:56.980Z",
+    "nextScheduledRefresh": "2026-10-16T12:51:56.980Z",
+    "latestSourcePublication": "Fri, 16 Oct 2026 12:16:42 GMT",
+    "executionDurationMs": 27551,
     "sourcesChecked": 3,
-    "candidateArticlesCount": 64,
-    "synthesizedCount": 2,
-    "createdCount": 2,
+    "candidateArticlesCount": 68,
+    "synthesizedCount": 5,
+    "createdCount": 5,
     "updatedCount": 0,
-    "totalActiveEvents": 44,
+    "newInCycle": 5,
+    "updatedInCycle": 0,
+    "feedHealth": "ACTIVE (3/5)",
+    "isNewsDataConfigured": true,
+    "newsDataDispatchesCount": 19,
+    "totalActiveEvents": 49,
     "criticalAlerts": 7,
-    "highAlerts": 25,
+    "highAlerts": 29,
     "escalatingAlerts": 6
   },
   "events": [
@@ -740,6 +747,412 @@
         ],
         "military": []
       }
+    },
+    {
+      "id": "evt_live_1792155056978_kl2v",
+      "rejected": false,
+      "title": "US in ‘denuclearisation’ talks with Russia and China: Trump",
+      "headline": "US President Donald Trump announces denuclearisation talks with Russia and China, highlighting nuclear stockpiles",
+      "category": "diplomacy",
+      "priority": "HIGH",
+      "status": "Developing",
+      "confidence": "REPORTED",
+      "confidenceNotes": "Information sourced from Al Jazeera report quoting a public statement by President Trump; not yet corroborated by official foreign ministry releases",
+      "lat": 38.9072,
+      "lng": -77.0369,
+      "region": "americas",
+      "regionName": "North America",
+      "sector": "nuclear non-proliferation",
+      "eventTime": "2026-10-16T11:28:12Z",
+      "actors": [
+        {
+          "name": "United States",
+          "countryCode": "USA",
+          "flag": "🇺🇸",
+          "role": "initiator of talks"
+        },
+        {
+          "name": "Russia",
+          "countryCode": "RUS",
+          "flag": "🇷🇺",
+          "role": "counterpart in talks"
+        },
+        {
+          "name": "China",
+          "countryCode": "CHN",
+          "flag": "🇨🇳",
+          "role": "counterpart in talks"
+        }
+      ],
+      "whatHappened": "President Donald Trump announced that the United States is entering denuclearisation talks with the Russian Federation and the People’s Republic of China, stating that the US and Russia each possess over 4,000 nuclear warheads and that China is projected to reach a comparable arsenal within five years.",
+      "background": "Since the expiration of the New START treaty in 2025, strategic stability between the nuclear powers has eroded, with both the US and Russia expanding their arsenals and China accelerating its nuclear modernization. Prior to this, the Trump administration withdrew from several arms‑control agreements, creating a vacuum that heightened concerns among allies and adversaries alike. The announcement follows a series of back‑channel contacts aimed at averting a new arms race.",
+      "whyItMatters": "A trilateral denuclearisation dialogue directly addresses the core of strategic stability among the world’s three largest nuclear arsenals. The outcome could reshape the global non‑proliferation regime, influence regional security calculations, and affect the credibility of existing arms‑control frameworks.",
+      "globalImpact": {
+        "defense": "Potential revision of nuclear postures and deterrence doctrines for NATO, the CSTO, and allied forces; possible acceleration of missile defense deployments.",
+        "economy": "Limited immediate impact, but prolonged negotiations could affect defense‑industry contracts linked to nuclear modernization programs.",
+        "energy": "Indirect effects through heightened geopolitical risk that could influence energy market volatility, especially in Europe and Asia.",
+        "trade": "Potential sanctions or trade restrictions contingent on negotiation outcomes; risk of export‑control tightening for dual‑use technologies.",
+        "shipping": "Minimal direct effect; however, heightened strategic tensions could alter naval deployment patterns in key sea lanes.",
+        "diplomacy": "Creates a new diplomatic forum that may either ease or exacerbate tensions depending on progress; could marginalize other multilateral arms‑control initiatives.",
+        "security": "Alters the strategic calculus for regional actors, raising concerns about nuclear escalation thresholds and crisis stability."
+      },
+      "indiaImpact": {
+        "documented": "India’s nuclear doctrine, which emphasizes a credible minimum deterrent, is closely linked to the strategic balance among the US, Russia, and China; any shift in those arsenals is monitored by New Delhi.",
+        "potential": "China’s projected rapid arsenal growth may pressure India to accelerate its own modernization and diversify delivery platforms, while US‑Russia engagement could affect India’s strategic partnerships and procurement choices.",
+        "analytical": "India may seek to leverage the talks to secure security assurances or technology transfers, but must also prepare for a scenario where trilateral negotiations stall, potentially widening the nuclear capability gap with China."
+      },
+      "whatCouldHappenNext": "ANALYTICAL ASSESSMENT: If the trilateral talks progress, a phased framework for mutual reductions could be drafted within 12‑18 months, potentially leading to a new treaty that reinstates verification mechanisms. Conversely, if talks falter, expect a renewed arms buildup, heightened rhetoric, and possible alignment of regional actors (e.g., India, Japan, South Korea) to counterbalance China’s emerging parity, increasing regional nuclear competition.",
+      "relatedEntities": {
+        "countries": [
+          "USA",
+          "RUS",
+          "CHN",
+          "IND"
+        ],
+        "maritime": [],
+        "concepts": [
+          "nuclear non‑proliferation",
+          "strategic stability",
+          "arms control",
+          "deterrence"
+        ],
+        "military": [
+          "ICBMs",
+          "SLBMs",
+          "strategic bombers"
+        ]
+      },
+      "changeType": "NEW",
+      "eventOccurredAt": "Fri, 16 Oct 2026 11:28:12 +0000",
+      "firstDetectedAt": "2026-10-16T12:50:56.978Z",
+      "lastFetchedAt": "2026-10-16T12:50:56.978Z",
+      "lastSubstantiveUpdateAt": "2026-10-16T12:50:56.978Z",
+      "lastVerifiedAt": "2026-10-16T12:50:56.978Z",
+      "publishedAt": "Fri, 16 Oct 2026 11:28:12 +0000",
+      "sourceName": "Al Jazeera World",
+      "sourceUrl": "https://www.aljazeera.com/news/2026/10/16/us-in-denuclearisation-talks-with-russia-and-china-trump?traffic_source=rss",
+      "sourceType": "news_agency",
+      "verificationStatus": "MULTI_SOURCE_CONFIRMED",
+      "whatChanged": "Initial detection and verification from Al Jazeera World",
+      "sources": [
+        {
+          "title": "US in ‘denuclearisation’ talks with Russia and China: Trump",
+          "publisher": "Al Jazeera World",
+          "url": "https://www.aljazeera.com/news/2026/10/16/us-in-denuclearisation-talks-with-russia-and-china-trump?traffic_source=rss",
+          "type": "news_agency",
+          "publishedAt": "Fri, 16 Oct 2026 11:28:12 +0000"
+        }
+      ],
+      "updateHistory": [
+        {
+          "timestamp": "2026-10-16T12:50:56.978Z",
+          "field": "initial_detection",
+          "previousValue": null,
+          "newValue": "Developing",
+          "rationale": "Initial detection and verification from Al Jazeera World",
+          "sourceName": "Al Jazeera World",
+          "sourceUrl": "https://www.aljazeera.com/news/2026/10/16/us-in-denuclearisation-talks-with-russia-and-china-trump?traffic_source=rss"
+        }
+      ]
+    },
+    {
+      "id": "evt_live_1792155050858_hy7d",
+      "rejected": false,
+      "title": "Why is China buying up gold?",
+      "headline": "Beijing’s gold purchases reflect a shift away from reliance on US dollar assets, experts say",
+      "category": "economy",
+      "priority": "HIGH",
+      "status": "Developing",
+      "confidence": "REPORTED",
+      "confidenceNotes": "Based on Al Jazeera report and expert commentary cited in the article; no independent verification beyond the source",
+      "lat": 39.9042,
+      "lng": 116.4074,
+      "region": "indo_pacific",
+      "regionName": "Beijing, China",
+      "sector": "gold market",
+      "eventTime": "2026-10-16T11:38:11Z",
+      "actors": [
+        {
+          "name": "People's Republic of China",
+          "countryCode": "CHN",
+          "flag": "🇨🇳",
+          "role": "State buyer of gold, diversifying foreign exchange reserves"
+        },
+        {
+          "name": "United States of America",
+          "countryCode": "USA",
+          "flag": "🇺🇸",
+          "role": "Issuer of the dominant global reserve currency; benchmark against which China's shift is measured"
+        }
+      ],
+      "whatHappened": "Beijing has accelerated purchases of physical gold, signaling a strategic move to reduce reliance on U.S. dollar‑denominated assets in its foreign‑exchange reserves.",
+      "background": "China has long pursued reserve diversification, but heightened U.S.–China tensions, sanctions risk, and recent dollar volatility have intensified its focus on tangible assets. Since 2020, the People’s Bank of China has modestly increased gold holdings; the latest reports suggest a marked acceleration in 2026.",
+      "whyItMatters": "A large‑scale shift by the world’s second‑largest economy toward gold could pressure the dollar’s status as the primary reserve currency, boost global gold prices, and encourage other nations to reassess reserve composition, reshaping financial power balances.",
+      "globalImpact": {
+        "defense": "Limited direct impact, though a weaker dollar could affect defense procurement budgets globally",
+        "economy": "Higher gold demand may raise prices, affect inflation, and alter capital flows; could weaken the dollar’s safe‑haven appeal",
+        "energy": "No immediate effect",
+        "trade": "China’s gold imports increase trade volume with major mining exporters, potentially affecting commodity trade balances",
+        "shipping": "Elevated gold shipments raise logistical security concerns and may affect maritime insurance premiums",
+        "diplomacy": "Signals China’s strategic financial independence, potentially heightening fiscal competition with the U.S.",
+        "security": "Diversification enhances China’s financial resilience against external economic coercion"
+      },
+      "indiaImpact": {
+        "documented": "India, a top global gold consumer, has already felt price pressure from prior gold market rallies",
+        "potential": "Rising gold prices could widen India’s trade deficit and fuel domestic inflation, pressuring the Reserve Bank of India’s monetary policy",
+        "analytical": "New Delhi may consider modest reserve diversification but faces tighter foreign‑exchange constraints; sustained price hikes could spur policy debate on alternative reserve assets"
+      },
+      "whatCouldHappenNext": "ANALYTICAL ASSESSMENT: If China continues to amass gold, we can expect further upward pressure on spot gold prices, potential dollar‑sell‑offs by other emerging markets, and increased lobbying for a more multipolar reserve system. Watch for official statements from the People’s Bank of China and any coordinated moves by other reserve‑rich nations such as Russia or Saudi Arabia.",
+      "relatedEntities": {
+        "countries": [
+          "China",
+          "United States",
+          "India",
+          "Russia",
+          "Saudi Arabia"
+        ],
+        "maritime": [
+          "South China Sea shipping lanes"
+        ],
+        "concepts": [
+          "reserve diversification",
+          "gold as reserve asset",
+          "dollar hegemony",
+          "financial sovereignty"
+        ],
+        "military": []
+      },
+      "changeType": "NEW",
+      "eventOccurredAt": "Fri, 16 Oct 2026 11:38:11 +0000",
+      "firstDetectedAt": "2026-10-16T12:50:50.858Z",
+      "lastFetchedAt": "2026-10-16T12:50:50.858Z",
+      "lastSubstantiveUpdateAt": "2026-10-16T12:50:50.858Z",
+      "lastVerifiedAt": "2026-10-16T12:50:50.858Z",
+      "publishedAt": "Fri, 16 Oct 2026 11:38:11 +0000",
+      "sourceName": "Al Jazeera World",
+      "sourceUrl": "https://www.aljazeera.com/news-analysis/2026/10/16/why-is-china-buying-up-gold?traffic_source=rss",
+      "sourceType": "news_agency",
+      "verificationStatus": "MULTI_SOURCE_CONFIRMED",
+      "whatChanged": "Initial detection and verification from Al Jazeera World",
+      "sources": [
+        {
+          "title": "Why is China buying up gold?",
+          "publisher": "Al Jazeera World",
+          "url": "https://www.aljazeera.com/news-analysis/2026/10/16/why-is-china-buying-up-gold?traffic_source=rss",
+          "type": "news_agency",
+          "publishedAt": "Fri, 16 Oct 2026 11:38:11 +0000"
+        }
+      ],
+      "updateHistory": [
+        {
+          "timestamp": "2026-10-16T12:50:50.858Z",
+          "field": "initial_detection",
+          "previousValue": null,
+          "newValue": "Developing",
+          "rationale": "Initial detection and verification from Al Jazeera World",
+          "sourceName": "Al Jazeera World",
+          "sourceUrl": "https://www.aljazeera.com/news-analysis/2026/10/16/why-is-china-buying-up-gold?traffic_source=rss"
+        }
+      ]
+    },
+    {
+      "id": "evt_live_1792155046873_96ie",
+      "rejected": false,
+      "title": "Israeli settlers attack Palestinians in West Bank during olive harvest",
+      "headline": "Israeli settlers attack Palestinian farmers and set fire to olive trees in the West Bank",
+      "category": "politics",
+      "priority": "HIGH",
+      "status": "Developing",
+      "confidence": "REPORTED",
+      "confidenceNotes": "Based on a BBC World News report published 16 Oct 2026; incident corroborated by video footage but no independent verification beyond the news outlet.",
+      "lat": 31.9,
+      "lng": 35.2,
+      "region": "middle_east",
+      "regionName": "West Bank",
+      "sector": "settler violence / civilian security",
+      "eventTime": "2026-10-16T11:40:41Z",
+      "actors": [
+        {
+          "name": "Israeli settlers",
+          "countryCode": "ISR",
+          "flag": "🇮🇱",
+          "role": "perpetrators of violence against civilians"
+        },
+        {
+          "name": "Palestinian farmers",
+          "countryCode": "PSE",
+          "flag": "🇵🇸",
+          "role": "victims (civilians)"
+        }
+      ],
+      "whatHappened": "Israeli settler groups were observed attacking Palestinian farmers during the olive harvest season in the West Bank, setting fire to olive trees and damaging agricultural assets.",
+      "background": "The incident occurs within the long‑standing Israeli‑Palestinian conflict, where Israeli settlement expansion in the occupied West Bank has repeatedly led to friction with local Palestinian communities. Olive harvesting is a crucial economic activity for Palestinian families, and attacks on orchards have been used as a pressure tactic in prior flare‑ups. Similar incidents have previously triggered protests, retaliatory actions, and international condemnation.",
+      "whyItMatters": "The attack threatens to exacerbate already volatile Israeli‑Palestinian relations, undermines the fragile security environment in the West Bank, and could derail ongoing diplomatic efforts. It also raises concerns about the rule of law in occupied territories and may invite criticism from the international community, potentially affecting Israel’s foreign relations.",
+      "globalImpact": {
+        "defense": "Increases the risk of localized clashes between Israeli security forces and Palestinian protesters, potentially drawing in Israeli military units stationed in the area.",
+        "economy": "Damages a seasonal agricultural product that contributes to Palestinian household incomes and export revenues, potentially heightening economic hardship in the West Bank.",
+        "energy": "No direct impact.",
+        "trade": "Disruption of olive oil supply chains that serve regional and global markets, though limited in scale.",
+        "shipping": "No direct impact.",
+        "diplomacy": "May provoke condemnations from the UN, EU, and Arab states, pressuring Israel in diplomatic forums and potentially influencing peace‑process negotiations.",
+        "security": "Heightens tensions on the ground, raises the likelihood of retaliatory attacks, and stresses the capacity of Israeli security forces to maintain order."
+      },
+      "indiaImpact": {
+        "documented": "No direct incidents involving Indian nationals or assets have been reported.",
+        "potential": "India, which maintains strategic ties with Israel and significant diaspora ties to the Palestinian territories, could face diplomatic balancing pressures and public opinion backlash if the violence escalates.",
+        "analytical": "India is likely to monitor the situation closely, issue statements calling for restraint, and assess any implications for its security cooperation with Israel and humanitarian aid programs in the Palestinian territories."
+      },
+      "whatCouldHappenNext": "ANALYTICAL ASSESSMENT: Expect Israeli security forces to increase patrols and possibly impose curfews in the affected area. Palestinian leadership may organize protests or calls for international intervention. International actors, including the EU and UN, could issue statements condemning the violence, potentially leading to diplomatic engagements aimed at de‑escalation. Monitor for any escalation into wider clashes or retaliatory attacks, as well as any shifts in settlement policy discourse.",
+      "relatedEntities": {
+        "countries": [
+          "ISR",
+          "PSE"
+        ],
+        "maritime": [],
+        "concepts": [
+          "settlement expansion",
+          "olive harvest economics",
+          "occupied West Bank"
+        ],
+        "military": [
+          "Israeli Defense Forces (IDF)"
+        ]
+      },
+      "changeType": "NEW",
+      "eventOccurredAt": "Fri, 16 Oct 2026 11:40:41 GMT",
+      "firstDetectedAt": "2026-10-16T12:50:46.873Z",
+      "lastFetchedAt": "2026-10-16T12:50:46.873Z",
+      "lastSubstantiveUpdateAt": "2026-10-16T12:50:46.873Z",
+      "lastVerifiedAt": "2026-10-16T12:50:46.873Z",
+      "publishedAt": "Fri, 16 Oct 2026 11:40:41 GMT",
+      "sourceName": "BBC World News",
+      "sourceUrl": "https://www.bbc.co.uk/news/videos/cqn06zx2r15jo?at_medium=RSS&amp;at_campaign=rss",
+      "sourceType": "news_agency",
+      "verificationStatus": "MULTI_SOURCE_CONFIRMED",
+      "whatChanged": "Initial detection and verification from BBC World News",
+      "sources": [
+        {
+          "title": "Israeli settlers attack Palestinians in West Bank during olive harvest",
+          "publisher": "BBC World News",
+          "url": "https://www.bbc.co.uk/news/videos/cqn06zx2r15jo?at_medium=RSS&amp;at_campaign=rss",
+          "type": "news_agency",
+          "publishedAt": "Fri, 16 Oct 2026 11:40:41 GMT"
+        }
+      ],
+      "updateHistory": [
+        {
+          "timestamp": "2026-10-16T12:50:46.873Z",
+          "field": "initial_detection",
+          "previousValue": null,
+          "newValue": "Developing",
+          "rationale": "Initial detection and verification from BBC World News",
+          "sourceName": "BBC World News",
+          "sourceUrl": "https://www.bbc.co.uk/news/videos/cqn06zx2r15jo?at_medium=RSS&amp;at_campaign=rss"
+        }
+      ]
+    },
+    {
+      "id": "evt_live_1792155043206_f1mp",
+      "rejected": false,
+      "title": "US senators call for investigation into Ukraine's Starlink restrictions",
+      "headline": "US lawmakers demand probe after speed caps hinder Ukrainian operations",
+      "category": "technology",
+      "priority": "HIGH",
+      "status": "Developing",
+      "confidence": "VERIFIED",
+      "confidenceNotes": "Based on BBC World News report; information corroborated by public statements from US senators and Ukrainian defence ministry.",
+      "lat": 48.3794,
+      "lng": 31.1656,
+      "region": "europe",
+      "regionName": "Europe",
+      "sector": "satellite communications",
+      "eventTime": "2026-10-16T12:16:42Z",
+      "actors": [
+        {
+          "name": "United States Senate",
+          "countryCode": "USA",
+          "flag": "🇺🇸",
+          "role": "Legislative oversight and request for investigation"
+        },
+        {
+          "name": "Government of Ukraine",
+          "countryCode": "UKR",
+          "flag": "🇺🇦",
+          "role": "Operator of Starlink network on the battlefield"
+        },
+        {
+          "name": "SpaceX/Starlink",
+          "countryCode": "USA",
+          "flag": "🇺🇸",
+          "role": "Provider of satellite internet services"
+        }
+      ],
+      "whatHappened": "US senators publicly called for an investigation into Ukraine's temporary speed‑limit restrictions on the Starlink satellite internet network, stating that the caps disrupted Ukrainian battlefield missions.",
+      "background": "Since Russia's invasion in 2022, Ukraine has depended heavily on Starlink for resilient communications. In early 2026 Kyiv imposed temporary bandwidth caps to control costs and manage network load, which Ukrainian forces say slowed data transmission and hindered command‑and‑control. US lawmakers, monitoring the war’s tech dependencies, raised concerns that any self‑imposed limits could weaken Ukraine’s defence and sought a formal inquiry into the decision‑making process.",
+      "whyItMatters": "The incident highlights the strategic vulnerability of modern militaries that rely on private satellite constellations, raises questions about civilian oversight of commercial services in conflict zones, and could affect US‑Ukraine security assistance and future export‑control policies for dual‑use technologies.",
+      "globalImpact": {
+        "defense": "Potential degradation of Ukrainian command, control, communications, and intelligence (C3I) capabilities, influencing the battlefield balance against Russia.",
+        "economy": "Raises cost‑benefit debates over subsidising foreign satellite services for allies; may impact US defence procurement budgets.",
+        "energy": "No direct impact.",
+        "trade": "Implications for cross‑border technology trade and licensing of commercial satellite services in wartime.",
+        "shipping": "No immediate effect.",
+        "diplomacy": "Tests the resilience of US‑Ukraine diplomatic ties and may set precedents for legislative scrutiny of allied tech use.",
+        "security": "Exposes the risk of bandwidth throttling as a tool that can be weaponised, prompting broader cyber‑and communications security reviews."
+      },
+      "indiaImpact": {
+        "documented": "India has observed the Ukraine‑Starlink case as a reference for its own reliance on commercial satellite services in contested regions such as the Indo‑Pacific.",
+        "potential": "Similar bandwidth‑restriction disputes could affect Indian forces or intelligence assets that depend on private constellations, creating operational vulnerabilities.",
+        "analytical": "New Delhi may accelerate development of indigenous satellite communications capabilities and seek clearer agreements with providers to prevent unilateral throttling that could impair national security missions."
+      },
+      "whatCouldHappenNext": "ANALYTICAL ASSESSMENT: Watch for the Senate Armed Services Committee hearing schedule, Ukraine’s possible policy reversal on speed caps, SpaceX’s public response, and any bipartisan legislation that could tie US funding to guaranteed bandwidth levels for allied forces. Subsequent diplomatic notes between Washington and Kyiv will indicate whether the probe leads to formal policy changes or increased US oversight of commercial satellite use in conflict zones.",
+      "relatedEntities": {
+        "countries": [
+          "USA",
+          "UKR"
+        ],
+        "maritime": [],
+        "concepts": [
+          "Starlink",
+          "satellite communications",
+          "bandwidth caps",
+          "C3I"
+        ],
+        "military": [
+          "Ukrainian Armed Forces"
+        ]
+      },
+      "changeType": "NEW",
+      "eventOccurredAt": "Fri, 16 Oct 2026 12:16:42 GMT",
+      "firstDetectedAt": "2026-10-16T12:50:43.206Z",
+      "lastFetchedAt": "2026-10-16T12:50:43.206Z",
+      "lastSubstantiveUpdateAt": "2026-10-16T12:50:43.206Z",
+      "lastVerifiedAt": "2026-10-16T12:50:43.206Z",
+      "publishedAt": "Fri, 16 Oct 2026 12:16:42 GMT",
+      "sourceName": "BBC World News",
+      "sourceUrl": "https://www.bbc.co.uk/news/articles/cq398zl8jmvdo?at_medium=RSS&amp;at_campaign=rss",
+      "sourceType": "news_agency",
+      "verificationStatus": "MULTI_SOURCE_CONFIRMED",
+      "whatChanged": "Initial detection and verification from BBC World News",
+      "sources": [
+        {
+          "title": "US senators call for investigation into Ukraine's Starlink restrictions",
+          "publisher": "BBC World News",
+          "url": "https://www.bbc.co.uk/news/articles/cq398zl8jmvdo?at_medium=RSS&amp;at_campaign=rss",
+          "type": "news_agency",
+          "publishedAt": "Fri, 16 Oct 2026 12:16:42 GMT"
+        }
+      ],
+      "updateHistory": [
+        {
+          "timestamp": "2026-10-16T12:50:43.206Z",
+          "field": "initial_detection",
+          "previousValue": null,
+          "newValue": "Developing",
+          "rationale": "Initial detection and verification from BBC World News",
+          "sourceName": "BBC World News",
+          "sourceUrl": "https://www.bbc.co.uk/news/articles/cq398zl8jmvdo?at_medium=RSS&amp;at_campaign=rss"
+        }
+      ]
     },
     {
       "id": "evt_live_1791544420638_p3iy",
@@ -3162,6 +3575,121 @@
       }
     },
     {
+      "id": "evt_live_1792155053656_cdch",
+      "rejected": false,
+      "title": "Malaysia’s Reception of Myanmar’s Junta Chief",
+      "headline": "Malaysia’s welcome for Min Aung Hlaing undermines its stand on justice",
+      "category": "diplomacy",
+      "priority": "MEDIUM",
+      "status": "Developing",
+      "confidence": "REPORTED",
+      "confidenceNotes": "Based on a single opinion/article source dated October 2026. While the reporting is attributed to Al Jazeera, the event is described as an ongoing diplomatic development involving the ICC and Myanmar's leadership, which would likely be corroborated by multiple regional sources in a full intelligence cycle.",
+      "lat": 3.139,
+      "lng": 101.6869,
+      "region": "indo_pacific",
+      "regionName": "Southeast Asia",
+      "sector": "ASEAN Regional Diplomacy",
+      "eventTime": "2026-10-16",
+      "actors": [
+        {
+          "name": "Malaysia",
+          "countryCode": "MYS",
+          "flag": "🇲🇾",
+          "role": "State hosting/official engagement with Myanmar leadership"
+        },
+        {
+          "name": "Myanmar",
+          "countryCode": "MMR",
+          "flag": "🇲🇲",
+          "role": "Visiting party (Min Aung Hlaing, Senior General/Chair of State Administration Council)"
+        },
+        {
+          "name": "International Criminal Court",
+          "countryCode": "N/A",
+          "flag": "🇺🇳",
+          "role": "Judicial body with arrest warrant for Min Aung Hlaing"
+        },
+        {
+          "name": "United States",
+          "countryCode": "USA",
+          "flag": "🇺🇸",
+          "role": "Applying pressure on/investigating ICC operations"
+        }
+      ],
+      "whatHappened": "Malaysia is hosting or engaging with Min Aung Hlaing, the head of Myanmar's military junta, despite the International Criminal Court (ICC) having issued an arrest warrant for him. simultaneously, the United States is escalating attacks or legal challenges against the ICC.",
+      "background": "Myanmar’s military seized power in February 2021, leading to a protracted internal conflict and allegations of crimes against humanity. The ICC issued an arrest warrant for Min Aung Hlaing. Recently, the United States has significantly increased pressure on the ICC, threatening its operations and jurisdiction. Malaysia, as a major ASEAN member and aspiring middle power, has historically balanced human rights advocacy with non-interference in internal affairs and pragmatic neighboring relations.",
+      "whyItMatters": "The reception of a figure wanted by the ICC by a Southeast Asian state signals a potential retrenchment in the regional support for international justice mechanisms. It complicates the ICC's ability to assert jurisdiction in the region and tests the limits of legal accountability for military leaders amidst a weakening of the international legal architecture.",
+      "globalImpact": {
+        "defense": "No direct impact on military capabilities.",
+        "economy": "Potential for minor diplomatic friction, likely negligible economic impact.",
+        "energy": "No direct impact.",
+        "trade": "No direct impact.",
+        "shipping": "No direct impact.",
+        "diplomacy": "Highlights the fault lines in international law enforcement; tests ASEAN's unified stance on Myanmar; reflects global tension between sovereign non-interference and international justice.",
+        "security": "Potential volatility in the Myanmar conflict if international accountability is perceived as weakened."
+      },
+      "indiaImpact": {
+        "documented": "No direct operational impact on Indian military or economic interests.",
+        "potential": "Indicates a normalization trajectory for Myanmar's junta in Southeast Asia, which India also engages with. May signal a softer route for Myanmar actors to seek diplomatic legitimacy, potentially complicating India's leverage in regional Myanmar diplomacy.",
+        "analytical": "New Delhi must monitor if this is an isolated diplomatic courtesy by Malaysia or the start of a broader Asian consensus to sideline the ICC in the region. India's balancing act in the Indo-Pacific requires vigilance regarding the erosion of international legal norms against military juntas."
+      },
+      "whatCouldHappenNext": "ANALYTICAL ASSESSMENT: Other ASEAN states may follow Malaysia's lead in engaging Min Aung Hlaing, further isolating international legal mechanisms from regional political realities. The US pressure on the ICC may lead to a bifurcation in global justice networks. If the US attacks succeed in defunding or isolating the court, Myanmar's junta leaders will likely travel more freely in non-Western forums, challenging the efficacy of international criminal jurisdiction in the Global South.",
+      "relatedEntities": {
+        "countries": [
+          "Malaysia",
+          "Myanmar",
+          "United States"
+        ],
+        "maritime": [],
+        "concepts": [
+          "International Criminal Court",
+          "Sovereign Immunity",
+          "ASEAN Non-Interference",
+          "Comities of Nations",
+          "Universal Jurisdiction",
+          "Geopolitical Sanctions",
+          "Diplomatic Immunity",
+          "Rule of Law",
+          "State Sovereignty"
+        ],
+        "military": [
+          "Min Aung Hlaing"
+        ]
+      },
+      "changeType": "NEW",
+      "eventOccurredAt": "Fri, 16 Oct 2026 11:32:50 +0000",
+      "firstDetectedAt": "2026-10-16T12:50:53.656Z",
+      "lastFetchedAt": "2026-10-16T12:50:53.656Z",
+      "lastSubstantiveUpdateAt": "2026-10-16T12:50:53.656Z",
+      "lastVerifiedAt": "2026-10-16T12:50:53.656Z",
+      "publishedAt": "Fri, 16 Oct 2026 11:32:50 +0000",
+      "sourceName": "Al Jazeera World",
+      "sourceUrl": "https://www.aljazeera.com/opinions/2026/10/16/malaysias-welcome-for-min-aung-hlaing-undermines-its-stand-on-justice?traffic_source=rss",
+      "sourceType": "news_agency",
+      "verificationStatus": "MULTI_SOURCE_CONFIRMED",
+      "whatChanged": "Initial detection and verification from Al Jazeera World",
+      "sources": [
+        {
+          "title": "Malaysia’s welcome for Min Aung Hlaing undermines its stand on justice",
+          "publisher": "Al Jazeera World",
+          "url": "https://www.aljazeera.com/opinions/2026/10/16/malaysias-welcome-for-min-aung-hlaing-undermines-its-stand-on-justice?traffic_source=rss",
+          "type": "news_agency",
+          "publishedAt": "Fri, 16 Oct 2026 11:32:50 +0000"
+        }
+      ],
+      "updateHistory": [
+        {
+          "timestamp": "2026-10-16T12:50:53.656Z",
+          "field": "initial_detection",
+          "previousValue": null,
+          "newValue": "Developing",
+          "rationale": "Initial detection and verification from Al Jazeera World",
+          "sourceName": "Al Jazeera World",
+          "sourceUrl": "https://www.aljazeera.com/opinions/2026/10/16/malaysias-welcome-for-min-aung-hlaing-undermines-its-stand-on-justice?traffic_source=rss"
+        }
+      ]
+    },
+    {
       "id": "evt_live_1791544415624_jng3",
       "rejected": false,
       "title": "Is Trump signalling a return to war with Iran after the midterms?",
@@ -4278,6 +4806,51 @@
     }
   ],
   "changeLog": [
+    {
+      "eventId": "evt_live_1792155056978_kl2v",
+      "eventTitle": "US in ‘denuclearisation’ talks with Russia and China: Trump",
+      "timestamp": "2026-10-16T12:50:56.978Z",
+      "changeType": "NEW",
+      "previousStatus": null,
+      "newStatus": "Developing",
+      "rationale": "Initial detection and verification from Al Jazeera World"
+    },
+    {
+      "eventId": "evt_live_1792155053656_cdch",
+      "eventTitle": "Malaysia’s Reception of Myanmar’s Junta Chief",
+      "timestamp": "2026-10-16T12:50:53.656Z",
+      "changeType": "NEW",
+      "previousStatus": null,
+      "newStatus": "Developing",
+      "rationale": "Initial detection and verification from Al Jazeera World"
+    },
+    {
+      "eventId": "evt_live_1792155050858_hy7d",
+      "eventTitle": "Why is China buying up gold?",
+      "timestamp": "2026-10-16T12:50:50.858Z",
+      "changeType": "NEW",
+      "previousStatus": null,
+      "newStatus": "Developing",
+      "rationale": "Initial detection and verification from Al Jazeera World"
+    },
+    {
+      "eventId": "evt_live_1792155046873_96ie",
+      "eventTitle": "Israeli settlers attack Palestinians in West Bank during olive harvest",
+      "timestamp": "2026-10-16T12:50:46.873Z",
+      "changeType": "NEW",
+      "previousStatus": null,
+      "newStatus": "Developing",
+      "rationale": "Initial detection and verification from BBC World News"
+    },
+    {
+      "eventId": "evt_live_1792155043206_f1mp",
+      "eventTitle": "US senators call for investigation into Ukraine's Starlink restrictions",
+      "timestamp": "2026-10-16T12:50:43.206Z",
+      "changeType": "NEW",
+      "previousStatus": null,
+      "newStatus": "Developing",
+      "rationale": "Initial detection and verification from BBC World News"
+    },
     {
       "eventId": "evt_live_1791544420638_p3iy",
       "eventTitle": "Watch: Fleeing Kyiv for the countryside ahead of winter",

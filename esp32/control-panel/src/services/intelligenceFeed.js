@@ -35,11 +35,17 @@ class IntelligenceFeedService {
     this.historyLog = [];
     this.isInitialized = false;
 
+    // Real-time NewsData.io dispatches state
+    this.newsDispatches = [];
+    this.isNewsLoading = false;
+    this.newsLastFetched = null;
+
     // Load initial baseline
     this.recordInitialBaseline();
 
     // Trigger initial live fetch from persisted JSON or API endpoint
     this.initLiveFeed();
+    this.fetchLiveNews();
   }
 
   recordInitialBaseline() {
@@ -174,6 +180,9 @@ class IntelligenceFeedService {
       historyLog: this.historyLog,
       isLive: this.isLive,
       isUpdating: this.isUpdating,
+      newsDispatches: this.newsDispatches,
+      isNewsLoading: this.isNewsLoading,
+      newsLastFetched: this.newsLastFetched,
       lastSuccessfulUpdate: this.lastSuccessfulUpdate,
       lastUpdatedUtcString,
       nextScheduledRefreshUtcString,
@@ -309,6 +318,83 @@ class IntelligenceFeedService {
       this.isLive = false;
       this.notify();
     }
+  }
+
+  /**
+   * Fetch live raw dispatches directly from NewsData.io & backend news stream
+   */
+  async fetchLiveNews(query = '', forceRefresh = false) {
+    this.isNewsLoading = true;
+    this.notify();
+
+    try {
+      // 1. Try backend endpoint /api/intelligence?type=news
+      let url = '/api/intelligence?type=news';
+      if (query) url += '&q=' + encodeURIComponent(query);
+      if (forceRefresh) url += '&refresh=true';
+
+      let res = await fetch(url, {
+        headers: { 'Accept': 'application/json' },
+        signal: AbortSignal.timeout(10000)
+      }).catch(() => null);
+
+      // 2. Try static public /data/liveNewsDispatches.json
+      if (!res || !res.ok) {
+        res = await fetch('/data/liveNewsDispatches.json', {
+          headers: { 'Accept': 'application/json' },
+          signal: AbortSignal.timeout(5000)
+        }).catch(() => null);
+      }
+
+      // 3. Client-side direct NewsData.io fallback
+      if (!res || !res.ok) {
+        const clientKey = import.meta.env?.VITE_NEWSDATA_API_KEY || 'pub_260812a950d147ccb2f748d008efd036';
+        if (clientKey) {
+          const newsQuery = query || 'geopolitics OR military OR sanctions OR conflict OR missile OR strait';
+          const directUrl = `https://newsdata.io/api/1/latest?apikey=${clientKey}&q=${encodeURIComponent(newsQuery)}&language=en`;
+          res = await fetch(directUrl, { signal: AbortSignal.timeout(10000) }).catch(() => null);
+          if (res && res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data.results)) {
+              this.newsDispatches = data.results.map(r => ({
+                title: r.title,
+                link: r.link,
+                source: r.source_name || r.source_id || 'NewsData.io Wire',
+                pubDate: r.pubDate || new Date().toISOString(),
+                description: r.description || r.content || '',
+                country: r.country ? (Array.isArray(r.country) ? r.country[0] : r.country) : null,
+                category: r.category ? (Array.isArray(r.category) ? r.category[0] : r.category) : 'world',
+                imageUrl: r.image_url || null,
+                sourceIcon: r.source_icon || null,
+                aiRegion: r.ai_region || null
+              }));
+              this.newsLastFetched = new Date();
+              this.isNewsLoading = false;
+              this.notify();
+              return;
+            }
+          }
+        }
+      }
+
+      if (res && res.ok) {
+        const data = await res.json();
+        const items = Array.isArray(data.dispatches) 
+          ? data.dispatches 
+          : Array.isArray(data.results) 
+            ? data.results 
+            : [];
+        if (items.length > 0) {
+          this.newsDispatches = items;
+          this.newsLastFetched = new Date();
+        }
+      }
+    } catch (err) {
+      console.warn('fetchLiveNews warning:', err.message);
+    }
+
+    this.isNewsLoading = false;
+    this.notify();
   }
 
   /**
@@ -481,6 +567,7 @@ export function useIntelligenceFeed() {
   return {
     ...feedState,
     refreshFeed: () => intelligenceFeed.refreshFeed(),
+    refreshNews: (q, force) => intelligenceFeed.fetchLiveNews(q, force),
     setLiveStatus: (status) => intelligenceFeed.setLiveStatus(status),
     filterDevelopments: (filters) => intelligenceFeed.filterDevelopments(filters),
     getRegionalClusters: () => intelligenceFeed.getRegionalClusters()

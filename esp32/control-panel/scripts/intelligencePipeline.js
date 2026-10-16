@@ -54,6 +54,88 @@ export function getApiKey() {
   return null;
 }
 
+// Helper to safely load NewsData.io API key from .env or environment
+export function getNewsDataApiKey() {
+  if (process.env.NEWSDATA_API_KEY && process.env.NEWSDATA_API_KEY.trim()) {
+    return process.env.NEWSDATA_API_KEY.trim();
+  }
+  if (process.env.VITE_NEWSDATA_API_KEY && process.env.VITE_NEWSDATA_API_KEY.trim()) {
+    return process.env.VITE_NEWSDATA_API_KEY.trim();
+  }
+
+  const envPath = path.join(ROOT_DIR, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    const matchNews = envContent.match(/(?:NEWSDATA_API_KEY|VITE_NEWSDATA_API_KEY)=([^\r\n]+)/);
+    if (matchNews && matchNews[1].trim()) return matchNews[1].trim();
+  }
+
+  return null;
+}
+
+/**
+ * Ingest live geopolitical news dispatches directly from NewsData.io API
+ */
+export async function fetchNewsDataDispatches(newsKey, query = 'geopolitics OR military OR sanctions OR conflict OR missile OR strait') {
+  const key = newsKey || getNewsDataApiKey();
+  if (!key) return [];
+  const dispatches = [];
+
+  const queryUrls = [
+    `https://newsdata.io/api/1/latest?apikey=${key}&q=${encodeURIComponent(query)}&language=en`,
+    `https://newsdata.io/api/1/latest?apikey=${key}&category=politics,world&language=en`
+  ];
+
+  for (const url of queryUrls) {
+    try {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'GEOINTEL-Planetary-Monitor/2.0' },
+        signal: AbortSignal.timeout(12000)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'success' && Array.isArray(data.results)) {
+          for (const item of data.results) {
+            if (item.title && (item.description || item.content)) {
+              dispatches.push({
+                source: item.source_name || item.source_id || 'NewsData Wire',
+                sourceId: item.source_id || 'newsdata',
+                sourceType: 'news_agency',
+                title: item.title,
+                link: item.link,
+                pubDate: item.pubDate || new Date().toISOString(),
+                description: (item.description || item.content || '').slice(0, 1000),
+                country: item.country ? (Array.isArray(item.country) ? item.country[0] : item.country) : null,
+                category: item.category ? (Array.isArray(item.category) ? item.category[0] : item.category) : 'world',
+                imageUrl: item.image_url || null,
+                sourceIcon: item.source_icon || null,
+                aiRegion: item.ai_region || null
+              });
+            }
+          }
+        }
+      } else {
+        console.warn(`NewsData.io returned HTTP ${res.status}`);
+      }
+    } catch (err) {
+      console.warn('NewsData.io fetch warning:', err.message);
+    }
+  }
+
+  // Deduplicate by title
+  const seen = new Set();
+  const deduped = [];
+  for (const d of dispatches) {
+    const norm = (d.title || d.link || '').toLowerCase().trim();
+    if (norm && !seen.has(norm)) {
+      seen.add(norm);
+      deduped.push(d);
+    }
+  }
+
+  return deduped;
+}
+
 // Authoritative global RSS feeds
 export const AUTHORITATIVE_FEEDS = [
   {
@@ -323,6 +405,7 @@ export class IntelligencePipeline {
   constructor(options = {}) {
     this.storagePath = options.storagePath || path.join(ROOT_DIR, 'public', 'data', 'liveIntelligenceFeed.json');
     this.cachePath = options.cachePath || path.join(ROOT_DIR, 'public', 'data', 'processedArticlesCache.json');
+    this.newsStoragePath = options.newsStoragePath || path.join(ROOT_DIR, 'public', 'data', 'liveNewsDispatches.json');
     this.baselineDataPath = path.join(ROOT_DIR, 'src', 'data', 'geointelEventsData.js');
     this.isRefreshing = false;
   }
@@ -404,8 +487,47 @@ export class IntelligencePipeline {
     const newDispatches = [];
     let sourcesChecked = 0;
     let candidateArticlesCount = 0;
+    const rawNewsDataItems = [];
 
-    // STEP 1: Fetch feeds
+    // STEP 1A: Fetch real-time dispatches from NewsData.io using API key
+    const newsDataKey = getNewsDataApiKey();
+    if (newsDataKey) {
+      try {
+        const newsItems = await fetchNewsDataDispatches(newsDataKey);
+        if (newsItems.length > 0) {
+          sourcesChecked += 1;
+          candidateArticlesCount += newsItems.length;
+          rawNewsDataItems.push(...newsItems);
+
+          for (const item of newsItems) {
+            const articleHash = `newsdata_${item.title}_${item.pubDate}`.slice(0, 100);
+            if (!processedCache.has(articleHash)) {
+              newDispatches.push({ ...item, hash: articleHash });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('NewsData.io ingestion warning:', err.message);
+      }
+    }
+
+    // Persist raw news dispatches to public directory for direct UI and API consumption
+    if (rawNewsDataItems.length > 0) {
+      try {
+        const newsDir = path.dirname(this.newsStoragePath);
+        if (!fs.existsSync(newsDir)) fs.mkdirSync(newsDir, { recursive: true });
+        fs.writeFileSync(this.newsStoragePath, JSON.stringify({
+          updatedAt: new Date().toISOString(),
+          provider: 'NewsData.io Real-Time Global Dispatch Engine',
+          total: rawNewsDataItems.length,
+          dispatches: rawNewsDataItems
+        }, null, 2), 'utf8');
+      } catch (err) {
+        console.warn('Could not write liveNewsDispatches.json:', err.message);
+      }
+    }
+
+    // STEP 1B: Fetch authoritative global RSS feeds
     for (const feed of AUTHORITATIVE_FEEDS) {
       try {
         const res = await fetch(feed.url, {
@@ -632,9 +754,11 @@ export class IntelligencePipeline {
       updatedCount,
       newInCycle: createdCount,
       updatedInCycle: updatedCount,
-      feedHealth: sourcesChecked >= AUTHORITATIVE_FEEDS.length 
-        ? 'ALL SOURCES ACTIVE (4/4)' 
-        : `DEGRADED (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length} active)`,
+      feedHealth: sourcesChecked >= (AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)) 
+        ? `ALL SOURCES ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)}) · NEWSDATA.IO CONNECTED` 
+        : `ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)})`,
+      isNewsDataConfigured: !!newsDataKey,
+      newsDataDispatchesCount: rawNewsDataItems.length,
       totalActiveEvents: currentEvents.length,
       criticalAlerts: currentEvents.filter(e => e.priority === 'CRITICAL').length,
       highAlerts: currentEvents.filter(e => e.priority === 'HIGH').length,

@@ -11,7 +11,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { defaultPipeline, getApiKey } from '../scripts/intelligencePipeline.js';
+import { defaultPipeline, getApiKey, getNewsDataApiKey, fetchNewsDataDispatches } from '../scripts/intelligencePipeline.js';
 import { GEOPOLITICAL_CONSPIRACIES } from '../src/data/geointelConspiracies.js';
 import { COUNTRY_DOSSIERS, getCountryDossier } from '../src/data/geointelCountryDossiers.js';
 import { WORLD_HISTORY_EVENTS, HISTORICAL_PERIODS } from '../src/data/history/worldHistoryEvents.js';
@@ -34,13 +34,15 @@ export default async function handler(req, res) {
   // 1. Health check endpoint
   if (query.health === 'true') {
     const key = getApiKey();
+    const newsKey = getNewsDataApiKey();
     return res.status(200).json({
       status: 'OPERATIONAL',
-      provider: 'Groq Cloud High-Speed Inference',
+      provider: 'Groq Cloud High-Speed Inference & NewsData.io Live Dispatches',
       model: 'openai/gpt-oss-120b',
       fallbackModel: 'qwen/qwen3.8-27b',
       isKeyConfigured: !!key,
-      service: 'GEOINTEL Planetary Ingestion Pipeline & Shadow Intelligence',
+      isNewsDataConfigured: !!newsKey,
+      service: 'GEOINTEL Planetary Ingestion Pipeline & Real-Time News Stream',
       totalConspiracies: GEOPOLITICAL_CONSPIRACIES.length,
       timestamp: new Date().toISOString()
     });
@@ -107,7 +109,64 @@ export default async function handler(req, res) {
     });
   }
 
-  // 4. Trigger Refresh Cycle (POST or GET with action=refresh for cron)
+  // 7. Live News Dispatches Endpoint (?type=news)
+  if (query.type === 'news') {
+    const newsKey = getNewsDataApiKey();
+    const q = query.q || 'geopolitics OR military OR sanctions OR conflict OR missile OR strait';
+
+    // If live refresh requested or query specified and key exists
+    if ((query.refresh === 'true' || query.q) && newsKey) {
+      try {
+        const freshDispatches = await fetchNewsDataDispatches(newsKey, q);
+        return res.status(200).json({
+          success: true,
+          provider: 'NewsData.io Real-Time Dispatch Engine',
+          query: q,
+          total: freshDispatches.length,
+          dispatches: freshDispatches
+        });
+      } catch (err) {
+        console.warn('Live news fetch failed:', err.message);
+      }
+    }
+
+    // Try reading cached liveNewsDispatches.json
+    try {
+      const newsPath = path.join(process.cwd(), 'public', 'data', 'liveNewsDispatches.json');
+      if (fs.existsSync(newsPath)) {
+        const data = JSON.parse(fs.readFileSync(newsPath, 'utf8'));
+        return res.status(200).json({
+          success: true,
+          ...data
+        });
+      }
+    } catch (_) {}
+
+    // Fallback: fetch directly if key exists
+    if (newsKey) {
+      try {
+        const freshDispatches = await fetchNewsDataDispatches(newsKey, q);
+        return res.status(200).json({
+          success: true,
+          provider: 'NewsData.io Real-Time Dispatch Engine',
+          query: q,
+          total: freshDispatches.length,
+          dispatches: freshDispatches
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, error: err.message });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      provider: 'NewsData.io Real-Time Dispatch Engine',
+      total: 0,
+      dispatches: []
+    });
+  }
+
+  // 8. Trigger Refresh Cycle (POST or GET with action=refresh for cron)
   if (method === 'POST' || query.action === 'refresh') {
     try {
       const cycleResult = await defaultPipeline.runCycle(3);
