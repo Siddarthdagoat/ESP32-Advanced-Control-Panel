@@ -43,13 +43,14 @@ import { WARGAME_SCENARIOS } from './data/geointelScenarios';
 import { STRATEGIC_FLASHPOINTS } from './data/geointelFlashpoints';
 
 export default function App() {
-  // Landing Page View vs Main Application
+  // Landing Page View vs Main Application - Both live seamlessly under the EXACT SAME URL
   const [showLanding, setShowLanding] = useState(() => {
     if (typeof window !== 'undefined') {
-      const path = (window.location.pathname || '').replace(/\/+$/, '') || '/';
-      const search = window.location.search || '';
-      if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
-        return false;
+      // Clean up any historical /app path to ensure the user stays on the single unified URL
+      if (window.location.pathname === '/app' || window.location.pathname.startsWith('/app/')) {
+        try {
+          window.history.replaceState(null, '', '/' + (window.location.search || ''));
+        } catch (_) {}
       }
     }
     return true;
@@ -126,40 +127,12 @@ export default function App() {
   const [conspiraciesOpen, setConspiraciesOpen] = useState(false);
   const [historyTimelineOpen, setHistoryTimelineOpen] = useState(false);
 
-  // Synchronize browser history (Back / Forward buttons)
-  useEffect(() => {
-    const handlePopState = () => {
-      if (typeof window !== 'undefined') {
-        const path = (window.location.pathname || '').replace(/\/+$/, '') || '/';
-        const search = window.location.search || '';
-        if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
-          setShowLanding(false);
-        } else {
-          setShowLanding(true);
-        }
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
   const handleExplore = useCallback(() => {
     setShowLanding(false);
-    if (typeof window !== 'undefined') {
-      try {
-        window.history.pushState({ view: 'app' }, '', '/app');
-      } catch (_) {}
-    }
   }, []);
 
   const handleReturnToLanding = useCallback(() => {
     setShowLanding(true);
-    if (typeof window !== 'undefined') {
-      try {
-        window.history.pushState({ view: 'landing' }, '', '/');
-      } catch (_) {}
-    }
   }, []);
 
   // Mark first user interaction to dismiss hint overlay
