@@ -34,6 +34,7 @@ import WargameScenarioModal from './components/ui/WargameScenarioModal';
 import FlashpointFocusModal from './components/ui/FlashpointFocusModal';
 import SensorTrackerPanel from './components/ui/SensorTrackerPanel';
 import CrisisWatchlist from './components/ui/CrisisWatchlist';
+import LandingPage from './components/ui/LandingPage';
 
 import { GLOBAL_REGIONS, COUNTRIES } from './data/geointelData';
 import { COUNTRY_DOSSIERS, getCountryDossier } from './data/geointelCountryDossiers';
@@ -42,6 +43,18 @@ import { WARGAME_SCENARIOS } from './data/geointelScenarios';
 import { STRATEGIC_FLASHPOINTS } from './data/geointelFlashpoints';
 
 export default function App() {
+  // Landing Page View vs Main Application
+  const [showLanding, setShowLanding] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const search = window.location.search;
+      if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   // Navigation & Mode
   const [activeMode, setActiveMode] = useState('world'); // 'world' | 'regions' | 'timeline' | 'hotspots'
   const [isRotating, setIsRotating] = useState(true);
@@ -112,6 +125,42 @@ export default function App() {
   const [isLiveFeedOpen, setIsLiveFeedOpen] = useState(false);
   const [conspiraciesOpen, setConspiraciesOpen] = useState(false);
   const [historyTimelineOpen, setHistoryTimelineOpen] = useState(false);
+
+  // Synchronize browser history (Back / Forward buttons)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        const path = window.location.pathname;
+        const search = window.location.search;
+        if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
+          setShowLanding(false);
+        } else {
+          setShowLanding(true);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleExplore = useCallback(() => {
+    setShowLanding(false);
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ view: 'app' }, '', '/app');
+      } catch (_) {}
+    }
+  }, []);
+
+  const handleReturnToLanding = useCallback(() => {
+    setShowLanding(true);
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ view: 'landing' }, '', '/');
+      } catch (_) {}
+    }
+  }, []);
 
   // Mark first user interaction to dismiss hint overlay
   const handleUserInteraction = useCallback(() => {
@@ -498,9 +547,15 @@ export default function App() {
         isLiveFeedOpen={isLiveFeedOpen}
         onOpenConspiracies={() => setConspiraciesOpen(true)}
         onOpenHistoryTimeline={() => setHistoryTimelineOpen(true)}
+        onOpenLanding={handleReturnToLanding}
         selectedRegion={selectedRegion}
         onSelectRegion={handleSelectRegion}
       />
+
+      {/* Cinematic Looped Video Landing Page Experience */}
+      {showLanding && (
+        <LandingPage onExplore={handleExplore} />
+      )}
 
       {/* 3. Subtle Landing Experience Interaction Hints (Auto-dismisses) */}
       <InteractionHints

@@ -33,7 +33,8 @@ export default function GeointelHeader({
   onOpenLiveFeed,
   isLiveFeedOpen,
   onOpenConspiracies,
-  onOpenHistoryTimeline
+  onOpenHistoryTimeline,
+  onOpenLanding
 }) {
   const [utcTime, setUtcTime] = useState('');
   const { isLive, lastUpdatedUtcString } = useIntelligenceFeed();
@@ -55,7 +56,11 @@ export default function GeointelHeader({
   return (
     <header className="fixed top-0 left-0 right-0 z-30 pointer-events-none p-3 sm:p-5 flex items-start justify-between">
       {/* Top Left: Cinematic Brand Identity (Strict Monochrome) */}
-      <div className="pointer-events-auto flex items-start gap-2.5 sm:gap-3 group">
+      <button 
+        onClick={onOpenLanding}
+        className="pointer-events-auto flex items-start gap-2.5 sm:gap-3 group cursor-pointer text-left focus:outline-hidden"
+        title="Return to Landing Overview"
+      >
         <div className="w-9 h-9 rounded-lg bg-[#080808]/90 flex items-center justify-center border border-white/20 group-hover:border-white transition-colors shadow-2xl backdrop-blur-md">
           <Globe2 className="w-5 h-5 text-white group-hover:rotate-45 transition-transform duration-500" />
         </div>
@@ -72,7 +77,7 @@ export default function GeointelHeader({
             GLOBAL GEOPOLITICAL INTELLIGENCE
           </span>
         </div>
-      </div>
+      </button>
 
       {/* Top Center: View Selectors + Educational & Analytical Modules */}
       <div className="pointer-events-auto hidden md:flex items-center bg-[#080808]/90 px-1.5 py-1 rounded-full border border-white/15 shadow-2xl backdrop-blur-md">

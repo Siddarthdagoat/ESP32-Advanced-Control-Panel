@@ -193,3 +193,55 @@ html, body {
 .animate-slide-up-mobile {
   animation: slideUpBottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ==========================================================================
+   Cinematic Landing Page Entrance Animations
+   ========================================================================== */
+@keyframes landingFadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landingFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-landing-brand {
+  animation: landingFadeInDown 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.animate-landing-headline {
+  animation: landingFadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.animate-landing-desc {
+  animation: landingFadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+.animate-landing-cta {
+  animation: landingFadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-landing-brand,
+  .animate-landing-headline,
+  .animate-landing-desc,
+  .animate-landing-cta {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
