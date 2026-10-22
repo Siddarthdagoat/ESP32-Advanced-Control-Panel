@@ -406,7 +406,8 @@ export default function App() {
   // Global Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Don't trigger if user is typing in search input
+      // Don't trigger if landing page is active or user is typing in search input
+      if (showLanding) return;
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       if (e.key === '/') {
@@ -465,7 +466,7 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
-    searchOpen, helpOpen, isLiveFeedOpen, selectedConcept, selectedAgreement, 
+    showLanding, searchOpen, helpOpen, isLiveFeedOpen, selectedConcept, selectedAgreement, 
     selectedMilitarySystem, selectedRelationship, activeChain, 
     whyExplainerItem, glossaryOpen, sitrepModalOpen, wargameModalOpen, 
     flashpointsModalOpen, sensorsModalOpen, watchlistModalOpen
@@ -510,47 +511,49 @@ export default function App() {
       />
 
       {/* 2. Top Header & Operational Telemetry with Educational Shortcuts */}
-      <GeointelHeader
-        activeMode={activeMode}
-        setActiveMode={(mode) => {
-          setActiveMode(mode);
-          if (mode === 'world') {
-            handleDeselectAll();
-          } else if (mode === 'hotspots') {
-            setActiveLayers(prev => ({ ...prev, events: true, tensions: true }));
-          }
-        }}
-        workstationMode={workstationMode}
-        onToggleWorkstationMode={() => setWorkstationMode(prev => !prev)}
-        onOpenWargame={() => {
-          setWorkstationTab('wargame');
-          if (!workstationMode) setWargameModalOpen(true);
-        }}
-        onOpenFlashpoints={() => {
-          setWorkstationTab('flashpoints');
-          if (!workstationMode) setFlashpointsModalOpen(true);
-        }}
-        onOpenSensors={() => {
-          setWorkstationTab('sensors');
-          if (!workstationMode) setSensorsModalOpen(true);
-        }}
-        onOpenSitrep={() => handleOpenSitrep()}
-        onOpenWatchlist={() => {
-          setWorkstationTab('watchlist');
-          if (!workstationMode) setWatchlistModalOpen(true);
-        }}
-        onOpenSearch={() => setSearchOpen(true)}
-        onOpenHelp={() => setHelpOpen(true)}
-        onOpenGlossary={() => setGlossaryOpen(true)}
-        onOpenChains={() => setActiveChain('CHAIN_BRAHMOS_AUTONOMY')}
-        onOpenLiveFeed={() => setIsLiveFeedOpen(prev => !prev)}
-        isLiveFeedOpen={isLiveFeedOpen}
-        onOpenConspiracies={() => setConspiraciesOpen(true)}
-        onOpenHistoryTimeline={() => setHistoryTimelineOpen(true)}
-        onOpenLanding={handleReturnToLanding}
-        selectedRegion={selectedRegion}
-        onSelectRegion={handleSelectRegion}
-      />
+      {!showLanding && (
+        <GeointelHeader
+          activeMode={activeMode}
+          setActiveMode={(mode) => {
+            setActiveMode(mode);
+            if (mode === 'world') {
+              handleDeselectAll();
+            } else if (mode === 'hotspots') {
+              setActiveLayers(prev => ({ ...prev, events: true, tensions: true }));
+            }
+          }}
+          workstationMode={workstationMode}
+          onToggleWorkstationMode={() => setWorkstationMode(prev => !prev)}
+          onOpenWargame={() => {
+            setWorkstationTab('wargame');
+            if (!workstationMode) setWargameModalOpen(true);
+          }}
+          onOpenFlashpoints={() => {
+            setWorkstationTab('flashpoints');
+            if (!workstationMode) setFlashpointsModalOpen(true);
+          }}
+          onOpenSensors={() => {
+            setWorkstationTab('sensors');
+            if (!workstationMode) setSensorsModalOpen(true);
+          }}
+          onOpenSitrep={() => handleOpenSitrep()}
+          onOpenWatchlist={() => {
+            setWorkstationTab('watchlist');
+            if (!workstationMode) setWatchlistModalOpen(true);
+          }}
+          onOpenSearch={() => setSearchOpen(true)}
+          onOpenHelp={() => setHelpOpen(true)}
+          onOpenGlossary={() => setGlossaryOpen(true)}
+          onOpenChains={() => setActiveChain('CHAIN_BRAHMOS_AUTONOMY')}
+          onOpenLiveFeed={() => setIsLiveFeedOpen(prev => !prev)}
+          isLiveFeedOpen={isLiveFeedOpen}
+          onOpenConspiracies={() => setConspiraciesOpen(true)}
+          onOpenHistoryTimeline={() => setHistoryTimelineOpen(true)}
+          onOpenLanding={handleReturnToLanding}
+          selectedRegion={selectedRegion}
+          onSelectRegion={handleSelectRegion}
+        />
+      )}
 
       {/* Cinematic Looped Video Landing Page Experience */}
       {showLanding && (
@@ -558,18 +561,22 @@ export default function App() {
       )}
 
       {/* 3. Subtle Landing Experience Interaction Hints (Auto-dismisses) */}
-      <InteractionHints
-        visible={!hasInteracted && !selectedCountry && !selectedMaritimeEntity && !selectedEvent && !selectedLocation}
-        onDismiss={() => setHasInteracted(true)}
-      />
+      {!showLanding && (
+        <InteractionHints
+          visible={!hasInteracted && !selectedCountry && !selectedMaritimeEntity && !selectedEvent && !selectedLocation}
+          onDismiss={() => setHasInteracted(true)}
+        />
+      )}
 
       {/* 4. Floating Intelligence Layer Controls */}
-      <LayerControls
-        activeLayers={activeLayers}
-        onToggleLayer={handleToggleLayer}
-        mapMode={mapMode}
-        onMapModeChange={setMapMode}
-      />
+      {!showLanding && (
+        <LayerControls
+          activeLayers={activeLayers}
+          onToggleLayer={handleToggleLayer}
+          mapMode={mapMode}
+          onMapModeChange={setMapMode}
+        />
+      )}
 
       {/* 4.5. Docked Split Workstation Mode (Split-Screen Multi-Pane Terminal) */}
       <WorkstationDock
@@ -704,7 +711,7 @@ export default function App() {
       )}
 
       {/* 11. Cursor Hover Tooltip */}
-      <HoverTooltip hoverData={hoverData} />
+      {!showLanding && <HoverTooltip hoverData={hoverData} />}
 
 
       {/* 12. Global Search Command Palette (/) */}
@@ -894,7 +901,7 @@ export default function App() {
       )}
 
       {/* 28. Collapsible Intelligence Legend */}
-      <IntelligenceLegend />
+      {!showLanding && <IntelligenceLegend />}
     </div>
   );
 }
