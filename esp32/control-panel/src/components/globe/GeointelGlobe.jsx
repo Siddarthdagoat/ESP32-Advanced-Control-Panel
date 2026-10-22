@@ -303,8 +303,14 @@ export default function GeointelGlobe({
   onHoverChange,
   isRotating = true,
   onUserInteraction,
-  resetGlobeTrigger
+  resetGlobeTrigger,
+  isPaused = false
 }) {
+  const isPausedRef = useRef(isPaused);
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
+
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -1066,6 +1072,14 @@ export default function GeointelGlobe({
     const startTime = performance.now();
     const animate = () => {
       animFrameRef.current = requestAnimationFrame(animate);
+
+      // If globe is paused (e.g. landing page video active), skip all computation & WebGL rendering
+      // to eliminate GPU contention and allow the background video to decode smoothly
+      if (isPausedRef.current) {
+        lastTime = performance.now();
+        return;
+      }
+
       const now = performance.now();
       const delta = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;

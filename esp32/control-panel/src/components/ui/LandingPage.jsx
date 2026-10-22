@@ -4,16 +4,17 @@ import { ArrowRight, Globe2, ShieldCheck, Activity, Compass } from 'lucide-react
 /**
  * GEOINTEL Landing Page
  * 
- * Features:
- * - Fullscreen background video using the authentic looped video asset (gemini_generated_video_581aa9d1.mp4)
+ * Performance & Polish Features:
+ * - Ultra-smooth hardware-accelerated video background with VP9 WebM and faststart H.264 MP4
+ * - Dedicated GPU compositing layer (will-change: transform; transform: translateZ(0))
+ * - Zero-flicker background poster frame layer
  * - Calibrated CSS overlay (35% base black + directional gradient for text contrast)
- * - Premium GEOINTEL branding in top-right corner with refined typography and subtle glow
+ * - Restrained typography and top-right branding
  * - Main headline: "Understand the World. See What Comes Next."
  * - Description: "Explore geopolitical events, global power dynamics, strategic geography, historical turning points, and their implications for India — all through one connected intelligence platform."
  * - Prominent "EXPLORE NOW" primary call to action with interactive hover, focus, and scale feedback
- * - Smooth cinematic transition into the main 3D geospatial intelligence platform
- * - Staggered entrance animations respecting prefers-reduced-motion
- * - Fallback poster frame and zero-flicker video loading
+ * - Smooth cinematic dissolve transition into the main 3D geospatial intelligence platform
+ * - Suspends GPU/CPU usage of underlying 3D globe to eliminate frame drops and stutter
  */
 export default function LandingPage({ onExplore }) {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -30,7 +31,16 @@ export default function LandingPage({ onExplore }) {
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // Muted autoplay fallback: user gesture will activate video or poster frame displays
+          // If browser autoplay policy blocks unprompted playback, resume immediately on first user touch/click/key
+          const resumeOnInteraction = () => {
+            if (videoRef.current) {
+              videoRef.current.play().catch(() => {});
+            }
+            window.removeEventListener('pointerdown', resumeOnInteraction);
+            window.removeEventListener('keydown', resumeOnInteraction);
+          };
+          window.addEventListener('pointerdown', resumeOnInteraction, { once: true });
+          window.addEventListener('keydown', resumeOnInteraction, { once: true });
         });
       }
     }
@@ -39,29 +49,29 @@ export default function LandingPage({ onExplore }) {
   const handleExploreClick = () => {
     if (isExiting) return;
     setIsExiting(true);
-    // Smooth cinematic dissolve transition
+    // Smooth cinematic dissolve transition into the live intelligence platform
     setTimeout(() => {
       onExplore();
-    }, 450);
+    }, 400);
   };
 
   return (
     <div 
-      className={`fixed inset-0 w-full h-full z-50 overflow-hidden bg-black select-none font-sans transition-all duration-500 ease-out ${
-        isExiting ? 'opacity-0 scale-[1.03] pointer-events-none' : 'opacity-100 scale-100'
+      className={`fixed inset-0 w-full h-full z-50 overflow-hidden bg-black select-none font-sans transition-all duration-400 ease-out ${
+        isExiting ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
       {/* ============================================================== */}
       {/* 1. BACKGROUND VIDEO LAYER & CALIBRATED OVERLAYS                */}
       {/* ============================================================== */}
       <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
-        {/* Poster frame layer (Always rendered underneath video to prevent any blank frames) */}
+        {/* Anti-Flicker Poster Frame Layer (Pre-rendered underneath video) */}
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: 'url(/videos/frame_60.jpg)' }}
+          style={{ backgroundImage: 'url(/videos/landing_poster.jpg)' }}
         />
 
-        {/* Fullscreen Looped Background Video */}
+        {/* Fullscreen Looped Background Video with Dual WebM/MP4 Sources */}
         <video
           ref={videoRef}
           autoPlay
@@ -69,16 +79,23 @@ export default function LandingPage({ onExplore }) {
           muted
           playsInline
           preload="auto"
-          poster="/videos/frame_60.jpg"
-          src="/videos/gemini_generated_video_581aa9d1.mp4"
+          poster="/videos/landing_poster.jpg"
           onCanPlay={() => setIsVideoLoaded(true)}
           onLoadedData={() => setIsVideoLoaded(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
             isVideoLoaded ? 'opacity-100' : 'opacity-90'
           }`}
+          style={{
+            willChange: 'transform',
+            transform: 'translateZ(0)'
+          }}
         >
+          {/* Lightweight VP9 WebM for modern Chromium / Firefox (1.58 MB, low CPU) */}
+          <source src="/videos/landing_globe_bg.webm" type="video/webm" />
+          {/* Optimized Faststart H.264 MP4 with stripped audio (3.04 MB) */}
+          <source src="/videos/landing_globe_bg.mp4" type="video/mp4" />
+          {/* Legacy fallback */}
           <source src="/videos/gemini_generated_video_581aa9d1.mp4" type="video/mp4" />
-          <source src="/gemini_generated_video_581aa9d1.mp4" type="video/mp4" />
         </video>
 
         {/* Base Darkness Overlay (~35% opacity as specified to preserve colors & motion) */}

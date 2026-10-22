@@ -46,8 +46,8 @@ export default function App() {
   // Landing Page View vs Main Application
   const [showLanding, setShowLanding] = useState(() => {
     if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      const search = window.location.search;
+      const path = (window.location.pathname || '').replace(/\/+$/, '') || '/';
+      const search = window.location.search || '';
       if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
         return false;
       }
@@ -130,8 +130,8 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       if (typeof window !== 'undefined') {
-        const path = window.location.pathname;
-        const search = window.location.search;
+        const path = (window.location.pathname || '').replace(/\/+$/, '') || '/';
+        const search = window.location.search || '';
         if (path === '/app' || search.includes('view=app') || search.includes('explore=true')) {
           setShowLanding(false);
         } else {
@@ -508,6 +508,7 @@ export default function App() {
         isRotating={isRotating}
         onUserInteraction={handleUserInteraction}
         resetGlobeTrigger={resetGlobeCounter}
+        isPaused={showLanding}
       />
 
       {/* 2. Top Header & Operational Telemetry with Educational Shortcuts */}
