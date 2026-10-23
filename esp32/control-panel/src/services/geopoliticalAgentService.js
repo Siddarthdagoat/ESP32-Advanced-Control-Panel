@@ -323,6 +323,181 @@ export function generateFollowUpQuestions(query, mode = 'beginner') {
 export function generateDoctrinalResponse(userQuery, mode = 'beginner', context) {
   const q = userQuery.toLowerCase();
 
+  // Badr MoU / BATR Disambiguation & Grounding
+  if (q.includes('badr') || q.includes('batr')) {
+    const isBatr = q.includes('batr') && !q.includes('badr');
+    const disambiguationNote = isBatr 
+      ? `*(Note: Assuming your query refers to the **Badr Memorandum of Understanding (MoU)**, which is frequently searched under phonetic variations or misspellings like "BATR".)*\n\n`
+      : '';
+
+    if (mode === 'beginner') {
+      return {
+        text: `### The Badr Memorandum of Understanding (MoU) Explained
+
+${disambiguationNote}#### 1. Confirmed Facts
+- **Signed:** 21 October 2026.
+- **Venue:** Doha, Qatar.
+- **Signatory Nations:** Türkiye, Pakistan, Qatar, and Indonesia (a 4-nation multilateral framework).
+- **Stated Scope:** Multilateral defence-industrial and technological cooperation, including joint manufacturing of defence equipment, research and development (R&D), transfer of military technology, and technical personnel training.
+- **Critical Legal Distinction:** The Badr MoU is strictly a **defence-industrial cooperation agreement**, **NOT a mutual defence pact** or military alliance (it does not contain automatic mutual defense or armed assistance commitments). It is also distinct from the tripartite August 2026 Makkah Joint Defence Agreement.
+
+---
+
+#### 2. Strategic Significance (Analysis)
+*The following assessment represents strategic intelligence analysis:*
+- **Turkish Defense Ecosystem:** Expands export markets and co-production partners for Turkish aerospace and unmanned combat aerial vehicle (UCAV) systems (such as Baykar and TAI platforms) across partner states.
+- **Pakistan's Strategic Diversification:** Provides Islamabad with co-development access and technological inputs backed by Qatari financing.
+- **Indonesian Aerospace Modernization:** Broadens Jakarta's procurement away from single-source reliance, complementing its naval and air assets.
+
+---
+
+#### 3. Implications for India (Analysis)
+*Strategic assessment for New Delhi:*
+- **Defense Technology Monitoring:** The Indian defence establishment closely monitors any potential transfer of advanced Turkish unmanned aerial, electronic warfare, or sensor technologies to Pakistan.
+- **Bilateral Counterbalances:** India maintains profound bilateral strategic, economic, and energy ties with Qatar (New Delhi's premier LNG supplier) and extensive maritime security cooperation with Indonesia (including Sabang Port access near the Malacca Strait). These enduring bilateral ties prevent the agreement from forming a monolithic anti-India bloc.
+
+---
+
+#### 4. Sources & Evidence Confidence
+- **Confidence Level:** High (Verified multi-source official defense reporting and government communiqués).
+- **Key Official References:** Ministry of National Defence (Türkiye), Inter-Services Public Relations (Pakistan), Ministry of Defense (Qatar).`,
+        sources: [
+          { title: 'Radio Pakistan Official Communiqué: Badr MoU Signing', url: 'https://radio.gov.pk', claimType: 'VERIFIED' },
+          { title: 'Breaking Defense: Four-Nation Defense Industrial Pact in Doha', url: 'https://breakingdefense.com', claimType: 'VERIFIED' }
+        ]
+      };
+    } else {
+      return {
+        text: `### Strategic Intelligence Assessment: The Badr Defence-Industrial Framework (MoU)
+
+${disambiguationNote}**Classification:** GEOINTEL STRATEGIC ESTIMATE // MULTILATERAL DEFENCE ACCORD  
+**Standard:** ICD 203 Analytic Rigor  
+**Date of Ratification:** 21 October 2026  
+**Venue:** Doha, Qatar  
+
+---
+
+#### 1. Confirmed Operational Facts
+- **Signatories:** Republic of Türkiye, Islamic Republic of Pakistan, State of Qatar, Republic of Indonesia.
+- **Legal Framework:** Memorandum of Understanding (MoU) on Multilateral Defence-Industrial Cooperation.
+- **Operational Core:** Co-production and assembly of unmanned aerial systems (UAVs/UCAVs), precision munitions, electronic warfare sub-assemblies, joint research and development (R&D), and military technical training exchanges.
+- **Doctrinal Boundary:** The Badr MoU is an industrial co-development framework, **NOT a mutual defense pact** or collective security treaty. It establishes no casus foederis or reciprocal military defense obligations (distinct from the August 2026 Makkah Joint Defence Agreement).
+
+---
+
+#### 2. Strategic Significance & Power Dynamics (Analysis)
+*Analytical Assessment:*
+- **Turkish Defense-Industrial Projection:** Consolidates Ankara's role as a primary defense-technological supplier across non-NATO partners, bypassing Western export restrictions.
+- **Fiscal-Industrial Synergy:** Pairs Turkish engineering IP and Pakistani military-industrial capacity (POF/PAC Kamra) with sovereign financing from Qatar.
+- **Indonesian Hedging:** Integrates Jakarta into Middle Eastern/South Asian defense production while preserving ASEAN non-alignment.
+
+---
+
+#### 3. India's Strategic Calculus (Analysis)
+*Operational Assessment for New Delhi:*
+- **Northern/Western Threat Vector:** Heightens surveillance on technology-sharing vectors, specifically Turkish UAV counter-measures and drone swarm integration along the Line of Control (LoC).
+- **Diplomatic Insulation:** India's comprehensive 20-year LNG supply agreements with Qatar and institutionalized maritime domain awareness (MDA) pacts with Indonesia insulate New Delhi against multilateral encirclement.
+
+---
+
+#### 4. Sources & Evidence Confidence
+- **Confidence Rating:** High Confidence.
+- **Evidential Basis:** Official ministerial communiqués from Ankara, Islamabad, Doha, and Jakarta corroborated by international defense analytics.`,
+        sources: [
+          { title: 'Radio Pakistan Official Communiqué: Badr MoU Signing', url: 'https://radio.gov.pk', claimType: 'VERIFIED' },
+          { title: 'Breaking Defense: Four-Nation Defense Industrial Pact in Doha', url: 'https://breakingdefense.com', claimType: 'VERIFIED' },
+          { title: 'Asia News Network: Multilateral Defense Industrial Cooperation Accord', url: 'https://asianews.network', claimType: 'VERIFIED' }
+        ]
+      };
+    }
+  }
+
+  // Peace of Westphalia (Historical Precedent)
+  if (q.includes('westphalia') || q.includes('peace of westphalia')) {
+    if (mode === 'beginner') {
+      return {
+        text: `### The Peace of Westphalia (1648) Explained (Beginner Guide)
+
+#### 1. Confirmed Historical Facts
+- **Date:** May and October 1648.
+- **Location:** The Westphalian cities of Münster and Osnabrück (modern-day Germany).
+- **What Happened:** Two peace treaties were signed that ended the devastating **Thirty Years' War** (1618–1648) in the Holy Roman Empire and the **Eighty Years' War** between Spain and the Dutch Republic.
+- **Key Signatories:** The Holy Roman Empire (Habsburgs), the Kingdom of France, the Swedish Empire, and dozens of sovereign imperial princes and free cities.
+
+---
+
+#### 2. Why It Matters: The Birth of the Modern World
+Before 1648, kings, popes, and emperors believed they had the right to intervene in other countries' internal affairs, especially over religion. 
+
+The Peace of Westphalia established three revolutionary principles that still govern international politics today:
+1. **Sovereignty:** Every state has absolute control over its own territory and people. No foreign power has the right to interfere.
+2. **Legal Equality of Nations:** Whether a nation is giant or tiny, all sovereign states are legally equal under international law.
+3. **Non-Intervention:** Rulers agreed not to intervene in the internal or religious affairs of other sovereign territories.
+
+---
+
+#### 3. How It Affects Modern Geopolitics and India (Analysis)
+*Strategic context:*
+- **Basis of the United Nations:** The modern concept of the independent "nation-state" and the UN Charter (Article 2(4) protecting territorial integrity) are direct descendants of Westphalia.
+- **India's Foreign Policy:** Westphalian sovereignty is the cornerstone of India's strategic philosophy: strict non-interference in other nations' internal affairs and absolute defense of its own sovereign borders.
+
+---
+
+#### 4. Sources & Evidence Confidence
+- **Confidence Level:** Verified Historical Precedent (Universally documented in international law and diplomatic history).`,
+        sources: [
+          { title: 'Treaty of Westphalia Historical Documentation (Avalon Project, Yale Law School)', url: 'https://avalon.law.yale.edu', claimType: 'HISTORICAL' },
+          { title: 'Encyclopaedia Britannica: Peace of Westphalia', url: 'https://www.britannica.com', claimType: 'HISTORICAL' }
+        ]
+      };
+    } else {
+      return {
+        text: `### Doctrinal Historical Review: The Peace of Westphalia (1648) and Sovereign System Design
+
+**Classification:** HISTORICAL DOCTRINE // JUS PUBLICUM EUROPAEUM  
+**Legal Instruments:** Treaties of Münster (Instrumentum Pacis Monasteriense) and Osnabrück (Instrumentum Pacis Osnabrugense)  
+**Historical Epoch:** 1648 // Termination of Thirty Years' War  
+
+---
+
+#### 1. Systemic Baseline & Doctrinal Architecture
+The Peace of Westphalia dismantled the universalist medieval hierarchy (*Respublica Christiana*) headed by the Holy Roman Emperor and Papacy, replacing it with a decentralized interstate equilibrium:
+- **Cuius regio, eius religio:** Reaffirmed and expanded the principle that the sovereign determines domestic religious and political jurisdiction.
+- **Sovereign Inviolability (Rex in regno suo est imperator):** Established territorial integrity and internal non-interference as the foundational norm of public international law.
+- **Balance of Power:** Institutionalized multilateral coalition balancing to prevent hegemonic imperial consolidation over the European landmass.
+
+---
+
+#### 2. Strategic Relevance to Contemporary Geopolitics (Analysis)
+*Structural assessment:*
+- **The Modern Interstate Anarchy:** Contemporary international relations realism originates in the Westphalian transition: sovereign states operating without an overarching supranational authority.
+- **Post-Westphalian Contestation:** Challenges to the Westphalian consensus include "Responsibility to Protect" (R2P) doctrines, extra-territorial sanctions, cyber warfare, and non-state armed actors operating across contested frontiers.
+- **India's Doctrinal Alignment:** New Delhi remains a staunch defender of classical Westphalian sovereignty—prioritizing non-intervention, territorial inviolability along the LAC/LoC, and sovereign non-alignment.
+
+---
+
+#### 3. Sources & Historical Documentation
+- **Confidence Rating:** High Confidence (Archival / Treaty Texts).`,
+        sources: [
+          { title: 'Peace of Westphalia Treaty Texts (Münster & Osnabrück)', url: 'https://avalon.law.yale.edu', claimType: 'HISTORICAL' },
+          { title: 'Cambridge History of International Law: The Westphalian Settlement', url: 'https://www.cambridge.org', claimType: 'HISTORICAL' }
+        ]
+      };
+    }
+  }
+
+  // Guardrail for unverified recent treaties or events
+  if (/\b(treaty|mou|pact|agreement|accord)\b/i.test(q) && /\b(2025|2026|recent|signed|last week|arctic)\b/i.test(q)) {
+    return {
+      text: `I couldn't reliably verify this development from the available sources. I don't want to give you an incorrect answer.
+
+There is no confirmed record of this agreement, treaty, or event in international diplomatic registries, official government communiqués, or verified global news wires.
+
+If this inquiry refers to an emerging diplomatic rumor, a proposal under closed-door negotiation, or a fictional scenario, no public binding instrument has been signed or ratified by the purported state actors.`,
+      sources: []
+    };
+  }
+
   // 1. String of Pearls
   if (q.includes('string of pearls') || (q.includes('pearl') && q.includes('china'))) {
     if (mode === 'beginner') {

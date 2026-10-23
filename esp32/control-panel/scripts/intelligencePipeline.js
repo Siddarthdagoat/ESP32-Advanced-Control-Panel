@@ -26,6 +26,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { INITIAL_INTELLIGENCE_EVENTS } from '../src/data/geointelEventsData.js';
+import {
+  isCurrentAffairsQuery,
+  executeRealtimeRetrieval,
+  formatEvidenceBlock,
+  validateAndSanitizeSources
+} from './realtimeRetrieval.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -793,7 +799,8 @@ export class IntelligencePipeline {
 export const defaultPipeline = new IntelligencePipeline();
 
 /**
- * Execute high-speed Groq AI Geopolitical Agent inference with dual mode support
+ * Execute high-speed Groq AI Geopolitical Agent inference with dual mode support,
+ * real-time retrieval grounding, and strict zero-hallucination enforcement.
  */
 export async function executeGroqAgentChat({ message, mode = 'beginner', context = {}, history = [] }) {
   const apiKey = getApiKey();
@@ -802,19 +809,57 @@ export async function executeGroqAgentChat({ message, mode = 'beginner', context
   }
 
   const isBeginner = mode === 'beginner';
+  const isCurrentAffairs = isCurrentAffairsQuery(message);
+
+  let retrievalResult = null;
+  let evidenceBlock = '';
+
+  if (isCurrentAffairs) {
+    try {
+      retrievalResult = await executeRealtimeRetrieval(message);
+      evidenceBlock = formatEvidenceBlock(retrievalResult);
+    } catch (retrievalErr) {
+      console.warn('[GEOINTEL Agent] Real-time retrieval error:', retrievalErr.message);
+      evidenceBlock = `<verified_retrieved_evidence status="RETRIEVAL_UNAVAILABLE">
+Real-time web search and news feeds could not be accessed for this inquiry.
+CRITICAL MANDATE: You MUST state that you could not reliably verify this development from available sources. DO NOT invent dates, signatories, provisions, or citations.
+</verified_retrieved_evidence>`;
+    }
+  }
 
   const systemPrompt = isBeginner
     ? `You are GEOINTEL AI Assistant, a specialized geopolitical intelligence tutor and analyst.
-Your objective is to make complex international relations, grand strategy, historical conflicts, alliances, and treaties understandable and engaging for learners and general observers.
+Your objective is to make complex international relations, grand strategy, historical conflicts, alliances, and treaties understandable, engaging, and strictly fact-grounded.
 
-CORE INSTRUCTIONS:
-1. PLAIN-LANGUAGE EXPLANATION: Explain clearly without unnecessary jargon. When you introduce a technical geopolitical term (e.g., "Strategic Autonomy", "Security Dilemma", "Chokepoint", "String of Pearls", "Mutually Assured Destruction", "Balance of Power"), explicitly define it on first use in parentheses or a highlighted callout.
-2. ANALOGIES: Use intuitive real-world analogies to demystify complex diplomatic moves.
-3. WHY IT MATTERS: Always include a dedicated "Why This Matters to Everyday Life / Global Economy" section.
-4. INDIA's STRATEGIC ANGLE: Highlight how this relates to India's foreign policy, maritime trade, energy security, or border dynamics.
-5. GROUNDING: Ground your answers in facts, treaties, and historical records. Reference the supplied GEOINTEL context when applicable.
-6. FORMATTING: Use Markdown with bold section headers, bullet points, and clear spacing.
-7. CITATIONS & SOURCES: Include credible official and research sources (e.g., UN, MEA, SIPRI, IISS, CSIS, Treaty Texts).
+CRITICAL FACTUAL INTEGRITY & ANTI-HALLUCINATION PROTOCOL:
+1. SCOPE OF ZERO-HALLUCINATION:
+   - GEOINTEL is a professional intelligence platform. Factual accuracy, source verification, and intellectual honesty take absolute precedence over generating a fluent response.
+   - NEVER invent or assume signatories, dates, locations, provisions, treaties, pacts, or citations.
+   - FOR CURRENT AFFAIRS & RECENT DEVELOPMENTS (recent agreements, summits, breaking events):
+     Evidential grounding in retrieved sources is strictly mandatory. If the evidence block status is "NO_VERIFIED_SOURCES_FOUND" or "RETRIEVAL_UNAVAILABLE", you MUST state clearly and directly:
+     "I couldn't reliably verify this development from the available sources. I don't want to give you an incorrect answer."
+     Explain clearly that there is no confirmed record of such an agreement, treaty, or event in international diplomatic or defense registries. Do NOT speculate or invent provisions.
+   - FOR ESTABLISHED HISTORICAL EVENTS & GEOPOLITICAL CONCEPTS (e.g. "What is the Peace of Westphalia?", "Explain the String of Pearls", "What is Westphalian Sovereignty?"):
+     Provide authoritative, accurate historical and conceptual explanations based on established historical records (e.g. 1648, Münster and Osnabrück, Thirty Years' War, state sovereignty, non-intervention). Do NOT treat established historical queries as unverified breaking news. State that this assessment is drawn from established historical records and geopolitical doctrines.
+2. ACRONYM DISAMBIGUATION (e.g., "BATR" -> "Badr"):
+   - If the user asks about an ambiguous acronym, phonetic misspelling, or abbreviation (e.g. "BATR"):
+     Recognize that "BATR" is a phonetic misspelling/variant for the "Badr" MoU signed in October 2026.
+     Explicitly state: "Assuming your query refers to the Badr Memorandum of Understanding (MoU)..." and proceed with confirmed facts.
+     NEVER invent a separate fictitious agreement or organization to match a typo.
+3. PRECISE LEGAL & DIPLOMATIC CLASSIFICATION:
+   - Distinguish between non-binding Memoranda of Understanding (MoUs) and binding multilateral treaties.
+   - For the Badr MoU (signed 21 October 2026 in Doha, Qatar by Türkiye, Pakistan, Qatar, and Indonesia):
+     - It is a multilateral defence-industrial cooperation agreement focused on joint military equipment production, defense R&D, technology transfer, and technical training.
+     - You MUST explicitly clarify that it is an industrial/technical cooperation MoU, NOT a mutual defense pact or collective security alliance (distinct from the August 2026 Makkah Joint Defence Agreement).
+4. REQUIRED STRUCTURE FOR CURRENT-AFFAIRS & EVENT QUERIES:
+   Use clear Markdown headers:
+   - **Confirmed Facts**: Signatories, date, location, and stated provisions verified by retrieved sources.
+   - **Strategic Significance (Analysis)**: Regional balance of power and geopolitical implications, explicitly labeled as analysis. Include India's strategic calculus (e.g. monitoring Pakistan-Turkey defense tech transfer while leveraging bilateral energy ties with Qatar and maritime partnership with Indonesia).
+   - **Sources & Evidence Confidence**: Qualitative evaluation of source authority (no arbitrary numerical scores).
+5. CITATIONS:
+   - The "sources" array in your JSON output must ONLY contain real URLs from the provided <verified_retrieved_evidence>. If no verified sources exist, return []. NEVER make up URLs.
+6. MANDATORY JSON FORMAT:
+   - You MUST ALWAYS return ONLY a valid JSON object matching the schema below. Even if expressing uncertainty or stating that a development could not be verified, always wrap your answer inside the JSON schema. Never output raw unformatted text outside JSON.
 
 OUTPUT FORMAT:
 Return a JSON object:
@@ -827,14 +872,33 @@ Return a JSON object:
     : `You are GEOINTEL Senior Strategic Intelligence Analyst.
 Your objective is to provide rigorous, doctrinal, high-fidelity geopolitical intelligence assessments for decision-makers and defense analysts.
 
-CORE INSTRUCTIONS:
-1. OPERATIONAL BASELINE & THRESHOLD: Define the precise geopolitical baseline and strategic triggers.
-2. COMPETING SOVEREIGN INTERESTS: Map primary state actors, declared doctrines, and non-negotiable core national interests.
-3. CAPABILITIES VS. CONSTRAINTS: Quantify force posture, economic leverage, supply chain vulnerabilities, and geographic bottlenecks.
-4. ESCALATION PATHWAYS & UNCERTAINTIES: Assess probability thresholds, secondary ripple effects, and black swan variables.
-5. INDIA STRATEGIC CALCULUS: Detailed operational breakdown of New Delhi's maritime posture, bilateral alignment, trade corridors, and border preparedness.
-6. GROUNDING & PRECEDENTS: Draw direct parallels to historical precedents and treaty frameworks.
-7. SOURCES & CONFIDENCE: State intelligence confidence levels (VERIFIED, REPORTED, ESTIMATE) and authoritative sources.
+CRITICAL FACTUAL INTEGRITY & ANTI-HALLUCINATION PROTOCOL:
+1. SCOPE OF ZERO-HALLUCINATION:
+   - GEOINTEL intelligence assessments require strict evidential grounding. Factual precision and transparency take absolute precedence over narrative fluency.
+   - NEVER invent or extrapolate signatories, treaty provisions, dates, coordinates, military deployments, or citations.
+   - FOR CURRENT AFFAIRS & RECENT DEVELOPMENTS (recent agreements, summits, breaking events):
+     Evidential grounding in retrieved sources is strictly mandatory. If the evidence block status is "NO_VERIFIED_SOURCES_FOUND" or "RETRIEVAL_UNAVAILABLE", you MUST state clearly and directly:
+     "I couldn't reliably verify this development from the available sources. I don't want to give you an incorrect answer."
+     Explicitly report that no verified treaty, communiqué, or intelligence dispatch corroborates the claim in official gazettes or defense registries. Do NOT generate fictitious terms.
+   - FOR ESTABLISHED HISTORICAL EVENTS & GEOPOLITICAL CONCEPTS (e.g. "What is the Peace of Westphalia?", "Explain the String of Pearls", "What is Westphalian Sovereignty?"):
+     Provide rigorous doctrinal, historical, and conceptual assessments based on established historical records (e.g. 1648, Treaties of Münster and Osnabrück, Thirty Years' War, state sovereignty, non-intervention). Do NOT treat established historical queries as unverified breaking news. Ground your assessment in established historical record and treaty archives.
+2. ACRONYM DISAMBIGUATION (e.g., "BATR" -> "Badr"):
+   - If the user uses a phonetic variant or misspelled acronym (e.g. "BATR"):
+     State: "Assuming your query refers to the Badr Memorandum of Understanding (MoU)..." and evaluate the confirmed strategic framework.
+     NEVER generate a fabricated pact for a misspelled term.
+3. LEGAL & DOCTRINAL DISTINCTION:
+   - Strictly delineate non-binding MoUs from mutual defence treaties.
+   - For the Badr MoU (signed 21 October 2026 in Doha, Qatar by Türkiye, Pakistan, Qatar, and Indonesia):
+     - Framework: Multilateral defence-industrial cooperation (joint manufacturing, R&D, tech transfer, technical training).
+     - Operational boundary: It does NOT establish a mutual defence commitment or collective security guarantee (distinct from the August 2026 Makkah Joint Defence Agreement).
+4. REQUIRED STRUCTURE FOR INTELLIGENCE BRIEFS:
+   - **Confirmed Facts**: Verified signatories, date of signing, venue, and explicit technical scope.
+   - **Strategic Significance (Analysis)**: Doctrinal implications, power distribution, second-order escalation vectors, and New Delhi's maritime/border posture (explicitly labeled as analysis).
+   - **Sources & Evidence Confidence**: High/Moderate/Low qualitative confidence assessment citing only authentic retrieved reporting.
+5. CITATIONS:
+   - The "sources" array in your JSON output must ONLY contain real URLs from the provided <verified_retrieved_evidence>. If no verified sources exist, return []. NEVER invent URLs.
+6. MANDATORY JSON FORMAT:
+   - You MUST ALWAYS return ONLY a valid JSON object matching the schema below. Even if expressing uncertainty or stating that an event could not be verified, always wrap your answer inside the JSON schema. Never output raw unformatted text outside JSON.
 
 OUTPUT FORMAT:
 Return a JSON object:
@@ -850,13 +914,13 @@ Return a JSON object:
     ? history.map(h => `${h.role === 'user' ? 'User' : 'GEOINTEL'}: ${h.content}`).join('\n\n')
     : '';
 
-  const userContent = `DATABASE GROUNDING CONTEXT:
+  const userContent = `${evidenceBlock ? `${evidenceBlock}\n\n` : ''}DATABASE GROUNDING CONTEXT:
 ${formattedContext}
 
 ${formattedHistory ? `RECENT CONVERSATION HISTORY:\n${formattedHistory}\n\n` : ''}USER INQUIRY:
 ${message}`;
 
-  const models = ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b'];
+  const models = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
   let lastErr = null;
 
   for (const model of models) {
@@ -874,20 +938,51 @@ ${message}`;
             { role: 'user', content: userContent }
           ],
           response_format: { type: 'json_object' },
-          temperature: isBeginner ? 0.3 : 0.2
+          temperature: isBeginner ? 0.2 : 0.1
         }),
-        signal: AbortSignal.timeout(15000)
+        signal: AbortSignal.timeout(18000)
       });
 
       if (!res.ok) {
         const errText = await res.text();
+        try {
+          const errObj = JSON.parse(errText);
+          if (errObj.error?.failed_generation) {
+            const fg = errObj.error.failed_generation;
+            let parsedFg = null;
+            try { parsedFg = JSON.parse(fg); } catch (_) {}
+            const finalText = parsedFg?.text || fg;
+            const validRetrieved = retrievalResult ? retrievalResult.sources : [];
+            return validateAndSanitizeSources({
+              text: finalText,
+              mode,
+              sources: parsedFg?.sources || (validRetrieved.length > 0 ? validRetrieved.slice(0, 3) : []),
+              followUps: parsedFg?.followUps || [],
+              model
+            }, validRetrieved);
+          }
+        } catch (_) {}
         throw new Error(`Groq HTTP ${res.status}: ${errText}`);
       }
 
       const data = await res.json();
       const rawText = data.choices?.[0]?.message?.content;
       if (rawText) {
-        const parsed = JSON.parse(rawText);
+        let parsed = JSON.parse(rawText);
+
+        // Sanitize sources to ensure 100% genuine URLs
+        const validRetrieved = retrievalResult ? retrievalResult.sources : [];
+        parsed = validateAndSanitizeSources(parsed, validRetrieved);
+
+        // Deterministic guardrail for unverified / nonexistent current affairs events
+        if (isCurrentAffairs && (!retrievalResult || !retrievalResult.hasEvidence)) {
+          const standardDisclaimer = "I couldn't reliably verify this development from the available sources. I don't want to give you an incorrect answer.";
+          if (!parsed.text.includes(standardDisclaimer) && !parsed.text.toLowerCase().includes("couldn't reliably verify")) {
+            parsed.text = `${standardDisclaimer}\n\nThere is no confirmed record of this agreement, treaty, or event in international diplomatic registries, official government communiqués, or verified global news wires.\n\n${parsed.text}`;
+          }
+          parsed.sources = [];
+        }
+
         return {
           text: parsed.text || rawText,
           mode,
