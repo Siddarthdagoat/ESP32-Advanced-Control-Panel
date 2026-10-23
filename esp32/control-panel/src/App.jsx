@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import GeointelGlobe from './components/globe/GeointelGlobe';
 import GeointelHeader from './components/ui/GeointelHeader';
 import InteractionHints from './components/ui/InteractionHints';
@@ -14,6 +14,14 @@ import HoverTooltip from './components/ui/HoverTooltip';
 import SearchModal from './components/ui/SearchModal';
 import KeyboardShortcutsModal from './components/ui/KeyboardShortcutsModal';
 import GlobalSituationPanel from './components/ui/GlobalSituationPanel';
+
+// Critical Global Alerts, Hot News, AI Agent & Educational Learning Path
+import AlertQuickPanel from './components/ui/AlertQuickPanel';
+import HotNewsSection from './components/ui/HotNewsSection';
+import GeopoliticalAgentModal from './components/ui/GeopoliticalAgentModal';
+import LearningPathModal from './components/ui/LearningPathModal';
+import GlobalBriefingModal from './components/ui/GlobalBriefingModal';
+import { useIntelligenceFeed } from './services/intelligenceFeed';
 
 // Educational & Interconnected Intelligence Modals
 import ConceptModal from './components/ui/ConceptModal';
@@ -127,6 +135,52 @@ export default function App() {
   const [conspiraciesOpen, setConspiraciesOpen] = useState(false);
   const [historyTimelineOpen, setHistoryTimelineOpen] = useState(false);
 
+  // Alert Priority Filters (Feature 1: Critical & High enabled by default, Medium & Low filterable)
+  const [alertPriorityFilters, setAlertPriorityFilters] = useState({
+    critical: true,
+    high: true,
+    medium: false,
+    low: false
+  });
+
+  // Selected quick alert for concise immediate panel vs full event dossier
+  const [quickAlertEvent, setQuickAlertEvent] = useState(null);
+
+  // Modals for Features 2, 3, 4
+  const [hotNewsOpen, setHotNewsOpen] = useState(false);
+  const [agentModalOpen, setAgentModalOpen] = useState(false);
+  const [agentInitialEvent, setAgentInitialEvent] = useState(null);
+  const [agentInitialQuery, setAgentInitialQuery] = useState(null);
+  const [learningPathOpen, setLearningPathOpen] = useState(false);
+  const [briefingModalOpen, setBriefingModalOpen] = useState(false);
+
+  // Live intelligence feed for alert priority counts
+  const { events: liveEventsList } = useIntelligenceFeed();
+  const alertCounts = useMemo(() => {
+    const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    (liveEventsList || []).forEach(e => {
+      const p = (e.priority || 'medium').toLowerCase();
+      if (counts[p] !== undefined) counts[p]++;
+    });
+    return counts;
+  }, [liveEventsList]);
+
+  const handleToggleAlertPriority = (priorityKey) => {
+    setAlertPriorityFilters(prev => ({
+      ...prev,
+      [priorityKey]: !prev[priorityKey]
+    }));
+  };
+
+  const handleQuickFilterCritical = () => {
+    setAlertPriorityFilters({
+      critical: true,
+      high: false,
+      medium: false,
+      low: false
+    });
+  };
+
   const handleExplore = useCallback(() => {
     setShowLanding(false);
   }, []);
@@ -234,6 +288,7 @@ export default function App() {
     const targetId = countryObj ? (countryObj.id || countryObj.ISO_A3 || countryObj.isoCode) : country;
     pushCurrentToStack('country', targetId);
     setSelectedEvent(null);
+    setQuickAlertEvent(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
     setSelectedCapital(null);
@@ -246,15 +301,22 @@ export default function App() {
     }
   };
 
-  // Handle Event Selection
+  // Handle Event Selection (Displays Concise Interactive Alert Panel by default)
   const handleSelectEvent = (event) => {
     handleUserInteraction();
     pushCurrentToStack('event', event?.id);
     setSelectedCountry(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
-    setSelectedEvent(event);
+    setSelectedEvent(null);
+    setQuickAlertEvent(event);
     setIsRotating(false);
+  };
+
+  // Open Complete Event Dossier & Historical Context (Full Overlay)
+  const handleOpenFullEventDossier = (event) => {
+    setQuickAlertEvent(null);
+    setSelectedEvent(event);
   };
 
   // Handle Strategic Location Selection
@@ -335,6 +397,7 @@ export default function App() {
   const handleResetGlobe = () => {
     setSelectedCountry(null);
     setSelectedEvent(null);
+    setQuickAlertEvent(null);
     setSelectedLocation(null);
     setSelectedMaritimeEntity(null);
     setSelectedCapital(null);
@@ -350,6 +413,7 @@ export default function App() {
     setSelectedCountry(null);
     setSelectedMaritimeEntity(null);
     setSelectedEvent(null);
+    setQuickAlertEvent(null);
     setSelectedLocation(null);
     setSelectedRegion(null);
     setSelectedConcept(null);
@@ -387,7 +451,12 @@ export default function App() {
         e.preventDefault();
         setSearchOpen(true);
       } else if (e.key === 'Escape') {
-        if (sitrepModalOpen) setSitrepModalOpen(false);
+        if (quickAlertEvent) setQuickAlertEvent(null);
+        else if (hotNewsOpen) setHotNewsOpen(false);
+        else if (agentModalOpen) setAgentModalOpen(false);
+        else if (learningPathOpen) setLearningPathOpen(false);
+        else if (briefingModalOpen) setBriefingModalOpen(false);
+        else if (sitrepModalOpen) setSitrepModalOpen(false);
         else if (wargameModalOpen) setWargameModalOpen(false);
         else if (flashpointsModalOpen) setFlashpointsModalOpen(false);
         else if (sensorsModalOpen) setSensorsModalOpen(false);
@@ -405,8 +474,17 @@ export default function App() {
         else if (helpOpen) setHelpOpen(false);
         else handleDeselectAll();
       } else if (e.code === 'Space') {
+        if (['input', 'textarea'].includes(document.activeElement?.tagName?.toLowerCase())) return;
         e.preventDefault();
         setIsRotating(prev => !prev);
+      } else if (['input', 'textarea', 'select'].includes(document.activeElement?.tagName?.toLowerCase())) {
+        return;
+      } else if (e.key.toLowerCase() === 'n') {
+        setHotNewsOpen(prev => !prev);
+      } else if (e.key.toLowerCase() === 'a') {
+        setAgentModalOpen(prev => !prev);
+      } else if (e.key.toLowerCase() === 'b') {
+        setBriefingModalOpen(prev => !prev);
       } else if (e.key.toLowerCase() === 'w') {
         setWorkstationMode(prev => !prev);
       } else if (e.key.toLowerCase() === 'c') {
@@ -442,7 +520,8 @@ export default function App() {
     showLanding, searchOpen, helpOpen, isLiveFeedOpen, selectedConcept, selectedAgreement, 
     selectedMilitarySystem, selectedRelationship, activeChain, 
     whyExplainerItem, glossaryOpen, sitrepModalOpen, wargameModalOpen, 
-    flashpointsModalOpen, sensorsModalOpen, watchlistModalOpen
+    flashpointsModalOpen, sensorsModalOpen, watchlistModalOpen,
+    quickAlertEvent, hotNewsOpen, agentModalOpen, learningPathOpen, briefingModalOpen
   ]);
 
   return (
@@ -463,6 +542,7 @@ export default function App() {
         activeScenario={activeScenario}
         mapMode={mapMode}
         activeLayers={activeLayers}
+        alertPriorityFilters={alertPriorityFilters}
         currentYear={currentYear}
         onCountrySelect={handleSelectCountry}
         onSelectMaritimeEntity={handleSelectMaritimeEntity}
@@ -523,6 +603,14 @@ export default function App() {
           isLiveFeedOpen={isLiveFeedOpen}
           onOpenConspiracies={() => setConspiraciesOpen(true)}
           onOpenHistoryTimeline={() => setHistoryTimelineOpen(true)}
+          onOpenHotNews={() => setHotNewsOpen(true)}
+          onOpenAgent={() => {
+            setAgentInitialEvent(null);
+            setAgentInitialQuery(null);
+            setAgentModalOpen(true);
+          }}
+          onOpenLearn={() => setLearningPathOpen(true)}
+          onOpenBriefing={() => setBriefingModalOpen(true)}
           onOpenLanding={handleReturnToLanding}
           selectedRegion={selectedRegion}
           onSelectRegion={handleSelectRegion}
@@ -549,6 +637,10 @@ export default function App() {
           onToggleLayer={handleToggleLayer}
           mapMode={mapMode}
           onMapModeChange={setMapMode}
+          alertPriorityFilters={alertPriorityFilters}
+          onToggleAlertPriority={handleToggleAlertPriority}
+          onQuickFilterCritical={handleQuickFilterCritical}
+          alertCounts={alertCounts}
         />
       )}
 
@@ -638,6 +730,24 @@ export default function App() {
           onSelectMaritimeEntity={handleSelectMaritimeEntity}
           onSelectCountry={handleSelectCountry}
           onSelectConcept={(cId) => setSelectedConcept(cId)}
+        />
+      )}
+
+      {/* Interactive Concise Geopolitical Alert Panel (Feature 1) */}
+      {quickAlertEvent && (
+        <AlertQuickPanel
+          event={quickAlertEvent}
+          onClose={() => setQuickAlertEvent(null)}
+          onOpenFullDossier={(evt) => handleOpenFullEventDossier(evt)}
+          onAskAi={(evt) => {
+            setQuickAlertEvent(null);
+            setAgentInitialEvent(evt);
+            setAgentModalOpen(true);
+          }}
+          onFocusCoordinates={(lat, lng, label) => handleSelectLocation({ name: label || 'Tactical Alert Focus', lat, lng })}
+          onSelectCountry={handleSelectCountry}
+          onSelectConcept={(cId) => setSelectedConcept(cId)}
+          onSelectAgreement={(agrId) => setSelectedAgreement(agrId)}
         />
       )}
 
@@ -873,6 +983,90 @@ export default function App() {
           onSelectCountry={handleSelectCountry}
         />
       )}
+
+      {/* Dedicated Hot News & Real-Time Wire Modal (Feature 2) */}
+      <HotNewsSection
+        isOpen={hotNewsOpen}
+        onClose={() => setHotNewsOpen(false)}
+        onShowOnGlobe={(lat, lng, label) => {
+          handleSelectLocation({ name: label || 'Strategic Hot News Theater', lat, lng });
+        }}
+        onSelectCountry={handleSelectCountry}
+        onOpenTimeline={() => {
+          setHotNewsOpen(false);
+          setActiveMode('timeline');
+        }}
+        onAskAi={(evt) => {
+          setHotNewsOpen(false);
+          setAgentInitialEvent(evt);
+          setAgentModalOpen(true);
+        }}
+        onOpenEventDossier={(evt) => {
+          setHotNewsOpen(false);
+          handleOpenFullEventDossier(evt);
+        }}
+      />
+
+      {/* Specialized Geopolitical AI Agent (Dual Mode) Modal (Feature 3) */}
+      <GeopoliticalAgentModal
+        isOpen={agentModalOpen}
+        onClose={() => {
+          setAgentModalOpen(false);
+          setAgentInitialEvent(null);
+          setAgentInitialQuery(null);
+        }}
+        initialEvent={agentInitialEvent}
+        initialQuery={agentInitialQuery}
+        onShowOnGlobe={(lat, lng, label) => {
+          handleSelectLocation({ name: label || 'AI Agent Focal Point', lat, lng });
+        }}
+        onSelectCountry={handleSelectCountry}
+        onOpenTimeline={() => {
+          setAgentModalOpen(false);
+          setActiveMode('timeline');
+        }}
+        onSelectConcept={(cId) => {
+          setAgentModalOpen(false);
+          setSelectedConcept(cId);
+        }}
+        onSelectAgreement={(agrId) => {
+          setAgentModalOpen(false);
+          setSelectedAgreement(agrId);
+        }}
+      />
+
+      {/* 8-Lesson Educational Learning Path Modal (Feature 4) */}
+      <LearningPathModal
+        isOpen={learningPathOpen}
+        onClose={() => setLearningPathOpen(false)}
+        onExploreOnGlobe={(lat, lng, label) => {
+          setLearningPathOpen(false);
+          handleSelectLocation({ name: label || 'Geopolitical Case Study', lat, lng });
+        }}
+        onSelectCountry={(countryCode) => {
+          setLearningPathOpen(false);
+          handleSelectCountry(countryCode);
+        }}
+      />
+
+      {/* Global Executive Briefing (24h/7d/30d) Modal (Feature 4) */}
+      <GlobalBriefingModal
+        isOpen={briefingModalOpen}
+        onClose={() => setBriefingModalOpen(false)}
+        onShowOnGlobe={(lat, lng, label) => {
+          handleSelectLocation({ name: label || 'Executive SitRep Theater', lat, lng });
+        }}
+        onSelectCountry={handleSelectCountry}
+        onAskAi={(evt) => {
+          setBriefingModalOpen(false);
+          setAgentInitialEvent(evt);
+          setAgentModalOpen(true);
+        }}
+        onOpenEventDossier={(evt) => {
+          setBriefingModalOpen(false);
+          handleOpenFullEventDossier(evt);
+        }}
+      />
 
       {/* 28. Collapsible Intelligence Legend */}
       {!showLanding && <IntelligenceLegend />}

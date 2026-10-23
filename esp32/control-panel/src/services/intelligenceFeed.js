@@ -348,7 +348,7 @@ class IntelligenceFeedService {
 
       // 3. Client-side direct NewsData.io fallback
       if (!res || !res.ok) {
-        const clientKey = import.meta.env?.VITE_NEWSDATA_API_KEY || 'pub_260812a950d147ccb2f748d008efd036';
+        const clientKey = import.meta.env?.VITE_NEWSDATA_API_KEY;
         if (clientKey) {
           const newsQuery = query || 'geopolitics OR military OR sanctions OR conflict OR missile OR strait';
           const directUrl = `https://newsdata.io/api/1/latest?apikey=${clientKey}&q=${encodeURIComponent(newsQuery)}&language=en`;

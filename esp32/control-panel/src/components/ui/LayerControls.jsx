@@ -24,7 +24,11 @@ export default function LayerControls({
   activeLayers, 
   onToggleLayer,
   mapMode = 'monochrome',
-  onMapModeChange
+  onMapModeChange,
+  alertPriorityFilters = { critical: true, high: true, medium: false, low: false },
+  onToggleAlertPriority,
+  onQuickFilterCritical,
+  alertCounts = { critical: 3, high: 5, medium: 4, low: 2 }
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -119,6 +123,101 @@ export default function LayerControls({
                   </button>
                 );
               })}
+            </div>
+
+            {/* 3. Alert Priority Filters (Feature 1) */}
+            <div className="pt-2 border-t border-[#1A1A1A] space-y-1.5">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-[9px] font-mono text-[#888888] font-bold uppercase tracking-wider">
+                  ALERT PRIORITY:
+                </span>
+                <button
+                  type="button"
+                  onClick={onQuickFilterCritical}
+                  className="text-[9px] font-mono text-[#FF3030] hover:underline hover:text-white cursor-pointer uppercase transition-colors"
+                  title="Filter to show only Critical tier alerts"
+                >
+                  Only Critical
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-1 text-[10px] font-mono">
+                {/* CRITICAL */}
+                <button
+                  type="button"
+                  onClick={() => onToggleAlertPriority && onToggleAlertPriority('critical')}
+                  className={`px-2 py-1 rounded-lg flex items-center justify-between border cursor-pointer transition-all ${
+                    alertPriorityFilters.critical
+                      ? 'bg-[#FF3030]/15 text-[#FF3030] border-[#FF3030]/60 font-bold'
+                      : 'bg-[#111111] text-[#666666] border-transparent hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${alertPriorityFilters.critical ? 'bg-[#FF3030] animate-ping' : 'bg-[#666666]'}`} />
+                    CRIT
+                  </span>
+                  <span className="text-[9px] px-1 rounded bg-black/40">
+                    {alertCounts.critical || 0}
+                  </span>
+                </button>
+
+                {/* HIGH */}
+                <button
+                  type="button"
+                  onClick={() => onToggleAlertPriority && onToggleAlertPriority('high')}
+                  className={`px-2 py-1 rounded-lg flex items-center justify-between border cursor-pointer transition-all ${
+                    alertPriorityFilters.high
+                      ? 'bg-white/15 text-white border-white/60 font-bold'
+                      : 'bg-[#111111] text-[#666666] border-transparent hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${alertPriorityFilters.high ? 'bg-white' : 'bg-[#666666]'}`} />
+                    HIGH
+                  </span>
+                  <span className="text-[9px] px-1 rounded bg-black/40">
+                    {alertCounts.high || 0}
+                  </span>
+                </button>
+
+                {/* MEDIUM */}
+                <button
+                  type="button"
+                  onClick={() => onToggleAlertPriority && onToggleAlertPriority('medium')}
+                  className={`px-2 py-1 rounded-lg flex items-center justify-between border cursor-pointer transition-all ${
+                    alertPriorityFilters.medium
+                      ? 'bg-white/10 text-[#C0C0C0] border-white/30 font-bold'
+                      : 'bg-[#111111] text-[#666666] border-transparent hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${alertPriorityFilters.medium ? 'bg-[#A0A0A0]' : 'bg-[#666666]'}`} />
+                    MED
+                  </span>
+                  <span className="text-[9px] px-1 rounded bg-black/40">
+                    {alertCounts.medium || 0}
+                  </span>
+                </button>
+
+                {/* LOW */}
+                <button
+                  type="button"
+                  onClick={() => onToggleAlertPriority && onToggleAlertPriority('low')}
+                  className={`px-2 py-1 rounded-lg flex items-center justify-between border cursor-pointer transition-all ${
+                    alertPriorityFilters.low
+                      ? 'bg-white/5 text-[#888888] border-white/20 font-bold'
+                      : 'bg-[#111111] text-[#666666] border-transparent hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${alertPriorityFilters.low ? 'bg-[#777777]' : 'bg-[#444444]'}`} />
+                    LOW
+                  </span>
+                  <span className="text-[9px] px-1 rounded bg-black/40">
+                    {alertCounts.low || 0}
+                  </span>
+                </button>
+              </div>
             </div>
 
           </div>

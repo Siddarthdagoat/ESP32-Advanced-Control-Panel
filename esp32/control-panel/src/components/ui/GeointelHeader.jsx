@@ -12,7 +12,9 @@ import {
   Layout, 
   FileText, 
   Crosshair, 
-  Star 
+  Star,
+  Flame,
+  Bot
 } from 'lucide-react';
 import { useIntelligenceFeed } from '../../services/intelligenceFeed';
 
@@ -34,6 +36,10 @@ export default function GeointelHeader({
   isLiveFeedOpen,
   onOpenConspiracies,
   onOpenHistoryTimeline,
+  onOpenHotNews,
+  onOpenAgent,
+  onOpenLearn,
+  onOpenBriefing,
   onOpenLanding
 }) {
   const [utcTime, setUtcTime] = useState('');
@@ -162,6 +168,48 @@ export default function GeointelHeader({
         >
           <History className="w-3 h-3 text-white" />
           <span>HISTORY</span>
+        </button>
+
+        <div className="w-px h-4 bg-white/10 mx-1" />
+
+        {/* Dedicated Hot News & Real-Time Global Wire */}
+        <button
+          onClick={onOpenHotNews}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-white hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open Dedicated Hot News Section & 10-Category Geopolitical Feed"
+        >
+          <Flame className="w-3 h-3 text-white" />
+          <span>HOT NEWS</span>
+        </button>
+
+        {/* Specialized Geopolitical AI Agent */}
+        <button
+          onClick={onOpenAgent}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-white hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open Specialized Geopolitical AI Agent (Dual Mode: Beginner & Analyst)"
+        >
+          <Bot className="w-3 h-3 text-white" />
+          <span>AI AGENT</span>
+        </button>
+
+        {/* 8-Lesson Educational Learning Path */}
+        <button
+          onClick={onOpenLearn}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#CCCCCC] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open 8-Lesson Geopolitical Learning Path & Interactive Case Studies"
+        >
+          <BookOpen className="w-3 h-3 text-white" />
+          <span>LEARN</span>
+        </button>
+
+        {/* Global Executive Briefing (24h / 7d / 30d) */}
+        <button
+          onClick={onOpenBriefing}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold rounded-full text-[#CCCCCC] hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+          title="Open Global Executive Briefing (24h / 7d / 30d SitRep)"
+        >
+          <FileText className="w-3 h-3 text-white" />
+          <span>BRIEFING</span>
         </button>
 
         <div className="w-px h-4 bg-white/10 mx-1" />

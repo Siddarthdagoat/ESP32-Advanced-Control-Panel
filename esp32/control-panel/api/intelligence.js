@@ -11,7 +11,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { defaultPipeline, getApiKey, getNewsDataApiKey, fetchNewsDataDispatches } from '../scripts/intelligencePipeline.js';
+import { defaultPipeline, getApiKey, getNewsDataApiKey, fetchNewsDataDispatches, executeGroqAgentChat, generateGlobalBriefing } from '../scripts/intelligencePipeline.js';
 import { GEOPOLITICAL_CONSPIRACIES } from '../src/data/geointelConspiracies.js';
 import { COUNTRY_DOSSIERS, getCountryDossier } from '../src/data/geointelCountryDossiers.js';
 import { WORLD_HISTORY_EVENTS, HISTORICAL_PERIODS } from '../src/data/history/worldHistoryEvents.js';
@@ -30,6 +30,49 @@ export default async function handler(req, res) {
   }
 
   const { query, method } = req;
+
+  // Safely parse JSON body if available
+  let body = {};
+  if (req.body) {
+    body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  }
+
+  // Specialized Geopolitical AI Agent Endpoint (Groq Cloud LLM Inference)
+  if (body.action === 'agent_chat' || query.action === 'agent_chat' || query.type === 'agent') {
+    const message = body.message || query.message;
+    const mode = body.mode || query.mode || 'beginner';
+    const context = body.context || {};
+    const history = body.history || [];
+
+    try {
+      const response = await executeGroqAgentChat({ message, mode, context, history });
+      return res.status(200).json({
+        success: true,
+        response,
+        provider: `Groq Cloud High-Speed Inference (${response.model})`
+      });
+    } catch (err) {
+      console.error('Agent chat inference error:', err.message);
+      return res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    }
+  }
+
+  // Global Executive Briefing Endpoint (?type=briefing&timeframe=24h)
+  if (query.type === 'briefing' || body.action === 'briefing') {
+    try {
+      const timeframe = query.timeframe || body.timeframe || '24h';
+      const briefing = await generateGlobalBriefing(timeframe);
+      return res.status(200).json({
+        success: true,
+        briefing
+      });
+    } catch (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  }
 
   // 1. Health check endpoint
   if (query.health === 'true') {

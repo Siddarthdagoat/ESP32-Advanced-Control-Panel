@@ -2430,6 +2430,69 @@ export const GEOPOLITICAL_TERMS = {
     ],
     claimType: 'VERIFIED',
     lastVerified: '2026-03'
+  },
+
+  'string-of-pearls': {
+    id: 'string-of-pearls',
+    name: 'String of Pearls',
+    aliases: ['string-of-pearls', 'String of Pearls', 'string of pearls', 'STRING_OF_PEARLS', 'pearls-strategy'],
+    category: 'Maritime Geopolitics & Grand Strategy',
+    shortDefinition: 'A geopolitical concept describing the network of Chinese military, naval, and commercial facilities developed along vital sea lines of communication stretching from the Chinese mainland across the Indian Ocean to the Horn of Africa.',
+    detailedExplanation: 'Coined in a 2004 internal US Department of Defense report ("Energy Futures in Asia"), the concept refers to strategic maritime access points and dual-use commercial hubs built or financed by China across the Indian Ocean Region (IOR). Key nodes ("pearls") include Gwadar Port in Pakistan (anchoring the China-Pakistan Economic Corridor), Hambantota and Colombo Port City in Sri Lanka, Kyaukpyu deep-water port in Myanmar, Chittagong in Bangladesh, and China\'s first overseas military logistics base in Doraleh, Djibouti.',
+    whyItMatters: 'Directly impacts the balance of naval power in the Indo-Pacific. Over 80% of China\'s crude oil imports transit the Indian Ocean and Malacca Strait. By securing maritime footholds, Beijing mitigates its "Malacca Dilemma" while giving the People\'s Liberation Army Navy (PLAN) forward power projection, replenishment, and intelligence gathering stations encircling peninsular India.',
+    contextualFraming: {
+      IND: 'India views the String of Pearls as a strategic encirclement challenge. In response, New Delhi developed its "Necklace of Diamonds" counter-strategy: expanding naval capabilities on the Andaman & Nicobar Islands, securing operational berthing rights at Duqm (Oman), Agaléga (Mauritius), Chabahar (Iran), and Changi (Singapore), while deepening Quad maritime domain awareness.',
+      CHN: 'China officially rejects the term as a Western Cold War framing, maintaining that these port investments are purely commercial infrastructure under the Maritime Silk Road (Belt and Road Initiative) to foster South-South trade and protect international commercial shipping against piracy.',
+      USA: 'Washington views Chinese dual-use commercial hubs as potential wartime replenishment stations for the expanding PLAN fleet, challenging the US Fifth Fleet (Bahrain) and Seventh Fleet (Japan/Diego Garcia) across the Indo-Pacific.'
+    },
+    majorActors: ['China', 'India', 'Pakistan', 'Sri Lanka', 'Myanmar', 'Djibouti', 'United States'],
+    historicalBackground: 'Originated in 2004 as China transitioned from a continental power to an energy-dependent maritime trading nation vulnerable to naval blockades at critical chokepoints like the Strait of Malacca.',
+    currentRelevance: 'With China deploying Type 052D destroyers, nuclear attack submarines, and oceanographic survey vessels on continuous Indian Ocean patrols, commercial hubs in Gwadar and Hambantota represent critical focal points for naval logistics.',
+    relatedCountries: ['CHN', 'IND', 'PAK', 'LKA', 'MMR', 'DJI', 'USA', 'BGD', 'MDV'],
+    relatedEvents: ['BRI Launch', 'Djibouti Base Establishment', 'Hambantota 99-Year Lease', 'CPEC Gwadar Operationalization'],
+    relatedLocations: ['Gwadar Port', 'Hambantota Port', 'Djibouti Naval Base', 'Kyaukpyu Port', 'Strait of Malacca'],
+    relatedTerms: ['chokepoints', 'sloc', 'indo-pacific', 'strategic-autonomy', 'quad', 'balance-of-power'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/String_of_Pearls_(geopolitics)',
+    officialSources: [
+      { title: 'US Department of Defense — Military and Security Developments Involving the PRC', type: 'government-report', url: 'https://www.defense.gov' },
+      { title: 'Observer Research Foundation (ORF) Maritime Security Series', type: 'think-tank', url: 'https://www.orfonline.org' }
+    ],
+    sources: [
+      { title: 'International Institute for Strategic Studies (IISS)', type: 'research', url: 'https://www.iiss.org' },
+      { title: 'Center for Strategic and International Studies (CSIS) Asia Maritime Transparency Initiative', type: 'research', url: 'https://amti.csis.org' }
+    ],
+    claimType: 'ANALYSIS',
+    lastVerified: '2026-04'
+  },
+
+  'security-dilemma': {
+    id: 'security-dilemma',
+    name: 'Security Dilemma',
+    aliases: ['security-dilemma', 'Security Dilemma', 'security dilemma', 'spiral model', 'SECURITY_DILEMMA'],
+    category: 'International Relations Theory',
+    shortDefinition: 'A foundational concept in international relations where defensive actions taken by one state to increase its own security paradoxically cause other states to feel threatened, prompting counter-measures and resulting in decreased security for all.',
+    detailedExplanation: 'First articulated by John H. Herz in 1950 and Herbert Butterfield, the security dilemma arises under international anarchy—the absence of an overarching global government. Because military capabilities acquired for self-defense (such as air defense batteries, border fortifications, or naval task forces) can also be used offensively, neighboring states interpret defensive preparations with suspicion. This triggers retaliatory arms build-ups, military alliances, and heightened crisis instability without either side initially desiring conflict.',
+    whyItMatters: 'Explains why status-quo states end up locked in catastrophic arms races or proxy confrontations. It demonstrates that conflict often stems not from inherent aggression, but from structural fear, mutual mistrust, and worst-case intelligence assumptions under international anarchy.',
+    contextualFraming: {
+      IND: 'Visible along the Line of Actual Control (LAC) with China and Line of Control (LoC) with Pakistan. India\'s infrastructure modernization (border roads, tunnels in Ladakh/Arunachal) is defensive from Delhi\'s standpoint, but Beijing views it as offensive capability, triggering reciprocal military deployments and forward airbase construction.',
+      USA: 'Characterizes the US-China rivalry in the Western Pacific: US rotational troop deployments and missile defense in the First Island Chain are framed as deterring aggression, while Beijing interprets them as containment aimed at strangling China\'s maritime rise.',
+      RUS: 'Central to the NATO-Russia dynamic: NATO expanded eastwards to secure sovereign democracies, but Moscow interpreted it as aggressive encirclement, culminating in military aggression in Georgia (2008) and Ukraine (2014, 2022).'
+    },
+    majorActors: ['United States', 'China', 'Russia', 'India', 'NATO'],
+    historicalBackground: 'Thucydides observed the original security dilemma in Ancient Greece: "What made war inevitable was the growth of Athenian power and the fear which this caused in Sparta." Codified analytically during the Cold War nuclear arms race.',
+    currentRelevance: 'Dominates today\'s hypersonic missile races, Indo-Pacific naval build-ups, space weaponization, and AI military procurement where every defensive move accelerates bilateral tensions.',
+    relatedCountries: ['USA', 'CHN', 'RUS', 'IND', 'PAK', 'TWN', 'UKR'],
+    relatedEvents: ['Cold War Arms Race', 'Taiwan Strait Standoff', 'Ukraine War Escalation', 'India-China LAC Standoff'],
+    relatedTerms: ['balance-of-power', 'deterrence', 'arms-control', 'collective-security', 'nuclear-triad'],
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Security_dilemma',
+    officialSources: [
+      { title: 'Oxford Bibliographies in International Relations — The Security Dilemma', type: 'academic', url: 'https://www.oxfordbibliographies.com' }
+    ],
+    sources: [
+      { title: 'Robert Jervis, "Cooperation Under the Security Dilemma", World Politics', type: 'academic-foundation', url: 'https://www.jstor.org' }
+    ],
+    claimType: 'VERIFIED',
+    lastVerified: '2026-04'
   }
 };
 

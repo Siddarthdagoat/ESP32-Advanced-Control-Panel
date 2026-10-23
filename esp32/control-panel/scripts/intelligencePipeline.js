@@ -791,3 +791,177 @@ export class IntelligencePipeline {
 }
 
 export const defaultPipeline = new IntelligencePipeline();
+
+/**
+ * Execute high-speed Groq AI Geopolitical Agent inference with dual mode support
+ */
+export async function executeGroqAgentChat({ message, mode = 'beginner', context = {}, history = [] }) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error('Groq API Key not configured');
+  }
+
+  const isBeginner = mode === 'beginner';
+
+  const systemPrompt = isBeginner
+    ? `You are GEOINTEL AI Assistant, a specialized geopolitical intelligence tutor and analyst.
+Your objective is to make complex international relations, grand strategy, historical conflicts, alliances, and treaties understandable and engaging for learners and general observers.
+
+CORE INSTRUCTIONS:
+1. PLAIN-LANGUAGE EXPLANATION: Explain clearly without unnecessary jargon. When you introduce a technical geopolitical term (e.g., "Strategic Autonomy", "Security Dilemma", "Chokepoint", "String of Pearls", "Mutually Assured Destruction", "Balance of Power"), explicitly define it on first use in parentheses or a highlighted callout.
+2. ANALOGIES: Use intuitive real-world analogies to demystify complex diplomatic moves.
+3. WHY IT MATTERS: Always include a dedicated "Why This Matters to Everyday Life / Global Economy" section.
+4. INDIA's STRATEGIC ANGLE: Highlight how this relates to India's foreign policy, maritime trade, energy security, or border dynamics.
+5. GROUNDING: Ground your answers in facts, treaties, and historical records. Reference the supplied GEOINTEL context when applicable.
+6. FORMATTING: Use Markdown with bold section headers, bullet points, and clear spacing.
+7. CITATIONS & SOURCES: Include credible official and research sources (e.g., UN, MEA, SIPRI, IISS, CSIS, Treaty Texts).
+
+OUTPUT FORMAT:
+Return a JSON object:
+{
+  "text": "Markdown formatted explanation...",
+  "mode": "beginner",
+  "sources": [{ "title": string, "url": string, "claimType": "VERIFIED" | "HISTORICAL" | "ANALYSIS" }],
+  "followUps": [string, string, string]
+}`
+    : `You are GEOINTEL Senior Strategic Intelligence Analyst.
+Your objective is to provide rigorous, doctrinal, high-fidelity geopolitical intelligence assessments for decision-makers and defense analysts.
+
+CORE INSTRUCTIONS:
+1. OPERATIONAL BASELINE & THRESHOLD: Define the precise geopolitical baseline and strategic triggers.
+2. COMPETING SOVEREIGN INTERESTS: Map primary state actors, declared doctrines, and non-negotiable core national interests.
+3. CAPABILITIES VS. CONSTRAINTS: Quantify force posture, economic leverage, supply chain vulnerabilities, and geographic bottlenecks.
+4. ESCALATION PATHWAYS & UNCERTAINTIES: Assess probability thresholds, secondary ripple effects, and black swan variables.
+5. INDIA STRATEGIC CALCULUS: Detailed operational breakdown of New Delhi's maritime posture, bilateral alignment, trade corridors, and border preparedness.
+6. GROUNDING & PRECEDENTS: Draw direct parallels to historical precedents and treaty frameworks.
+7. SOURCES & CONFIDENCE: State intelligence confidence levels (VERIFIED, REPORTED, ESTIMATE) and authoritative sources.
+
+OUTPUT FORMAT:
+Return a JSON object:
+{
+  "text": "Markdown formatted doctrinal intelligence brief...",
+  "mode": "analyst",
+  "sources": [{ "title": string, "url": string, "claimType": "VERIFIED" | "HISTORICAL" | "ANALYSIS" }],
+  "followUps": [string, string, string]
+}`;
+
+  const formattedContext = JSON.stringify(context, null, 2);
+  const formattedHistory = Array.isArray(history) 
+    ? history.map(h => `${h.role === 'user' ? 'User' : 'GEOINTEL'}: ${h.content}`).join('\n\n')
+    : '';
+
+  const userContent = `DATABASE GROUNDING CONTEXT:
+${formattedContext}
+
+${formattedHistory ? `RECENT CONVERSATION HISTORY:\n${formattedHistory}\n\n` : ''}USER INQUIRY:
+${message}`;
+
+  const models = ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b'];
+  let lastErr = null;
+
+  for (const model of models) {
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userContent }
+          ],
+          response_format: { type: 'json_object' },
+          temperature: isBeginner ? 0.3 : 0.2
+        }),
+        signal: AbortSignal.timeout(15000)
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Groq HTTP ${res.status}: ${errText}`);
+      }
+
+      const data = await res.json();
+      const rawText = data.choices?.[0]?.message?.content;
+      if (rawText) {
+        const parsed = JSON.parse(rawText);
+        return {
+          text: parsed.text || rawText,
+          mode,
+          sources: parsed.sources || [],
+          followUps: parsed.followUps || [],
+          model
+        };
+      }
+    } catch (err) {
+      lastErr = err;
+      console.warn(`Groq chat model ${model} failed, attempting next:`, err.message);
+    }
+  }
+
+  throw lastErr || new Error('All Groq agent models exhausted');
+}
+
+/**
+ * Generate Global Executive Briefing across 24h, 7d, or 30d timeframes
+ */
+export async function generateGlobalBriefing(timeframe = '24h') {
+  const feedData = defaultPipeline.loadExistingEvents();
+  const events = feedData.events || [];
+  
+  // Filter events by timeframe
+  const now = Date.now();
+  const maxAgeHours = timeframe === '24h' ? 24 : timeframe === '7d' ? 168 : 720;
+  
+  const relevantEvents = events.filter(e => {
+    if (!e.publishedAt && !e.lastVerifiedAt) return true;
+    const pubDate = new Date(e.publishedAt || e.lastVerifiedAt).getTime();
+    if (isNaN(pubDate)) return true;
+    return (now - pubDate) <= (maxAgeHours * 3600 * 1000);
+  });
+
+  // If no events fall strictly within the narrow window, gracefully fall back to latest monitored developments
+  const targetEvents = relevantEvents.length > 0 ? relevantEvents : events;
+  const criticals = targetEvents.filter(e => e.priority === 'CRITICAL');
+  const highs = targetEvents.filter(e => e.priority === 'HIGH');
+  const escalating = targetEvents.filter(e => e.status === 'Escalating');
+
+  const selectedShifts = (criticals.length > 0 ? criticals : (highs.length > 0 ? highs : targetEvents)).slice(0, 5);
+
+  return {
+    timeframe,
+    generatedAt: new Date().toISOString(),
+    stats: {
+      totalMonitored: events.length,
+      relevantInPeriod: relevantEvents.length > 0 ? relevantEvents.length : targetEvents.length,
+      criticalAlerts: criticals.length,
+      highAlerts: highs.length,
+      escalatingTheaters: escalating.length
+    },
+    topShifts: selectedShifts.map(e => ({
+      id: e.id,
+      headline: e.headline || e.title,
+      priority: e.priority || 'HIGH',
+      category: e.category || 'geopolitics',
+      location: e.sector || e.theater || e.location || 'Global Strategic Theater',
+      lat: e.lat,
+      lng: e.lng,
+      whatHappened: e.whatHappened || e.description || e.summary || 'Strategic development under continuous observation.',
+      whyItMatters: e.whyItMatters || 'Systemic balance-of-power development across regional SLOCs.',
+      indiaImpact: e.indiaImpact?.documented || e.indiaImpact?.potential || 'Maintains active diplomatic engagement and strategic monitoring.',
+      sources: (e.sources || []).slice(0, 2)
+    })),
+    indiaStrategicOutlook: {
+      posture: 'Strategic Autonomy & Maritime Preparedness',
+      keyPriorities: [
+        'Guarding Indian Ocean Sea Lines of Communication (Malacca, Bab el-Mandeb, Hormuz).',
+        'Enhancing Northern Border infrastructure and multi-domain deterrence along the LAC.',
+        'Diversifying strategic partnerships across Quad, BRICS, and European bilateral corridors.',
+        'Securing critical mineral imports and semiconductor supply chains against trade choke points.'
+      ]
+    }
+  };
+}

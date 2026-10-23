@@ -291,6 +291,7 @@ export default function GeointelGlobe({
   tacticalFlashpoint,
   activeScenario,
   activeLayers = {},
+  alertPriorityFilters = { critical: true, high: true, medium: false, low: false },
   mapMode = 'monochrome', // 'monochrome' | 'bathymetry' | 'thermal' | 'satellite'
   currentYear = 'PRESENT',
   hoverDelay = 1200,
@@ -1380,6 +1381,13 @@ export default function GeointelGlobe({
       const allFeedEvents = intelligenceFeed.getState().events;
       const activeEvents = allFeedEvents.filter(event => {
         if (!event || event.lat === undefined || event.lng === undefined) return false;
+
+        // Filter alerts by priority level (CRITICAL & HIGH enabled by default, MEDIUM & LOW filterable)
+        const priorityKey = (event.priority || 'MEDIUM').toLowerCase();
+        if (alertPriorityFilters && alertPriorityFilters[priorityKey] === false) {
+          return false;
+        }
+
         if (currentYear === 'PRESENT') return true;
         const yearInt = parseInt(currentYear, 10);
         return event.timeline ? event.timeline.some(t => {
@@ -1400,6 +1408,36 @@ export default function GeointelGlobe({
         hitMesh.userData = { event, type: 'event' };
         eventGroup.add(hitMesh);
         interactiveMarkersRef.current.push(hitMesh);
+
+        // Multi-country linked markers & connecting strategic dashed arcs
+        if (Array.isArray(event.secondaryCoordinates) && event.secondaryCoordinates.length > 0) {
+          event.secondaryCoordinates.forEach(sec => {
+            if (sec && sec.lat !== undefined && sec.lng !== undefined) {
+              const secPos = latLngToVector3(sec.lat, sec.lng, GLOBE_RADIUS * 1.008);
+              const secMesh = new THREE.Mesh(
+                new THREE.SphereGeometry(0.8, 12, 12),
+                new THREE.MeshBasicMaterial({ color: event.priority === 'CRITICAL' ? 0xFF3030 : 0xCCCCCC })
+              );
+              secMesh.position.copy(secPos);
+              eventGroup.add(secMesh);
+
+              // Sub-arc connecting secondary theater
+              const mid = pos.clone().add(secPos).multiplyScalar(0.5).normalize().multiplyScalar(GLOBE_RADIUS * 1.04);
+              const curve = new THREE.QuadraticBezierCurve3(pos, mid, secPos);
+              const lineGeom = new THREE.BufferGeometry().setFromPoints(curve.getPoints(20));
+              const lineMat = new THREE.LineDashedMaterial({
+                color: event.priority === 'CRITICAL' ? 0xFF3030 : 0x888888,
+                dashSize: 1.2,
+                gapSize: 0.8,
+                transparent: true,
+                opacity: 0.7
+              });
+              const line = new THREE.Line(lineGeom, lineMat);
+              line.computeLineDistances();
+              eventGroup.add(line);
+            }
+          });
+        }
 
         // Geometric shape based on category and priority
         const isCritical = event.priority === 'CRITICAL';
@@ -1611,7 +1649,7 @@ export default function GeointelGlobe({
         }
       });
     }
-  }, [activeLayers, currentYear, liveEventsVersion]);
+  }, [activeLayers, alertPriorityFilters, currentYear, liveEventsVersion]);
 
 
   // Update Bilateral Strategic Arcs (Monochrome fine white lines with traveling luminous photons)
