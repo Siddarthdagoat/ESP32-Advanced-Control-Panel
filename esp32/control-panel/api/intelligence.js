@@ -11,7 +11,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { defaultPipeline, getApiKey, getNewsDataApiKey, fetchNewsDataDispatches, executeGroqAgentChat, generateGlobalBriefing } from '../scripts/intelligencePipeline.js';
+import { defaultPipeline, getApiKey, getNewsApiKey, fetchCurrentsNewsDispatches, getNewsDataApiKey, fetchNewsDataDispatches, executeGroqAgentChat, generateGlobalBriefing } from '../scripts/intelligencePipeline.js';
 import { GEOPOLITICAL_CONSPIRACIES } from '../src/data/geointelConspiracies.js';
 import { COUNTRY_DOSSIERS, getCountryDossier } from '../src/data/geointelCountryDossiers.js';
 import { WORLD_HISTORY_EVENTS, HISTORICAL_PERIODS } from '../src/data/history/worldHistoryEvents.js';
@@ -77,14 +77,16 @@ export default async function handler(req, res) {
   // 1. Health check endpoint
   if (query.health === 'true') {
     const key = getApiKey();
-    const newsKey = getNewsDataApiKey();
+    const newsApiKey = getNewsApiKey();
+    const newsDataKey = getNewsDataApiKey();
     return res.status(200).json({
       status: 'OPERATIONAL',
-      provider: 'Groq Cloud High-Speed Inference & NewsData.io Live Dispatches',
+      provider: 'Groq Cloud High-Speed Inference & Currents API / NewsData.io Live Dispatches',
       model: 'openai/gpt-oss-120b',
       fallbackModel: 'qwen/qwen3.8-27b',
       isKeyConfigured: !!key,
-      isNewsDataConfigured: !!newsKey,
+      isNewsApiConfigured: !!newsApiKey,
+      isNewsDataConfigured: !!newsDataKey,
       service: 'GEOINTEL Planetary Ingestion Pipeline & Real-Time News Stream',
       totalConspiracies: GEOPOLITICAL_CONSPIRACIES.length,
       timestamp: new Date().toISOString()
@@ -154,16 +156,23 @@ export default async function handler(req, res) {
 
   // 7. Live News Dispatches Endpoint (?type=news)
   if (query.type === 'news') {
-    const newsKey = getNewsDataApiKey();
-    const q = query.q || 'geopolitics OR military OR sanctions OR conflict OR missile OR strait';
+    const newsApiKey = getNewsApiKey();
+    const newsDataKey = getNewsDataApiKey();
+    const q = query.q || 'geopolitics OR military OR sanctions OR conflict OR missile OR trade';
 
     // If live refresh requested or query specified and key exists
-    if ((query.refresh === 'true' || query.q) && newsKey) {
+    if ((query.refresh === 'true' || query.q) && (newsApiKey || newsDataKey)) {
       try {
-        const freshDispatches = await fetchNewsDataDispatches(newsKey, q);
+        let freshDispatches = [];
+        if (newsApiKey) {
+          freshDispatches = await fetchCurrentsNewsDispatches(newsApiKey, q);
+        }
+        if (freshDispatches.length === 0 && newsDataKey) {
+          freshDispatches = await fetchNewsDataDispatches(newsDataKey, q);
+        }
         return res.status(200).json({
           success: true,
-          provider: 'NewsData.io Real-Time Dispatch Engine',
+          provider: newsApiKey ? 'Currents API Real-Time Dispatch Engine' : 'NewsData.io Real-Time Dispatch Engine',
           query: q,
           total: freshDispatches.length,
           dispatches: freshDispatches
@@ -186,12 +195,18 @@ export default async function handler(req, res) {
     } catch (_) {}
 
     // Fallback: fetch directly if key exists
-    if (newsKey) {
+    if (newsApiKey || newsDataKey) {
       try {
-        const freshDispatches = await fetchNewsDataDispatches(newsKey, q);
+        let freshDispatches = [];
+        if (newsApiKey) {
+          freshDispatches = await fetchCurrentsNewsDispatches(newsApiKey, q);
+        }
+        if (freshDispatches.length === 0 && newsDataKey) {
+          freshDispatches = await fetchNewsDataDispatches(newsDataKey, q);
+        }
         return res.status(200).json({
           success: true,
-          provider: 'NewsData.io Real-Time Dispatch Engine',
+          provider: newsApiKey ? 'Currents API Real-Time Dispatch Engine' : 'NewsData.io Real-Time Dispatch Engine',
           query: q,
           total: freshDispatches.length,
           dispatches: freshDispatches
@@ -203,7 +218,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      provider: 'NewsData.io Real-Time Dispatch Engine',
+      provider: 'Currents API / NewsData.io Real-Time Dispatch Engine',
       total: 0,
       dispatches: []
     });

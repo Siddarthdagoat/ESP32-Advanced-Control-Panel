@@ -26,8 +26,11 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { INITIAL_INTELLIGENCE_EVENTS } from '../src/data/geointelEventsData.js';
+import { generateDoctrinalResponse } from '../src/services/geopoliticalAgentService.js';
 import {
   isCurrentAffairsQuery,
+  isTradePolicyQuery,
+  isDiplomaticMeetingQuery,
   executeRealtimeRetrieval,
   formatEvidenceBlock,
   validateAndSanitizeSources
@@ -60,6 +63,28 @@ export function getApiKey() {
   return null;
 }
 
+// Helper to safely load Currents API / News API key from .env or environment
+export function getNewsApiKey() {
+  if (process.env.NEWS_API_KEY && process.env.NEWS_API_KEY.trim()) {
+    return process.env.NEWS_API_KEY.trim();
+  }
+  if (process.env.CURRENTS_API_KEY && process.env.CURRENTS_API_KEY.trim()) {
+    return process.env.CURRENTS_API_KEY.trim();
+  }
+  if (process.env.VITE_NEWS_API_KEY && process.env.VITE_NEWS_API_KEY.trim()) {
+    return process.env.VITE_NEWS_API_KEY.trim();
+  }
+
+  const envPath = path.join(ROOT_DIR, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    const matchNews = envContent.match(/(?:NEWS_API_KEY|CURRENTS_API_KEY|VITE_NEWS_API_KEY)=([^\r\n]+)/);
+    if (matchNews && matchNews[1].trim()) return matchNews[1].trim();
+  }
+
+  return null;
+}
+
 // Helper to safely load NewsData.io API key from .env or environment
 export function getNewsDataApiKey() {
   if (process.env.NEWSDATA_API_KEY && process.env.NEWSDATA_API_KEY.trim()) {
@@ -77,6 +102,79 @@ export function getNewsDataApiKey() {
   }
 
   return null;
+}
+
+/**
+ * Ingest live geopolitical news dispatches directly from Currents API
+ */
+export async function fetchCurrentsNewsDispatches(newsKey, query = 'geopolitics OR military OR sanctions OR conflict OR missile OR trade') {
+  const key = newsKey || getNewsApiKey();
+  if (!key) return [];
+  const dispatches = [];
+
+  const queryKeywords = [
+    query,
+    'geopolitics',
+    'defense OR military',
+    'sanctions OR tariffs'
+  ];
+
+  for (const kw of queryKeywords.slice(0, 2)) {
+    try {
+      const url = `https://api.currentsapi.services/v1/search?language=en&keywords=${encodeURIComponent(kw)}&apiKey=${key}`;
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'GEOINTEL-Planetary-Monitor/2.0' },
+        signal: AbortSignal.timeout(10000)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'ok' && Array.isArray(data.news)) {
+          for (const item of data.news) {
+            if (item.title && (item.description || item.url)) {
+              let sourceName = item.author || 'Currents Wire';
+              if (item.url) {
+                try {
+                  sourceName = new URL(item.url).hostname.replace(/^www\./, '');
+                } catch (_) {}
+              }
+
+              dispatches.push({
+                source: sourceName,
+                sourceId: 'currents_api',
+                sourceType: 'news_agency',
+                title: item.title,
+                link: item.url,
+                pubDate: item.published || new Date().toISOString(),
+                description: (item.description || item.title || '').slice(0, 1000),
+                category: Array.isArray(item.category) ? item.category[0] : (item.category || 'world'),
+                imageUrl: item.image || null
+              });
+            }
+          }
+        }
+      } else if (res.status === 429) {
+        console.warn('Currents API rate limit reached (HTTP 429). Pacing requests.');
+        break;
+      } else {
+        console.warn(`Currents API returned HTTP ${res.status}`);
+      }
+    } catch (err) {
+      console.warn('Currents API fetch warning:', err.message);
+    }
+  }
+
+  // Deduplicate by title or link
+  const seen = new Set();
+  const deduped = [];
+  for (const d of dispatches) {
+    const norm = (d.title || d.link || '').toLowerCase().trim();
+    if (norm && !seen.has(norm)) {
+      seen.add(norm);
+      deduped.push(d);
+    }
+  }
+
+  return deduped;
 }
 
 /**
@@ -425,8 +523,17 @@ export class IntelligencePipeline {
         const raw = fs.readFileSync(this.storagePath, 'utf8');
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed.events) && parsed.events.length > 0) {
+          const normalized = parsed.events.map(e => ({
+            ...e,
+            eventOccurredAt: e.eventOccurredAt || e.publishedAt || "2026-10-01T00:00:00.000Z",
+            publishedAt: e.publishedAt || "2026-10-01T00:00:00.000Z",
+            firstDetectedAt: e.firstDetectedAt || e.publishedAt || "2026-10-01T00:00:00.000Z",
+            lastFetchedAt: e.lastFetchedAt || e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z",
+            lastSubstantiveUpdateAt: e.lastSubstantiveUpdateAt || e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z",
+            lastVerifiedAt: e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z"
+          }));
           return {
-            events: parsed.events,
+            events: normalized,
             telemetry: parsed.telemetry || {},
             changeLog: parsed.changeLog || []
           };
@@ -437,8 +544,18 @@ export class IntelligencePipeline {
     }
 
     // Fallback: baseline from INITIAL_INTELLIGENCE_EVENTS
+    const fallbackNormalized = INITIAL_INTELLIGENCE_EVENTS.map(e => ({
+      ...e,
+      eventOccurredAt: e.eventOccurredAt || e.publishedAt || "2026-10-01T00:00:00.000Z",
+      publishedAt: e.publishedAt || "2026-10-01T00:00:00.000Z",
+      firstDetectedAt: e.firstDetectedAt || e.publishedAt || "2026-10-01T00:00:00.000Z",
+      lastFetchedAt: e.lastFetchedAt || e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z",
+      lastSubstantiveUpdateAt: e.lastSubstantiveUpdateAt || e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z",
+      lastVerifiedAt: e.lastVerifiedAt || e.publishedAt || "2026-10-23T00:00:00.000Z"
+    }));
+
     return {
-      events: [...INITIAL_INTELLIGENCE_EVENTS],
+      events: fallbackNormalized,
       telemetry: { status: 'BASELINE_ACTIVE', lastSuccessfulRefresh: null },
       changeLog: []
     };
@@ -495,7 +612,29 @@ export class IntelligencePipeline {
     let candidateArticlesCount = 0;
     const rawNewsDataItems = [];
 
-    // STEP 1A: Fetch real-time dispatches from NewsData.io using API key
+    // STEP 1A: Fetch real-time dispatches from Currents API using API key
+    const newsApiKey = getNewsApiKey();
+    if (newsApiKey) {
+      try {
+        const currentsItems = await fetchCurrentsNewsDispatches(newsApiKey);
+        if (currentsItems.length > 0) {
+          sourcesChecked += 1;
+          candidateArticlesCount += currentsItems.length;
+          rawNewsDataItems.push(...currentsItems);
+
+          for (const item of currentsItems) {
+            const articleHash = `currents_${item.title}_${item.pubDate}`.slice(0, 100);
+            if (!processedCache.has(articleHash)) {
+              newDispatches.push({ ...item, hash: articleHash });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Currents API ingestion warning:', err.message);
+      }
+    }
+
+    // STEP 1B: Fetch real-time dispatches from NewsData.io using API key if configured
     const newsDataKey = getNewsDataApiKey();
     if (newsDataKey) {
       try {
@@ -524,7 +663,7 @@ export class IntelligencePipeline {
         if (!fs.existsSync(newsDir)) fs.mkdirSync(newsDir, { recursive: true });
         fs.writeFileSync(this.newsStoragePath, JSON.stringify({
           updatedAt: new Date().toISOString(),
-          provider: 'NewsData.io Real-Time Global Dispatch Engine',
+          provider: newsApiKey ? 'Currents API Real-Time Global Dispatch Engine' : 'NewsData.io Real-Time Global Dispatch Engine',
           total: rawNewsDataItems.length,
           dispatches: rawNewsDataItems
         }, null, 2), 'utf8');
@@ -661,7 +800,7 @@ export class IntelligencePipeline {
             sourceType: dispatch.sourceType,
             firstDetectedAt: prev.firstDetectedAt || prev.publishedAt || nowIso,
             lastFetchedAt: nowIso,
-            lastSubstantiveUpdateAt: nowIso,
+            lastSubstantiveUpdateAt: hasStatusChanged ? nowIso : (prev.lastSubstantiveUpdateAt || prev.firstDetectedAt || nowIso),
             lastVerifiedAt: nowIso,
             updateHistory: updatedHistory
           };
@@ -760,9 +899,10 @@ export class IntelligencePipeline {
       updatedCount,
       newInCycle: createdCount,
       updatedInCycle: updatedCount,
-      feedHealth: sourcesChecked >= (AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)) 
-        ? `ALL SOURCES ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)}) · NEWSDATA.IO CONNECTED` 
-        : `ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsDataKey ? 1 : 0)})`,
+      feedHealth: sourcesChecked >= (AUTHORITATIVE_FEEDS.length + (newsApiKey ? 1 : 0) + (newsDataKey ? 1 : 0)) 
+        ? `ALL SOURCES ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsApiKey ? 1 : 0) + (newsDataKey ? 1 : 0)}) · LIVE NEWS WIRE CONNECTED` 
+        : `ACTIVE (${sourcesChecked}/${AUTHORITATIVE_FEEDS.length + (newsApiKey ? 1 : 0) + (newsDataKey ? 1 : 0)})`,
+      isNewsApiConfigured: !!newsApiKey,
       isNewsDataConfigured: !!newsDataKey,
       newsDataDispatchesCount: rawNewsDataItems.length,
       totalActiveEvents: currentEvents.length,
@@ -851,14 +991,27 @@ CRITICAL FACTUAL INTEGRITY & ANTI-HALLUCINATION PROTOCOL:
    - For the Badr MoU (signed 21 October 2026 in Doha, Qatar by Türkiye, Pakistan, Qatar, and Indonesia):
      - It is a multilateral defence-industrial cooperation agreement focused on joint military equipment production, defense R&D, technology transfer, and technical training.
      - You MUST explicitly clarify that it is an industrial/technical cooperation MoU, NOT a mutual defense pact or collective security alliance (distinct from the August 2026 Makkah Joint Defence Agreement).
-4. REQUIRED STRUCTURE FOR CURRENT-AFFAIRS & EVENT QUERIES:
+4. SPECIFIC GEOPOLITICAL DOMAIN PROTOCOLS:
+   - US TRADE TARIFFS ON INDIA:
+     - Distinguish binding statutory tariffs from political campaign rhetoric or universal tariff proposals.
+     - Accurately state statutory legal authorities: Section 232 of Trade Expansion Act of 1962 (national security tariffs: 25% steel, 10% aluminum), Section 301 of Trade Act of 1974 (unfair trade / digital services tax equalization levy), and GSP status.
+     - Record the bilateral dispute resolution: Note India's 2019 retaliatory duties on 28 US items (almonds, walnuts, apples, etc.) and the landmark June 2023 bilateral WTO settlement during PM Modi's Washington visit which terminated 6 WTO disputes and removed retaliatory tariffs.
+   - INDIA-POLAND DIPLOMATIC DEVELOPMENTS:
+     - Accurately sequence and distinguish diplomatic tiers: Distinguish ministerial talks between External Affairs Minister Dr. S. Jaishankar and Polish Foreign Minister Radosław Sikorski from Polish Prime Minister Donald Tusk's bilateral state visit to New Delhi.
+     - Highlight agenda pillars: Upgrade to Strategic Partnership, defense cooperation & modernization of legacy platforms, green technology/EV mobility, IT/cyber cooperation, and Poland's perspectives on the Ukraine conflict alongside India's call for diplomacy.
+   - CONFLICTING REPORTS & COMPETING CLAIMS (e.g., Zangezur Corridor):
+     - Present competing sovereign claims objectively:
+       - Azerbaijan: Seeks unhindered sovereign transport access connecting mainland Azerbaijan to the Nakhchivan exclave under Article 9 of the 2020 ceasefire statement.
+       - Armenia: Insists on full sovereignty and customs/border jurisdiction over all transit corridors passing through its sovereign territory ("Crossroads of Peace" initiative).
+       - Regional dynamics: Iran's red line opposing any geopolitical boundary changes severing its direct frontier with Armenia; Russia's changing role in border oversight.
+5. REQUIRED STRUCTURE FOR CURRENT-AFFAIRS & EVENT QUERIES:
    Use clear Markdown headers:
-   - **Confirmed Facts**: Signatories, date, location, and stated provisions verified by retrieved sources.
-   - **Strategic Significance (Analysis)**: Regional balance of power and geopolitical implications, explicitly labeled as analysis. Include India's strategic calculus (e.g. monitoring Pakistan-Turkey defense tech transfer while leveraging bilateral energy ties with Qatar and maritime partnership with Indonesia).
+   - **Confirmed Facts**: Signatories/actors, dates, statutory basis, locations, and stated provisions verified by retrieved sources.
+   - **Strategic Significance (Analysis)**: Regional balance of power and geopolitical implications, explicitly labeled as analysis. Include India's strategic calculus.
    - **Sources & Evidence Confidence**: Qualitative evaluation of source authority (no arbitrary numerical scores).
-5. CITATIONS:
+6. CITATIONS:
    - The "sources" array in your JSON output must ONLY contain real URLs from the provided <verified_retrieved_evidence>. If no verified sources exist, return []. NEVER make up URLs.
-6. MANDATORY JSON FORMAT:
+7. MANDATORY JSON FORMAT:
    - You MUST ALWAYS return ONLY a valid JSON object matching the schema below. Even if expressing uncertainty or stating that a development could not be verified, always wrap your answer inside the JSON schema. Never output raw unformatted text outside JSON.
 
 OUTPUT FORMAT:
@@ -891,13 +1044,26 @@ CRITICAL FACTUAL INTEGRITY & ANTI-HALLUCINATION PROTOCOL:
    - For the Badr MoU (signed 21 October 2026 in Doha, Qatar by Türkiye, Pakistan, Qatar, and Indonesia):
      - Framework: Multilateral defence-industrial cooperation (joint manufacturing, R&D, tech transfer, technical training).
      - Operational boundary: It does NOT establish a mutual defence commitment or collective security guarantee (distinct from the August 2026 Makkah Joint Defence Agreement).
-4. REQUIRED STRUCTURE FOR INTELLIGENCE BRIEFS:
-   - **Confirmed Facts**: Verified signatories, date of signing, venue, and explicit technical scope.
+4. DOCTRINAL DOMAIN PROTOCOLS:
+   - US TARIFF POLICY TOWARD INDIA:
+     - Differentiate statutory legal authorities and USTR administrative orders from political campaign rhetoric.
+     - Delineate statutory mechanisms: Section 232 of Trade Expansion Act of 1962 (national security tariffs: 25% steel, 10% aluminum), Section 301 of Trade Act of 1974 (unfair trade / digital services tax equalization levy), and GSP status.
+     - Articulate dispute settlement record: Detail India's 2019 retaliatory duties across 28 US items and the June 2023 bilateral WTO settlement terminating 6 disputes and rescinding retaliatory duties.
+   - POLAND-INDIA STRATEGIC DIPLOMACY:
+     - Accurately sequence engagements: Distinguish bilateral ministerial talks between EAM Dr. S. Jaishankar and FM Radosław Sikorski from Prime Minister Donald Tusk's bilateral state visit to New Delhi.
+     - Analyze focal priorities: Elevation to Strategic Partnership, defense-industrial cooperation (modernizing legacy Soviet platforms), green technologies/EV supply chains, and Poland's strategic posture regarding Ukraine alongside India's dialogue-first diplomatic posture.
+   - CONFLICTING ASSESSMENTS & COMPETING DOCTRINES (e.g., Zangezur Corridor):
+     - Objectively delineate competing strategic imperatives:
+       - Azerbaijan: Demands unimpeded sovereign transit between mainland Azerbaijan and the Nakhchivan exclave under Article 9 of the Nov 2020 ceasefire statement.
+       - Armenia: Insists on uncompromised territorial sovereignty and customs jurisdiction ("Crossroads of Peace" initiative).
+       - Regional balance: Iran's active red line against geopolitical alterations cutting off its direct link to Armenia; Russia's evolving security posture.
+5. REQUIRED STRUCTURE FOR INTELLIGENCE BRIEFS:
+   - **Confirmed Facts**: Verified signatories, statutory authority, date, venue, and explicit technical scope.
    - **Strategic Significance (Analysis)**: Doctrinal implications, power distribution, second-order escalation vectors, and New Delhi's maritime/border posture (explicitly labeled as analysis).
    - **Sources & Evidence Confidence**: High/Moderate/Low qualitative confidence assessment citing only authentic retrieved reporting.
-5. CITATIONS:
+6. CITATIONS:
    - The "sources" array in your JSON output must ONLY contain real URLs from the provided <verified_retrieved_evidence>. If no verified sources exist, return []. NEVER invent URLs.
-6. MANDATORY JSON FORMAT:
+7. MANDATORY JSON FORMAT:
    - You MUST ALWAYS return ONLY a valid JSON object matching the schema below. Even if expressing uncertainty or stating that an event could not be verified, always wrap your answer inside the JSON schema. Never output raw unformatted text outside JSON.
 
 OUTPUT FORMAT:
@@ -909,7 +1075,37 @@ Return a JSON object:
   "followUps": [string, string, string]
 }`;
 
-  const formattedContext = JSON.stringify(context, null, 2);
+  // Enrich context with verified baseline intelligence for key topics
+  const enrichedContext = { ...context };
+  const msgLower = message.toLowerCase();
+
+  if (isTradePolicyQuery(message) && (msgLower.includes('india') || msgLower.includes('us') || msgLower.includes('united states') || msgLower.includes('america'))) {
+    enrichedContext.usIndiaTradeTariffsBaseline = {
+      section232: 'National security tariffs of 25% on steel and 10% on aluminum under Trade Expansion Act 1962.',
+      section301: 'Investigated unfair trade practices and digital service taxes (India 2% Equalization Levy).',
+      wtoDisputeSettlement: 'June 2023 Washington bilateral resolution at WTO terminating 6 disputes; India removed retaliatory tariffs on US goods (almonds, walnuts, apples, chickpeas, lentils).'
+    };
+  }
+
+  if (isDiplomaticMeetingQuery(message) && (msgLower.includes('poland') || msgLower.includes('polish')) && msgLower.includes('india')) {
+    enrichedContext.indiaPolandDiplomaticBaseline = {
+      elevation: 'Elevated bilateral relations to Strategic Partnership.',
+      tuskVisit: 'Prime Minister Donald Tusk conducted a landmark bilateral state visit to New Delhi for summit talks with PM Modi.',
+      ministerialConsultations: 'External Affairs Minister Dr. S. Jaishankar and Polish Foreign Minister Radosław Sikorski held bilateral consultations.',
+      pillars: 'Defense co-production and Soviet legacy modernization, EV battery and clean tech, and perspectives on Ukraine conflict.'
+    };
+  }
+
+  if (msgLower.includes('zangezur') || (msgLower.includes('corridor') && (msgLower.includes('armenia') || msgLower.includes('azerbaijan')))) {
+    enrichedContext.zangezurCorridorPositions = {
+      azerbaijan: 'Demands unimpeded sovereign transit route linking mainland Azerbaijan to Nakhchivan under Article 9 of Nov 2020 ceasefire.',
+      armenia: 'Insists on full territorial sovereignty, reciprocity, and customs/border jurisdiction over all routes (Crossroads of Peace initiative).',
+      iran: 'Firm opposition to geopolitical border changes severing direct Iran-Armenia border.',
+      russia: 'Article 9 assigned border guard monitoring to FSB, now contested by Yerevan.'
+    };
+  }
+
+  const formattedContext = JSON.stringify(enrichedContext, null, 2);
   const formattedHistory = Array.isArray(history) 
     ? history.map(h => `${h.role === 'user' ? 'User' : 'GEOINTEL'}: ${h.content}`).join('\n\n')
     : '';
@@ -920,7 +1116,7 @@ ${formattedContext}
 ${formattedHistory ? `RECENT CONVERSATION HISTORY:\n${formattedHistory}\n\n` : ''}USER INQUIRY:
 ${message}`;
 
-  const models = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
+  const models = ['qwen/qwen3.8-27b', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
   let lastErr = null;
 
   for (const model of models) {
@@ -938,6 +1134,7 @@ ${message}`;
             { role: 'user', content: userContent }
           ],
           response_format: { type: 'json_object' },
+          max_tokens: 850,
           temperature: isBeginner ? 0.2 : 0.1
         }),
         signal: AbortSignal.timeout(18000)
@@ -951,15 +1148,16 @@ ${message}`;
             const fg = errObj.error.failed_generation;
             let parsedFg = null;
             try { parsedFg = JSON.parse(fg); } catch (_) {}
-            const finalText = parsedFg?.text || fg;
-            const validRetrieved = retrievalResult ? retrievalResult.sources : [];
-            return validateAndSanitizeSources({
-              text: finalText,
-              mode,
-              sources: parsedFg?.sources || (validRetrieved.length > 0 ? validRetrieved.slice(0, 3) : []),
-              followUps: parsedFg?.followUps || [],
-              model
-            }, validRetrieved);
+            if (parsedFg && parsedFg.text && parsedFg.text.length > 20 && !parsedFg.text.toLowerCase().startsWith('max completion')) {
+              const validRetrieved = retrievalResult ? retrievalResult.sources : [];
+              return validateAndSanitizeSources({
+                text: parsedFg.text,
+                mode,
+                sources: parsedFg.sources || (validRetrieved.length > 0 ? validRetrieved.slice(0, 3) : []),
+                followUps: parsedFg.followUps || [],
+                model
+              }, validRetrieved);
+            }
           }
         } catch (_) {}
         throw new Error(`Groq HTTP ${res.status}: ${errText}`);
@@ -974,8 +1172,9 @@ ${message}`;
         const validRetrieved = retrievalResult ? retrievalResult.sources : [];
         parsed = validateAndSanitizeSources(parsed, validRetrieved);
 
-        // Deterministic guardrail for unverified / nonexistent current affairs events
-        if (isCurrentAffairs && (!retrievalResult || !retrievalResult.hasEvidence)) {
+        // Deterministic guardrail for unverified / nonexistent current affairs events (e.g. fictitious treaties)
+        const isDisputedOrEstablishedConcept = /\b(zangezur|westphalia|string of pearls|malacca|hormuz|taiwan|sovereignty)\b/i.test(message);
+        if (isCurrentAffairs && (!retrievalResult || !retrievalResult.hasEvidence) && !isDisputedOrEstablishedConcept) {
           const standardDisclaimer = "I couldn't reliably verify this development from the available sources. I don't want to give you an incorrect answer.";
           if (!parsed.text.includes(standardDisclaimer) && !parsed.text.toLowerCase().includes("couldn't reliably verify")) {
             parsed.text = `${standardDisclaimer}\n\nThere is no confirmed record of this agreement, treaty, or event in international diplomatic registries, official government communiqués, or verified global news wires.\n\n${parsed.text}`;
@@ -996,6 +1195,20 @@ ${message}`;
       console.warn(`Groq chat model ${model} failed, attempting next:`, err.message);
     }
   }
+
+  // If all Groq models exhausted or rate-limited, fall back to grounded doctrinal knowledge
+  try {
+    const doctrinal = generateDoctrinalResponse(message, mode, enrichedContext);
+    if (doctrinal && doctrinal.text) {
+      return {
+        text: doctrinal.text,
+        mode,
+        sources: doctrinal.sources || [],
+        followUps: doctrinal.followUps || [],
+        model: 'geointel-doctrinal-grounding'
+      };
+    }
+  } catch (_) {}
 
   throw lastErr || new Error('All Groq agent models exhausted');
 }

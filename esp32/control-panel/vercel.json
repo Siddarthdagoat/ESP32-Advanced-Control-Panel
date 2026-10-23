@@ -21,5 +21,11 @@
   ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/" }
+  ],
+  "crons": [
+    {
+      "path": "/api/intelligence?action=refresh",
+      "schedule": "0 * * * *"
+    }
   ]
 }

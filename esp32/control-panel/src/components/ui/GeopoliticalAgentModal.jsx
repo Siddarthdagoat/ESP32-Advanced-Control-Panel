@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { getCountryDossier } from '../../data/geointelCountryDossiers';
 import { GEOPOLITICAL_TERMS } from '../../data/geopoliticalTerms';
-import { retrieveGeopoliticalContext } from '../../services/geopoliticalAgentService';
+import { retrieveGeopoliticalContext, generateDoctrinalResponse } from '../../services/geopoliticalAgentService';
 
 // Quick-start Prompts
 const QUICK_PROMPTS = {
@@ -227,6 +227,12 @@ Output JSON: { "text": "markdown...", "sources": [{"title": "string", "claimType
       }
 
       // 3. Fallback message if all APIs fail
+      if (!responseData) {
+        try {
+          responseData = generateDoctrinalResponse(textToSend, mode, combinedContext);
+        } catch (_) {}
+      }
+
       if (!responseData) {
         responseData = {
           text: `**Intelligence Briefing: ${textToSend}**\n\nGEOINTEL's live inference server is currently experiencing network latency. Here is the verified baseline:\n\n- **Geopolitical Significance**: Key strategic friction point in contemporary multilateral relations.\n- **India's Stance**: Rooted in Strategic Autonomy, multi-alignment, and safeguarding critical maritime sea lanes.\n- **Risk Factor**: Moderate to high escalation potential depending on naval deployments and sanctions regimes.`,

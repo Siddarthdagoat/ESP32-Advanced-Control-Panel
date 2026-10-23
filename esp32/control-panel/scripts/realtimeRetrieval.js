@@ -16,7 +16,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getNewsDataApiKey, fetchNewsDataDispatches } from './intelligencePipeline.js';
+import { getNewsApiKey, fetchCurrentsNewsDispatches, getNewsDataApiKey, fetchNewsDataDispatches } from './intelligencePipeline.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,7 +31,9 @@ const GEOPOLITICAL_ALIASES = {
   'aukus': ['AUKUS', 'Australia UK US nuclear submarine pact'],
   'quad': ['Quadrilateral Security Dialogue', 'India US Japan Australia'],
   'imec': ['India-Middle East-Europe Economic Corridor'],
-  'cpec': ['China-Pakistan Economic Corridor']
+  'cpec': ['China-Pakistan Economic Corridor'],
+  'tusk': ['Donald Tusk', 'Poland Prime Minister', 'Poland India bilateral'],
+  'sikorski': ['Radoslaw Sikorski', 'Poland Foreign Minister', 'Poland Foreign Affairs']
 };
 
 /**
@@ -45,17 +47,33 @@ export function isCurrentAffairsQuery(query = '') {
     return true;
   }
 
-  // Diplomatic, military, or legal event triggers
-  if (/\b(mou|memorandum|treaty|agreement|accord|pact|summit|signed|signing|ratified|election|coup|airstrike|missile test|sanctions|tariff|ceasefire|exercise|blockade|protocol|corridor|communique|convention)\b/.test(q)) {
+  // Diplomatic, military, trade, or legal event triggers
+  if (/\b(mou|memorandum|treaty|agreement|accord|pact|summit|signed|signing|ratified|election|coup|airstrike|missile test|sanctions|tariff|tariffs|duty|duties|trade war|ceasefire|exercise|blockade|protocol|corridor|communique|convention|visit|talks|bilateral)\b/.test(q)) {
     return true;
   }
 
   // Questions inquiring about occurrence or specifics of an event
-  if (/^(what happened|did .* happen|explain the .* (mou|pact|treaty|deal|accord)|is it true that|tell me about the recent)/i.test(q)) {
+  if (/^(what happened|did .* happen|explain the .* (mou|pact|treaty|deal|accord|visit|tariff|tariffs)|is it true that|tell me about the recent)/i.test(q)) {
     return true;
   }
 
   return false;
+}
+
+/**
+ * Detects trade policy, tariff, or WTO dispute queries
+ */
+export function isTradePolicyQuery(query = '') {
+  const q = query.toLowerCase();
+  return /\b(tariff|tariffs|duty|duties|trade war|section 232|section 301|gsp|generalized system of preferences|retaliatory tariff|customs duty|import tax|trade dispute|wto dispute|reciprocal tariff)\b/i.test(q);
+}
+
+/**
+ * Detects bilateral high-level ministerial meetings or state visits
+ */
+export function isDiplomaticMeetingQuery(query = '') {
+  const q = query.toLowerCase();
+  return /\b(bilateral visit|state visit|meeting|talks|minister|foreign minister|prime minister|president|chancellor|jaishankar|sikorski|tusk|modi|summit|dialogue|diplomatic|bilateral relations|developments)\b/i.test(q);
 }
 
 /**
@@ -74,6 +92,33 @@ export function extractSearchQueries(userQuery = '') {
 
   if (cleaned) {
     queries.add(cleaned);
+  }
+
+  // Check for trade policy queries involving US and India
+  if (isTradePolicyQuery(userQuery)) {
+    if ((lower.includes('india') || lower.includes('indian')) && (lower.includes('us') || lower.includes('usa') || lower.includes('united states') || lower.includes('america'))) {
+      queries.add('US India tariffs Section 232 Section 301 WTO settlement');
+      queries.add('United States tariffs on India steel aluminum retaliatory duties');
+      queries.add('US India trade dispute settlement WTO Modi visit');
+    } else {
+      queries.add(`${cleaned} trade policy tariffs WTO`);
+    }
+  }
+
+  // Check for diplomatic meetings involving Poland and India
+  if (isDiplomaticMeetingQuery(userQuery)) {
+    if ((lower.includes('poland') || lower.includes('polish') || lower.includes('warsaw')) && (lower.includes('india') || lower.includes('indian') || lower.includes('delhi'))) {
+      queries.add('India Poland bilateral visit Donald Tusk New Delhi');
+      queries.add('Jaishankar Sikorski India Poland foreign minister consultations');
+      queries.add('India Poland strategic partnership defense clean energy Ukraine');
+    }
+  }
+
+  // Check for Zangezur corridor queries
+  if (lower.includes('zangezur') || (lower.includes('corridor') && (lower.includes('armenia') || lower.includes('azerbaijan')))) {
+    queries.add('Zangezur corridor Armenia Azerbaijan Syunik');
+    queries.add('Crossroads of Peace Armenia Azerbaijan transit corridor');
+    queries.add('Iran position Zangezur corridor border red line');
   }
 
   // Check for phonetic typos or acronyms (e.g. BATR -> Badr)
@@ -102,7 +147,7 @@ export function extractSearchQueries(userQuery = '') {
     queries.add(`${treatySubject} ${agreementMatch[2]} 2026`);
   }
 
-  return Array.from(queries).slice(0, 4);
+  return Array.from(queries).slice(0, 5);
 }
 
 /**
@@ -280,6 +325,55 @@ export async function searchDuckDuckGo(query) {
 }
 
 /**
+ * Search live global news via Currents API
+ */
+export async function searchCurrentsNews(query) {
+  const apiKey = getNewsApiKey();
+  if (!apiKey) return [];
+
+  const results = [];
+  try {
+    const encoded = encodeURIComponent(query);
+    const url = `https://api.currentsapi.services/v1/search?language=en&keywords=${encoded}&apiKey=${apiKey}`;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'GEOINTEL-Planetary-Monitor/2.0' },
+      signal: AbortSignal.timeout(9000)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === 'ok' && Array.isArray(data.news)) {
+        for (const item of data.news) {
+          if (item.title && (item.description || item.url)) {
+            let sourceName = item.author || 'Currents Wire';
+            if (item.url) {
+              try {
+                sourceName = new URL(item.url).hostname.replace(/^www\./, '');
+              } catch (_) {}
+            }
+
+            results.push({
+              title: item.title,
+              url: item.url,
+              snippet: (item.description || item.title || '').replace(/\s+/g, ' ').slice(0, 500),
+              sourceName,
+              pubDate: item.published || 'Recent 2026',
+              sourceType: classifySourceAuthority(item.url)
+            });
+          }
+        }
+      }
+    } else if (res.status === 429) {
+      console.warn('Currents API rate limited (429) during real-time retrieval');
+    }
+  } catch (err) {
+    console.warn(`Currents API search error for "${query}":`, err.message);
+  }
+
+  return results;
+}
+
+/**
  * Searches configured NewsData.io API for the given query terms
  */
 export async function searchNewsData(query) {
@@ -426,6 +520,15 @@ function expandConceptAliases(word) {
   if (word === 'chinese' || word === 'china') { set.add('chinese'); set.add('china'); }
   if (word === 'russian' || word === 'russia') { set.add('russian'); set.add('russia'); }
   if (word === 'turkish' || word === 'turkey' || word === 'türkiye') { set.add('turkish'); set.add('turkey'); set.add('türkiye'); }
+  if (word === 'poland' || word === 'polish' || word === 'warsaw' || word === 'tusk' || word === 'sikorski') {
+    set.add('poland'); set.add('polish'); set.add('warsaw'); set.add('tusk'); set.add('sikorski');
+  }
+  if (word === 'tariff' || word === 'tariffs' || word === 'duty' || word === 'duties' || word === 'trade') {
+    set.add('tariff'); set.add('tariffs'); set.add('duty'); set.add('duties'); set.add('trade'); set.add('section');
+  }
+  if (word === 'zangezur' || word === 'syunik' || word === 'nakhchivan') {
+    set.add('zangezur'); set.add('syunik'); set.add('nakhchivan'); set.add('armenia'); set.add('azerbaijan'); set.add('corridor');
+  }
   return Array.from(set);
 }
 
@@ -527,6 +630,14 @@ export async function executeRealtimeRetrieval(userQuery) {
     searchPromises.push(searchWikipedia(q));
     searchPromises.push(searchDuckDuckGo(q));
     searchPromises.push(Promise.resolve(searchLocalFeeds(q)));
+  }
+
+  // Currents API news search with queries if configured
+  if (getNewsApiKey() && searchQueries.length > 0) {
+    searchPromises.push(searchCurrentsNews(searchQueries[0]));
+    if (searchQueries.length > 1) {
+      searchPromises.push(searchCurrentsNews(searchQueries[1]));
+    }
   }
 
   // NewsData query once with primary query if configured

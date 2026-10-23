@@ -120,7 +120,11 @@
           "STRATEGIC_DEPTH"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:48:51.196Z",
+      "firstDetectedAt": "2026-10-09T10:48:51.196Z",
+      "lastFetchedAt": "2026-10-09T11:00:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T11:00:51.196Z"
     },
     {
       "id": "evt_red_sea_houthi",
@@ -234,7 +238,11 @@
           "SM6",
           "SHAHED_136"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:38:51.194Z",
+      "firstDetectedAt": "2026-10-09T10:38:51.194Z",
+      "lastFetchedAt": "2026-10-09T10:58:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:58:51.195Z"
     },
     {
       "id": "evt_lebanon_israel_litani",
@@ -332,7 +340,11 @@
           "SPIKE",
           "F35"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:23:51.196Z",
+      "firstDetectedAt": "2026-10-09T10:23:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:56:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:56:51.196Z"
     },
     {
       "id": "evt_taiwan_strait_airsea",
@@ -439,7 +451,11 @@
           "PATRIOT",
           "TYPE_055"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:28:51.195Z",
+      "firstDetectedAt": "2026-10-09T10:28:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:55:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:55:51.195Z"
     },
     {
       "id": "evt_iran_israel_standoff",
@@ -538,7 +554,11 @@
           "IRON_DOME",
           "F35"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:33:51.195Z",
+      "firstDetectedAt": "2026-10-09T09:33:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:51:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:51:51.195Z"
     },
     {
       "id": "evt_ukraine_eastern_front",
@@ -645,7 +665,11 @@
           "SU57",
           "F16"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T10:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:48:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:48:51.195Z"
     },
     {
       "id": "evt_us_china_tariffs_semiconductors",
@@ -746,7 +770,11 @@
           "TRADE_CORRIDOR"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:38:51.195Z",
+      "firstDetectedAt": "2026-10-09T09:38:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:47:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:47:51.195Z"
     },
     {
       "id": "evt_live_1792155056978_kl2v",
@@ -1237,7 +1265,10 @@
           "type": "news_agency",
           "publishedAt": "Fri, 09 Oct 2026 10:00:49 GMT"
         }
-      ]
+      ],
+      "eventOccurredAt": "Fri, 09 Oct 2026 10:00:49 GMT",
+      "lastFetchedAt": "2026-10-09T11:13:40.638Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T11:13:40.638Z"
     },
     {
       "id": "evt_live_1791543850524_lfea",
@@ -1325,7 +1356,10 @@
           "type": "news_agency",
           "publishedAt": "Fri, 09 Oct 2026 10:07:04 GMT"
         }
-      ]
+      ],
+      "eventOccurredAt": "Fri, 09 Oct 2026 10:07:04 GMT",
+      "lastFetchedAt": "2026-10-09T11:04:10.524Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T11:04:10.524Z"
     },
     {
       "id": "evt_hormuz_surveillance",
@@ -1423,7 +1457,11 @@
         "military": [
           "P8I"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:18:51.195Z",
+      "firstDetectedAt": "2026-10-09T10:18:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:53:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:53:51.195Z"
     },
     {
       "id": "evt_south_china_sea_shoal",
@@ -1526,7 +1564,11 @@
           "BRAHMOS",
           "P8I"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T10:13:51.195Z",
+      "firstDetectedAt": "2026-10-09T10:13:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:49:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:49:51.195Z"
     },
     {
       "id": "evt_luzon_archipelago_defense",
@@ -1625,7 +1667,11 @@
           "BRAHMOS",
           "TYPHON_MISSILE"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:18:51.196Z",
+      "firstDetectedAt": "2026-10-09T09:18:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:45:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:45:51.196Z"
     },
     {
       "id": "evt_baltic_infrastructure_alert",
@@ -1725,7 +1771,11 @@
           "EEZ"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T09:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:45:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:45:51.195Z"
     },
     {
       "id": "evt_counter_space_gps_electronic",
@@ -1825,7 +1875,11 @@
           "ASYMMETRIC_WARFARE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:48:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:48:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:43:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:43:51.196Z"
     },
     {
       "id": "evt_korean_peninsula_missiles",
@@ -1923,7 +1977,11 @@
           "THAAD",
           "PATRIOT"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:48:51.195Z",
+      "firstDetectedAt": "2026-10-09T09:48:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:43:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:43:51.195Z"
     },
     {
       "id": "evt_pak_afghan_durand_clashes",
@@ -2015,7 +2073,11 @@
           "BUFFER_STATE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T09:13:51.195Z",
+      "firstDetectedAt": "2026-10-09T09:13:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:41:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:41:51.195Z"
     },
     {
       "id": "evt_gwadar_port_cpec_security",
@@ -2108,7 +2170,11 @@
           "SPHERE_OF_INFLUENCE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:58:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:58:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:39:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:39:51.196Z"
     },
     {
       "id": "evt_black_sea_naval_drones",
@@ -2206,7 +2272,11 @@
           "KALIBR",
           "HARPOON"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:33:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:33:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:38:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:38:51.196Z"
     },
     {
       "id": "evt_critical_minerals_cartel",
@@ -2301,7 +2371,11 @@
           "ECONOMIC_SANCTIONS"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:23:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:23:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:37:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:37:51.196Z"
     },
     {
       "id": "evt_myanmar_civil_war_kaladan",
@@ -2401,7 +2475,11 @@
           "ASYMMETRIC_WARFARE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:18:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:18:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:35:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:35:51.196Z"
     },
     {
       "id": "evt_sudan_civil_war_redsea",
@@ -2496,7 +2574,11 @@
           "ENERGY_SECURITY"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:43:51.195Z",
+      "firstDetectedAt": "2026-10-09T08:43:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:35:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:35:51.195Z"
     },
     {
       "id": "evt_ethiopia_somaliland_berbera",
@@ -2598,7 +2680,11 @@
           "SPHERE_OF_INFLUENCE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:13:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:13:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:33:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:33:51.196Z"
     },
     {
       "id": "evt_lac_disengagement_verification",
@@ -2686,7 +2772,11 @@
           "S400",
           "AKASH"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T08:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:33:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:33:51.195Z"
     },
     {
       "id": "evt_arctic_northern_sea_route",
@@ -2784,7 +2874,11 @@
           "YASEN_M",
           "P8I"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T08:23:51.196Z",
+      "firstDetectedAt": "2026-10-09T08:23:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:31:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:31:51.196Z"
     },
     {
       "id": "evt_senkaku_diaoyu_standoff",
@@ -2880,7 +2974,11 @@
           "TYPE_12_SSM",
           "PATRIOT"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:58:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:58:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:31:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:31:51.196Z"
     },
     {
       "id": "evt_bangladesh_interim_transition",
@@ -2978,7 +3076,11 @@
           "TRADE_CORRIDOR"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:53:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:53:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:28:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:28:51.196Z"
     },
     {
       "id": "evt_nordic_defense_integration",
@@ -3078,7 +3180,11 @@
           "GRIPEN",
           "F35"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:43:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:43:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:28:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:28:51.196Z"
     },
     {
       "id": "evt_drc_coltan_m23_conflict",
@@ -3173,7 +3279,11 @@
           "TRADE_CORRIDOR"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:33:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:33:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:25:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:25:51.196Z"
     },
     {
       "id": "evt_brics_financial_dedollarization",
@@ -3269,7 +3379,11 @@
           "BALANCE_OF_POWER"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:43:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:43:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:23:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:23:51.196Z"
     },
     {
       "id": "evt_suwalki_gap_hardening",
@@ -3373,7 +3487,11 @@
           "LEOPARD_2",
           "PATRIOT"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T06:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T06:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:23:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:23:51.195Z"
     },
     {
       "id": "evt_aukus_pillar_submarines",
@@ -3478,7 +3596,11 @@
           "VIRGINIA_CLASS",
           "ASTUTE_CLASS"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:23:51.196Z",
+      "firstDetectedAt": "2026-10-09T07:23:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:18:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:18:51.196Z"
     },
     {
       "id": "evt_libya_oil_central_bank",
@@ -3572,7 +3694,11 @@
           "STATUS_QUO"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T05:53:51.196Z",
+      "firstDetectedAt": "2026-10-09T05:53:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:11:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:11:51.196Z"
     },
     {
       "id": "evt_live_1792155053656_cdch",
@@ -3777,7 +3903,10 @@
           "type": "news_agency",
           "publishedAt": "Fri, 09 Oct 2026 10:40:36 +0000"
         }
-      ]
+      ],
+      "eventOccurredAt": "Fri, 09 Oct 2026 10:40:36 +0000",
+      "lastFetchedAt": "2026-10-09T11:13:35.624Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T11:13:35.624Z"
     },
     {
       "id": "evt_live_1791543846937_cxiw",
@@ -3852,7 +3981,10 @@
           "type": "news_agency",
           "publishedAt": "Fri, 09 Oct 2026 10:18:41 +0000"
         }
-      ]
+      ],
+      "eventOccurredAt": "Fri, 09 Oct 2026 10:18:41 +0000",
+      "lastFetchedAt": "2026-10-09T11:04:06.937Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T11:04:06.937Z"
     },
     {
       "id": "evt_sri_lanka_colombo_terminal",
@@ -3945,7 +4077,11 @@
           "BALANCE_OF_POWER"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T06:53:51.196Z",
+      "firstDetectedAt": "2026-10-09T06:53:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:21:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:21:51.196Z"
     },
     {
       "id": "evt_maldives_strategic_recalibration",
@@ -4040,7 +4176,11 @@
           "P8I",
           "DORNIER_228"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T07:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T07:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:18:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:18:51.195Z"
     },
     {
       "id": "evt_panama_canal_transit_recovery",
@@ -4136,7 +4276,11 @@
           "CRITICAL_INFRASTRUCTURE"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T06:33:51.196Z",
+      "firstDetectedAt": "2026-10-09T06:33:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:15:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:15:51.196Z"
     },
     {
       "id": "evt_france_germany_defense",
@@ -4233,7 +4377,11 @@
           "LEOPARD_2",
           "EUROFIGHTER"
         ]
-      }
+      },
+      "eventOccurredAt": "2026-10-09T06:13:51.196Z",
+      "firstDetectedAt": "2026-10-09T06:13:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:13:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:13:51.196Z"
     },
     {
       "id": "evt_turkey_montreux_straits",
@@ -4329,7 +4477,11 @@
           "BALANCE_OF_POWER"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T05:43:51.196Z",
+      "firstDetectedAt": "2026-10-09T05:43:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:08:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:08:51.196Z"
     },
     {
       "id": "evt_sahel_confederation_aes",
@@ -4423,7 +4575,11 @@
           "PROXY_WAR"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T05:03:51.195Z",
+      "firstDetectedAt": "2026-10-09T05:03:51.195Z",
+      "lastFetchedAt": "2026-10-09T10:08:51.195Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:08:51.195Z"
     },
     {
       "id": "evt_essequibo_venezuela_guyana",
@@ -4523,7 +4679,11 @@
           "STATUS_QUO"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T04:03:51.196Z",
+      "firstDetectedAt": "2026-10-09T04:03:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:03:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:03:51.196Z"
     },
     {
       "id": "evt_teesta_river_barrage",
@@ -4614,7 +4774,11 @@
           "STRATEGIC_AUTONOMY"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T05:13:51.196Z",
+      "firstDetectedAt": "2026-10-09T05:13:51.196Z",
+      "lastFetchedAt": "2026-10-09T10:03:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T10:03:51.196Z"
     },
     {
       "id": "evt_saudi_iran_normalization",
@@ -4708,7 +4872,11 @@
           "ENERGY_SECURITY"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T05:33:51.196Z",
+      "firstDetectedAt": "2026-10-09T05:33:51.196Z",
+      "lastFetchedAt": "2026-10-09T09:58:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T09:58:51.196Z"
     },
     {
       "id": "evt_svalbard_treaty_arctic",
@@ -4802,7 +4970,11 @@
           "STRATEGIC_AUTONOMY"
         ],
         "military": []
-      }
+      },
+      "eventOccurredAt": "2026-10-09T04:53:51.196Z",
+      "firstDetectedAt": "2026-10-09T04:53:51.196Z",
+      "lastFetchedAt": "2026-10-09T09:58:51.196Z",
+      "lastSubstantiveUpdateAt": "2026-10-09T09:58:51.196Z"
     }
   ],
   "changeLog": [
